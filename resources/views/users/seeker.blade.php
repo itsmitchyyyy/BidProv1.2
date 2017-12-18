@@ -29,7 +29,7 @@
             </p>
         </div>
     </div>
-  <a href="#" class="btn btn-info float-right">View Profile</a>
+  <a href="#" class="btn btn-info float-right" style="background-color:#ee4b28;border:2px solid #ee4b28">View Profile</a>
 </div>
 </div>
 @endforeach
