@@ -31,8 +31,8 @@ class LoginController extends Controller
                 }elseif ($request->user()->hasRoles('bidder')) {
                     # code...
                 }elseif ($request->user()->hasRoles('seeker')) {
-                    # code...
-                }elseif (condition) {
+                    return redirect()->route('seeker');
+                }else {
                     return redirect()->route('login')
                         ->withErrors(['error' => 'Invalid Credentials']);
                 }
@@ -41,9 +41,9 @@ class LoginController extends Controller
             if($request->user()->hasRoles('admin')){
                 return redirect()->route('admin');
             }elseif ($request->user()->hasRoles('bidder')) {
-                # code...
+              
             }elseif ($request->user()->hasRoles('seeker')) {
-                # code...
+                return redirect()->route('seeker');
             }
         }else {
             return redirect()->route('login')

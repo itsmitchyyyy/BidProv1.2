@@ -36,7 +36,7 @@
                     </div>
                     <div class="form-group">
                         <div class="col-md-12">
-                            <div class="checkbox checkbox-primary pull-left p-t-0">
+                            <div class="checkbox checkbox-primary pull-left p-t-0" style>
                                 <input id="checkbox-signup" type="checkbox">
                                 <label for="checkbox-signup"> Remember me </label>
                             </div>
@@ -44,7 +44,7 @@
                     </div>
                     <div class="form-group text-center m-t-20">
                         <div class="col-xs-12">
-                            <button class="btn btn-info btn-lg btn-block text-uppercase waves-effect waves-light" type="submit">Log In</button>
+                            <button class="btn btn-info btn-lg btn-block text-uppercase waves-effect waves-light" style="background-color:#ee4b28;border:2px solid #ee4b28" type="submit">Log In</button>
                         </div>
                     </div>
                     <!--
@@ -76,7 +76,7 @@
                     </div>
                     <div class="form-group text-center m-t-20">
                         <div class="col-xs-12">
-                            <button class="btn btn-primary btn-lg btn-block text-uppercase waves-effect waves-light" type="submit">Reset</button>
+                            <button class="btn btn-primary btn-lg btn-block text-uppercase waves-effect waves-light" type="submit" style="background-color:#ee4b28;border:2px solid #ee4b28">Reset</button>
                         </div>
                     </div>
                 </form>

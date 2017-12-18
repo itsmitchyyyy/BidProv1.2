@@ -23,12 +23,15 @@ Route::group(['middleware' => ['auth']], function(){
     Route::get('admin', ['as' => 'admin', function(){
         return view('admin/admin');
     }]);
-    Route::get('bidder', ['as' => 'bidder', 'uses' => 'BidderController@bidderView']);
-    Route::get('bidder', ['as' => 'bidder', 'uses' => 'BidderController@getRole']);
+    Route::get('bidder', ['as' => 'bidderAdmin', 'uses' => 'BidderController@bidderView']);
+    Route::get('bidder', ['uses' => 'BidderController@getRole']);
     //Route::get('developer', 'BidderController@getRole')->name);
-    Route::get('seeker', ['as' => 'seeker', 'uses' => 'SeekerController@seekerData']);
-    Route::get('seeker', ['as' => 'seeker', 'uses' => 'SeekerController@getRole']);
-    Route::get('calendar', ['as' => 'calendar', function(){
+    Route::get('seeker', ['as' => 'seekerAdmin', 'uses' => 'SeekerController@seekerData']);
+    Route::get('seeker', ['uses' => 'SeekerController@getRole']);
+    Route::get('calendar', ['as' => 'calendarAdmin', function(){
         return view('admin/calendar');
     }]); 
+    //Route::get('seeker',['as' => 'seeker', 'uses' => 'ProjectController@seekerView']);
+    Route::get('seeker', ['as' => 'seeker', 'uses' => 'ProjectController@getProjects']);
+    Route::post('seeker', ['uses' => 'ProjectController@create']);
 });

@@ -45,29 +45,29 @@
 
           <div class="col-lg-3 col-md-6 text-center">
             <div class="service-box mt-5 mx-auto">
-              <i class="fa fa-4x fa-diamond text-primary mb-3 sr-icons"></i>
-              <h3 class="mb-3">Sturdy Templates</h3>
+              <i class="fa fa-4x fa-tasks text-primary mb-3 sr-icons"></i>
+              <h3 class="mb-3">Post a project</h3>
               <p class="text-muted mb-0">Our templates are updated regularly so they don't break.</p>
             </div>
           </div>
           <div class="col-lg-3 col-md-6 text-center">
             <div class="service-box mt-5 mx-auto">
-              <i class="fa fa-4x fa-paper-plane text-primary mb-3 sr-icons"></i>
-              <h3 class="mb-3">Ready to Ship</h3>
+              <i class="fa fa-4x fa-code text-primary mb-3 sr-icons"></i>
+              <h3 class="mb-3">Hire Developer</h3>
               <p class="text-muted mb-0">You can use this theme as is, or you can make changes!</p>
             </div>
           </div>
           <div class="col-lg-3 col-md-6 text-center">
             <div class="service-box mt-5 mx-auto">
-              <i class="fa fa-4x fa-newspaper-o text-primary mb-3 sr-icons"></i>
-              <h3 class="mb-3">Up to Date</h3>
+              <i class="fa fa-4x fa-money text-primary mb-3 sr-icons"></i>
+              <h3 class="mb-3">Bid a project</h3>
               <p class="text-muted mb-0">We update dependencies to keep things fresh.</p>
             </div>
           </div>
           <div class="col-lg-3 col-md-6 text-center">
             <div class="service-box mt-5 mx-auto">
-              <i class="fa fa-4x fa-heart text-primary mb-3 sr-icons"></i>
-              <h3 class="mb-3">Made with Love</h3>
+              <i class="fa fa-4x fa-star text-primary mb-3 sr-icons"></i>
+              <h3 class="mb-3">Get benefits</h3>
               <p class="text-muted mb-0">You have to make your websites with love these days!</p>
             </div>
           </div>
@@ -178,8 +178,8 @@
 
     <section class="bg-dark text-white">
       <div class="container text-center">
-        <h2 class="mb-4">Free Download at Start Bootstrap!</h2>
-        <a class="btn btn-light btn-xl sr-button" href="http://startbootstrap.com/template-overviews/creative/">Download Now!</a>
+        <h2 class="mb-4">BidPro</h2>
+        <a class="btn btn-light btn-xl sr-button" href="{{ route('register') }}">Join Now!</a>
       </div>
     </section>
 
@@ -200,7 +200,7 @@
           <div class="col-lg-4 mr-auto text-center">
             <i class="fa fa-envelope-o fa-3x mb-3 sr-contact"></i>
             <p>
-              <a href="mailto:your-email@your-domain.com">feedback@startbootstrap.com</a>
+              <a href="mailto:your-email@your-domain.com">info@BidPro.com</a>
             </p>
           </div>
         </div>

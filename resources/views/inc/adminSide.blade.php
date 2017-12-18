@@ -30,15 +30,15 @@
         <li> <a href="{{ route('admin') }}" class="waves-effect active"><i class="zmdi zmdi-apps zmdi-hc-fw fa-fw" ></i> <span class="hide-menu"> Dashboard  </span></a>
             
         </li>
-        <li> <a href="{{ route('bidder') }}" class="waves-effect "><i class="linea-icon linea-basic fa-fw text-danger" ></i> <span class="hide-menu"> Bidders </span></a>
+        <li> <a href="{{ route('bidderAdmin') }}" class="waves-effect "><i class="linea-icon linea-basic fa-fw text-danger" ></i> <span class="hide-menu"> Bidders </span></a>
             
         </li>
-        <li><a href="{{ route('seeker') }}" class="waves-effect "><i class="zmdi zmdi-apps zmdi-hc-fw fa-fw"></i> <span class="hide-menu">Seekers</span></a>
+        <li><a href="{{ route('seekerAdmin') }}" class="waves-effect "><i class="zmdi zmdi-apps zmdi-hc-fw fa-fw"></i> <span class="hide-menu">Seekers</span></a>
             
         </li>
-        <li><a href="{{ route('calendar') }}" class="waves-effect"><i class="zmdi zmdi-apps zmdi-hc-fw fa-fw"></i> <span class="hide-menu">Calendar</span></a>
+      <!--  <li><a href="{{ route('calendar') }}" class="waves-effect"><i class="zmdi zmdi-apps zmdi-hc-fw fa-fw"></i> <span class="hide-menu">Calendar</span></a>
             
-        </li>
+        </li>-->
         <!--
         <li class="nav-small-cap">--- Proffessional</li>
         <li> <a href="#" class="waves-effect"><i class="zmdi zmdi-copy zmdi-hc-fw fa-fw"></i> <span class="hide-menu">Sample Pages<span class="fa arrow"></span><span class="label label-rouded label-purple pull-right">30</span></span></a>

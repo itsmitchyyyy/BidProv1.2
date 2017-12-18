@@ -3,7 +3,7 @@
 @import url("https://fonts.googleapis.com/css?family=Raleway:300,400,600");
 
 // Variables
-//@import "variables";
+@import "variables";
 
 // Bootstrap
 //@import "~bootstrap-sass/assets/stylesheets/bootstrap";
@@ -11,13 +11,7 @@
 //@import "login/alpha-6";
 @import "node_modules/font-awesome/scss/font-awesome";
 @import "node_modules/simple-line-icons/scss/simple-line-icons";
-@import "node_modules/material-icons/css/material-icons";
+//@import "node_modules/material-icons/css/material-icons";
 @import "themify-icons/themify-icons";
-@import "landing-page/variables.scss";
-@import "landing-page/mixins.scss";
-@import "landing-page/global.scss";
-@import "landing-page/navbar.scss";
-@import "landing-page/masthead.scss";
-@import "landing-page/services.scss";
-@import "landing-page/portfolio.scss";
-@import "landing-page/bootstrap-overrides.scss";
+@import "landing-page/magnific-popup";
+@import "landing-page/creative";

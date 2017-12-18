@@ -14,7 +14,7 @@ class UserTableSeeder extends Seeder
     {
         $role_admin = Role::where('name','admin')->first();
         $role_bidder = Role::where('name','bidder')->first();
-        $role_seeker = Role::where('name','bidder')->first();
+        $role_seeker = Role::where('name','seeker')->first();
 
         $admin = new User();
         $admin->name = 'admin';
