@@ -36,11 +36,14 @@ class ProjectController extends Controller
         $projects->cost = $request->cost;
         $projects->save();
 
+        return redirect()->route('seeker')->with('success','Data added');
+
     }
     
     public function getProjects(){
         $projects = DB::table('projects')
             ->join('users', 'projects.seeker_id', '=', 'users.id')
+            ->orderBy('projects.id','desc')
             ->get();
         
             
