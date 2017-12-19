@@ -17,4 +17,8 @@ class SeekerController extends Controller
     public function seekerData(){
         return view('admin/seekers');
     }
+
+    public function seekerProfile(){
+        
+    }
 }

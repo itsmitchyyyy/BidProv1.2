@@ -16,9 +16,13 @@ Route::get('/', function () {
 });
 Route::get('login', 'LoginController@loginForm')->name('login');
 Route::post('login', 'LoginController@login');
+Route::get('email', 'ResetController@showReset')->name('password.email');
+Route::post('email', 'ResetController@sendEmail');
 Route::get('logout', 'LoginController@logout')->name('logout');
 Route::get('register', 'RegisterController@registerForm')->name('register');
 Route::post('register', 'RegisterController@register');
+Route::get('reset/{token}' ,'ResetController@getReset')->name('password.reset');
+Route::post('reset', 'RestController@postReset')->name('password.request');
 Route::group(['middleware' => ['auth']], function(){
 
     //admin
