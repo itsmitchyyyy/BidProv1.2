@@ -9,7 +9,7 @@
 </span> </div>
             <!-- /input-group -->
         </li>
-        <li class="user-pro">
+       <!-- <li class="user-pro">
             <a href="#" class="waves-effect">
             @if(Auth::user()->avatar == null)
             <img src="/uploads/blank.png" alt="user-img" class="img-circle">
@@ -19,24 +19,26 @@
             <span class="hide-menu"> {{ Auth::user()->name }}<span class="fa arrow"></span></span>
             </a>
             <ul class="nav nav-second-level">
-             <!--   <li><a href="javascript:void(0)"><i class="ti-user"></i> My Profile</a></li>
+                <li><a href="javascript:void(0)"><i class="ti-user"></i> My Profile</a></li>
                 <li><a href="javascript:void(0)"><i class="ti-wallet"></i> My Balance</a></li>
                 <li><a href="javascript:void(0)"><i class="ti-email"></i> Inbox</a></li>
-                <li><a href="javascript:void(0)"><i class="ti-settings"></i> Account Setting</a></li>-->
+                <li><a href="javascript:void(0)"><i class="ti-settings"></i> Account Setting</a></li>
                 <li><a href="{{ route('logout') }}"><i class="fa fa-power-off"></i> Logout</a></li>
             </ul>
-        </li>
+        </li>-->
         <li class="nav-small-cap m-t-10"><center>----- Main Menu -----</center></li>
-        <li> <a href="{{ route('admin') }}" class="waves-effect active"><i class="zmdi zmdi-apps zmdi-hc-fw fa-fw" ></i> <span class="hide-menu"> Dashboard  </span></a>
+        <li> <a href="{{ route('admin') }}" class="waves-effect{{ Request::is('admin') ? ' active' : ''}}"><i class="fa fa-dashboard fa-fw text-danger" ></i> <span class="hide-menu"> Dashboard  </span></a>
+        </li>
+        <li>
+            <a href="http://" class="waves-effect"><i class="fa fa-sticky-note-o fa-fw"></i><span class="hide-menu"> Post</span></a>
+        </li>
+        <li> <a href="{{ route('bidderAdmin') }}" class="waves-effect{{ Request::is('bidderAdmin') ? ' active' : ''}} "><i class="fa fa-user-o fa-fw  text-danger" ></i> <span class="hide-menu"> Bidders </span></a>
             
         </li>
-        <li> <a href="{{ route('bidderAdmin') }}" class="waves-effect "><i class="linea-icon linea-basic fa-fw text-danger" ></i> <span class="hide-menu"> Bidders </span></a>
+        <li><a href="{{ route('adminSeeker') }}" class="waves-effect "><i class="fa fa-user-o  fa-fw text-danger"></i> <span class="hide-menu">Seekers</span></a>
             
         </li>
-        <li><a href="{{ route('seekerAdmin') }}" class="waves-effect "><i class="zmdi zmdi-apps zmdi-hc-fw fa-fw"></i> <span class="hide-menu">Seekers</span></a>
-            
-        </li>
-      <!--  <li><a href="{{ route('calendar') }}" class="waves-effect"><i class="zmdi zmdi-apps zmdi-hc-fw fa-fw"></i> <span class="hide-menu">Calendar</span></a>
+      <!--  <li><a href="" class="waves-effect"><i class="zmdi zmdi-apps zmdi-hc-fw fa-fw"></i> <span class="hide-menu">Calendar</span></a>
             
         </li>-->
         <!--

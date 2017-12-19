@@ -46899,7 +46899,7 @@ if (false) {
 /* 45 */
 /***/ (function(module, exports) {
 
-throw new Error("Module build failed: ModuleBuildError: Module build failed: Error: ENOENT: no such file or directory, open 'C:\\xampp\\htdocs\\bidprov1.2\\resources\\assets\\sass\\bidder.scss'\n    at runLoaders (C:\\xampp\\htdocs\\bidprov1.2\\node_modules\\webpack\\lib\\NormalModule.js:195:19)\n    at C:\\xampp\\htdocs\\bidprov1.2\\node_modules\\loader-runner\\lib\\LoaderRunner.js:364:11\n    at C:\\xampp\\htdocs\\bidprov1.2\\node_modules\\loader-runner\\lib\\LoaderRunner.js:200:19\n    at C:\\xampp\\htdocs\\bidprov1.2\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:70:14\n    at _combinedTickCallback (internal/process/next_tick.js:95:7)\n    at process._tickCallback (internal/process/next_tick.js:161:9)");
+// removed by extract-text-webpack-plugin
 
 /***/ }),
 /* 46 */

@@ -1,6 +1,6 @@
-<nav class="navbar navbar-default navbar-static-top m-b-0">
-<div class="navbar-header"> <a class="navbar-toggle hidden-sm hidden-md hidden-lg " href="javascript:void(0)" data-toggle="collapse" data-target=".navbar-collapse"><i class="ti-menu"></i></a>
-    <div class="top-left-part"><a class="logo" href="/" style="padding-left:20%;"><b><img src="/img/bidpro-logo.png" alt="home"  /></span></a></div>
+<nav class="navbar navbar-default navbar-static-top m-b-0" >
+<div class="navbar-header" style="background-color:#ccc"> <a class="navbar-toggle hidden-sm hidden-md hidden-lg" href="javascript:void(0)" data-toggle="collapse" data-target=".navbar-collapse"><i class="ti-menu"></i></a>
+    <div class="top-left-part" style="background-color:#C0C0C0"><a class="logo" href="index.html" style="padding-left:20%;"><b><img src="/img/bidprologo.png" alt="home" style="width:120px;"  /></span></a></div>
     <ul class="nav navbar-top-links navbar-left hidden-xs">
         
        <!-- <li>
@@ -8,10 +8,8 @@
                 <input type="text" placeholder="Search..." class="form-control"> <a href="#"><i class="fa fa-search"></i></a> </form>
         </li>-->
     </ul>
-      <!--
-    <ul class="nav navbar-top-links navbar-right pull-right">
-      
-        <li class="dropdown"> <a class="dropdown-toggle waves-effect waves-light" data-toggle="dropdown" href="#"><i class="icon-envelope"></i>
+    <ul class="nav navbar-top-links navbar-right pull-right" style="background-color:#ccc">
+        <!--<li class="dropdown"> <a class="dropdown-toggle waves-effect waves-light" data-toggle="dropdown" href="#"><i class="icon-envelope"></i>
 <div class="notify"><span class="heartbit"></span><span class="point"></span></div>
 </a>
             <ul class="dropdown-menu mailbox scale-up">
@@ -46,12 +44,10 @@
                     <a class="text-center" href="javascript:void(0);"> <strong>See all notifications</strong> <i class="fa fa-angle-right"></i> </a>
                 </li>
             </ul>
-         
-        </li>
--->
-           <!-- /.dropdown-messages -->
-        <!-- /.dropdown --><!--
-        <li class="dropdown"> <a class="dropdown-toggle waves-effect waves-light" data-toggle="dropdown" href="#"><i class="icon-note"></i>
+             /.dropdown-messages 
+        </li>-->
+        <!-- /.dropdown -->
+    <!--    <li class="dropdown"> <a class="dropdown-toggle waves-effect waves-light" data-toggle="dropdown" href="#"><i class="icon-note"></i>
 <div class="notify"><span class="heartbit"></span><span class="point"></span></div>
 </a>
             <ul class="dropdown-menu dropdown-tasks scale-up">
@@ -103,25 +99,23 @@
                     <a class="text-center" href="#"> <strong>See All Tasks</strong> <i class="fa fa-angle-right"></i> </a>
                 </li>
             </ul>
-            
+             /.dropdown-tasks 
         </li>-->
         <!-- /.dropdown -->
-        <!-- /.dropdown-tasks -->
-      <!--
         <li class="dropdown">
             <a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#"> <img src="/img/users/varun.jpg" alt="user-img" width="36" class="img-circle"><b class="hidden-xs">Mitch</b> </a>
-                <li><a href="#"><i class="ti-user"></i> My Profile</a></li>
+            <ul class="dropdown-menu dropdown-user scale-up">
+              <!--  <li><a href="#"><i class="ti-user"></i> My Profile</a></li>
                 <li><a href="#"><i class="ti-wallet"></i> My Balance</a></li>
                 <li><a href="#"><i class="ti-email"></i> Inbox</a></li>
                 <li role="separator" class="divider"></li>
                 <li><a href="#"><i class="ti-settings"></i> Account Setting</a></li>
-                <li role="separator" class="divider"></li>
+                <li role="separator" class="divider"></li>-->
                 <li><a href="login2.html"><i class="fa fa-power-off"></i> Logout</a></li>
             </ul>
-            
+            <!-- /.dropdown-user -->
         </li>
-        -->
-    <!-- /.dropdown-user -->
+    
         <!-- /.dropdown -->
     </ul>
 </div>

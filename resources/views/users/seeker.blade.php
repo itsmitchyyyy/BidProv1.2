@@ -10,15 +10,15 @@
   <button type="button" class="btn btn-info text-uppercase waves-effect waves-light" style="background-color:#ee4b28;border:2px solid #ee4b28" data-toggle="modal" data-target="#myModal">
   POST
 </button>
-
+<!-- ADD PROJECT -->
 @foreach($projects as $project)
 <div class="card w-75 ">
-<div class="card-header">{{ ucwords($project->name) }}
-<a href="http://" class="action-button float-right"><i class="fa fa-trash"></i></a>
+<div class="card-header">Project Title: {{ ucwords($project->title) }}
+<a href="http://" class="action-button float-right"><i class="fa fa-gavel"></i></a>
 </div>
 <div class="card-block">
     
-  <h4 class="card-title">Project Title: {{ $project->title }} </h4>
+  <h4 class="card-title m-l-20">{{ ucwords($project->name) }} </h4>
     <div class="row">
         <div class="col-md-12">
             <img src="uploads/blank.png" style="float:left;width:150px;height:100px; margin-right:10%; border-radius:50%;" alt="">
@@ -29,11 +29,11 @@
             </p>
         </div>
     </div>
-  <a href="#" class="btn btn-info float-right" style="background-color:#ee4b28;border:2px solid #ee4b28">View Profile</a>
+  <button type="button" class="btn btn-info text-uppercase waves-effect waves-light float-right" style="background-color:#ee4b28;border:2px solid #ee4b28;" data-toggle="modal" data-target="#viewProfile">View Profile</button>
 </div>
 </div>
 @endforeach
-<!-- Modal -->
+<!-- ADD PROject -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
@@ -115,7 +115,30 @@
     </div>
   </div>
 </div>
-  
+  <!-- END OF ADD PROJECT -->
+
+  <!-- START OF VIEW PROFILE -->
+  <div class="modal fade" id="viewProfile" tabindex="-1" role="dialog" aria-labelledby="viewProfileLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h5 class="modal-title" id="viewProfileLabel">Profile Details</h5>
+      </div>
+      <div class="modal-body">
+            
+       
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary wew" data-dismiss="modal" >Close</button>
+        <!--<button type="submit" class="btn btn-primary wew" style="background-color:#ee4b28;border:2px solid #ee4b28">Delete</button>-->
+      </div>
+    </div>
+  </div>
+</div>
+  <!-- END OF VIEW PROFILE -->
 </div>
 
 @endsection
