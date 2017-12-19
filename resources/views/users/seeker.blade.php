@@ -30,7 +30,7 @@
             
         </div>
     </div>
-  <button type="button" class="btn btn-info text-uppercase waves-effect waves-light float-right" style="background-color:#ee4b28;border:2px solid #ee4b28;" data-toggle="modal" data-target="#viewProfile">View Profile</button>
+  <button type="button" class="btn btn-info text-uppercase waves-effect waves-light float-right" style="background-color:#ee4b28;border:2px solid #ee4b28;" data-toggle="modal" data-target="#viewProfile">View Project</button>
 </div>
 </div>
 @endforeach
@@ -70,11 +70,17 @@
             <input  type="text" name="start" id="start" class="form-control" onfocus="(this.type='date')" onblur="(this.type='text')" required>
             <span class="highlight"></span><span class="bar"></span>
             <label for="start">Date Start</label>
+            @if($errors->has('start'))
+              <p class="help-block">{{ $errors->first('start') }}</p>
+            @endif
         </div>
         <div class="form-group m-b-30 m-t-15{{ $errors->has('end') ? ' has-error' : ''}}">
           <input type="text" name="end" id="end" class="form-control" onfocus="(this.type='date')" onblur="(this.type='text')" required>
           <span class="highlight"></span><span class="bar"></span>
           <label for="end">Date End</label>
+          @if($errors->has('end'))
+              <p class="help-block">{{ $errors->first('end') }}</p>
+            @endif
         </div>
         <div class="form-group m-b-30 m-t-15{{ $errors->has('category') ? ' has-error' : ''}}">
           <select name="category" id="category" class="form-control" required>
@@ -85,11 +91,17 @@
           </select>
           <span class="highlight"></span><span class="bar"></span>
           <label for="category">Category</label>
+          @if($errors->has('category'))
+              <p class="help-block">{{ $errors->first('category') }}</p>
+            @endif
         </div>
         <div class="form-group m-b-5 m-t-15{{ $errors->has('cost') ? ' has-error' : ''}}">
             <input type="number" step="any"  name="cost" id="cost" class="form-control" required>
             <span class="highlight"></span><span class="bar"></span>
             <label for="cost">Cost</label>
+            @if($errors->has('cost'))
+              <p class="help-block">{{ $errors->first('cost') }}</p>
+            @endif
         </div>
       </div>
       <div class="modal-footer">
