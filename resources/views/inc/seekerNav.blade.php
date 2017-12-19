@@ -21,8 +21,8 @@
         <img src="/uploads/blank.png" style="width:30px;border-radius:50%" class="mr-sm-1">{{ ucwords(Auth::user()->name) }}
       </a>
       <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-        <a class="dropdown-item" href="#">Profile</a>
-        <a class="dropdown-item" href="{{ route('logout') }}">Logout</a>
+        <a class="dropdown-item" href="#"><i class="ti-user"></i> Profile</a>
+        <a class="dropdown-item" href="{{ route('logout') }}"><i class="fa fa-power-off"></i> Logout</a>
       </div>
     </li>
     </ul>
