@@ -27,7 +27,7 @@ class ProjectController extends Controller
         }
 
         $projects = new Project();
-        $projects->seeker_id = Auth::id();
+        $projects->user_id = Auth::id();
         $projects->title = $request->title;
         $projects->details = $request->details;
         $projects->start = $request->start;
@@ -42,8 +42,9 @@ class ProjectController extends Controller
     
     public function getProjects(){
         $projects = DB::table('projects')
-            ->join('users', 'projects.seeker_id', '=', 'users.id')
+            ->join('users', 'projects.user_id', '=', 'users.id')
             ->orderBy('projects.id','desc')
+            ->select('*','projects.id as project_id')
             ->get();
         
             
