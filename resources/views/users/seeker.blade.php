@@ -1,7 +1,7 @@
 @extends('layouts.seekerapp')
 @section('content')
  
-<div class="container">
+<div class="container m-t-10">
     @if(session()->has('success'))
     <div class="alert alert-success">
         {{ session()->get('success') }}
@@ -12,21 +12,22 @@
 </button>
 <!-- ADD PROJECT -->
 @foreach($projects as $project)
-<div class="card w-75 ">
-<div class="card-header">Project Title: {{ ucwords($project->title) }}
+<div class="card w-75 m-t-10 m-b-5">
+<div class="card-header">{{ ucwords($project->title) }}
 <a href="http://" class="action-button float-right"><i class="fa fa-gavel"></i></a>
 </div>
 <div class="card-block">
     
-  <h4 class="card-title m-l-20">{{ ucwords($project->name) }} </h4>
+  <h4 class="card-title ml-2">{{ ucwords($project->name) }} </h4>
     <div class="row">
         <div class="col-md-12">
-            <img src="uploads/blank.png" style="float:left;width:150px;height:100px; margin-right:10%; border-radius:50%;" alt="">
-            <p class="card-text">Details: {{ ucfirst($project->details) }} 
+            <img src="uploads/blank.png" style="float:left;width:130px;height:100px; margin-right:10%; border-radius:50%;" alt="">
+            <p class="card-text">Details: {{ substr(ucfirst($project->details), 0, 100) }} ... 
             <br>Date Start: {{ $project->start }}
             <br>Date End: {{ $project->end }}
             <br>Cost: {{ $project->cost }}<i class="fa fa-dollar"></i> 
             </p>
+            
         </div>
     </div>
   <button type="button" class="btn btn-info text-uppercase waves-effect waves-light float-right" style="background-color:#ee4b28;border:2px solid #ee4b28;" data-toggle="modal" data-target="#viewProfile">View Profile</button>
@@ -35,7 +36,7 @@
 @endforeach
 <!-- ADD PROject -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg" role="document">
+  <div class="modal-dialog modal-md" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -44,68 +45,52 @@
         <h5 class="modal-title" id="exampleModalLabel">Project Details</h5>
       </div>
       <div class="modal-body">
-            <form action="{{ route('seeker') }}" class="form-horizontal form-material" method="post">
-                {{ csrf_field() }}
-            <div class="form-group row{{ $errors->has('title') ? ' has-error' : ''}}">
-                <label for="title" class="col-2 col-form-label " >Title</label>
-                <div class="col-10">
-                 <input type="text" name="title" id="title" class="form-control" placeholder=" Title" aria-labelledby="errorHelpBlock">
-                @if($errors->has('title'))
-                    <small id="errorHelpBlock"  class="help-block text-danger">{{ $errors->first('title') }}</small>   
-                 @endif  
-            </div>
-            </div>
-            <div class="form-group row{{ $errors->has('details') ? ' has-error' : ''}}">
-                <label for="details" class="col-2 col-form-label">Details</label>
-                <div class="col-10">
-                    <textarea name="details" id="details" cols="30" rows="10" class="form-control"  placeholder="Details" aria-labelledby="errorHelpBlock"></textarea>
-                    @if($errors->has('details'))
-                    <small id="errorHelpBlock" class="help-block text-danger">{{ $errors->first('details') }}</small>   
-                    @endif  
-                </div>
-            </div>
-            <div class="form-group row{{ $errors->has('start') ? ' has-error' : ''}}">
-                <label for="start" class="col-2 col-form-label">Date Start</label>
-                <div class="col-10 ">   
-                    <input type="date" name="start" id="start" placeholder="Date Start" aria-labelledby="errorHelpBlock"   class="form-control">
-                    @if($errors->has('start'))
-                    <small id="errorHelpBlock" class="help-block text-danger">{{ $errors->first('start') }}</small>   
-                    @endif  
-                </div>
-            </div>    
-            <div class="form-group row{{ $errors->has('end') ? ' has-error' : ''}}">
-                <label for="end" class="col-2 col-form-label">Date End</label>
-                <div class="col-10">
-                    <input type="date" name="end" id="end" placeholder="Date End" aria-labelledby="errorHelpBlock"  class="form-control">
-                    @if($errors->has('end'))
-                    <small id="errorHelpBlock" class="help-block text-danger">{{ $errors->first('end') }}</small>   
-                    @endif  
-                </div>
-            </div>
-            <div class="form-group row{{ $errors->has('category') ? ' has-error' : ''}}">
-                <label for="category" class="col-2 col-form-label">Category</label>
-                <div class="col-10">
-                    <select name="category" id="category" class="form-control" aria-labelledby="errorHelpBlock">
-                        <option value="0" disabled selected>Choose category</option>
-                        <option value="Test">Test</option>
-                        <option value="Test">Test</option>
-                        <option value="Test">Test</option>
-                    </select>
-                    @if($errors->has('category'))
-                    <small id="errorHelpBlock" class="help-block text-danger">{{ $errors->first('category') }}</small>   
-                    @endif  
-                </div>
-            </div>
-            <div class="form-group row{{ $errors->has('cost') ? ' has-error' : ''}}">
-                <label for="cost" class="col-2 col-form-label">Cost</label>
-                <div class="col-10">
-                    <input type="number" step="any" name="cost" id="cost" placeholder=" Cost" class="form-control" aria-labelledby="errorHelpBlock">
-                    @if($errors->has('cost'))
-                    <small id="errorHelpBlock" class="help-block text-danger">{{ $errors->first('cost') }}</small>   
-                    @endif  
-                </div>
-            </div>
        
+            <form action="{{ route('seeker') }}" class="floating-labels" method="post">
+                {{ csrf_field() }}
+        <div class="form-group{{ $errors->has('title') ? ' has-error' : ''}} m-b-40 m-t-15">
+            <input type="text" name="title" id="title" class="form-control" required>
+            <span class=""></span><span class="bar"></span>
+            <label for="title">Title</label>
+            @if($errors->has('title'))
+              <p class="text-danger help-block">{{ $errors->first('title') }}</p>
+            @endif
+        </div>
+        <div class="form-group m-b-30 m-t-15{{ $errors->has('details') ? ' has-error' : ''}}">
+            <textarea name="details" id="details" rows="4"  class="form-control" style="height:auto" required></textarea>
+            <span class=""></span><span class="bar"></span>
+            <label for="details">Details</label>
+            @if($errors->has('details'))
+              <p class="text-danger help-block">{{ $errors->first('details') }}</p>
+              @else
+              <span class="help-block float-right"><small id="charLeft"></small></span>
+            @endif
+        </div>
+        <div class="form-group m-b-30 m-t-15{{ $errors->has('start') ? ' has-error' : ''}}">
+            <input  type="text" name="start" id="start" class="form-control" onfocus="(this.type='date')" onblur="(this.type='text')" required>
+            <span class="highlight"></span><span class="bar"></span>
+            <label for="start">Date Start</label>
+        </div>
+        <div class="form-group m-b-30 m-t-15{{ $errors->has('end') ? ' has-error' : ''}}">
+          <input type="text" name="end" id="end" class="form-control" onfocus="(this.type='date')" onblur="(this.type='text')" required>
+          <span class="highlight"></span><span class="bar"></span>
+          <label for="end">Date End</label>
+        </div>
+        <div class="form-group m-b-30 m-t-15{{ $errors->has('category') ? ' has-error' : ''}}">
+          <select name="category" id="category" class="form-control" required>
+            <option disabled selected></option>
+            <option value="Test1">Test1</option>
+            <option value="Test2">Test2</option>
+            <option value="Test3">Test3</option>
+          </select>
+          <span class="highlight"></span><span class="bar"></span>
+          <label for="category">Category</label>
+        </div>
+        <div class="form-group m-b-5 m-t-15{{ $errors->has('cost') ? ' has-error' : ''}}">
+            <input type="number" step="any"  name="cost" id="cost" class="form-control" required>
+            <span class="highlight"></span><span class="bar"></span>
+            <label for="cost">Cost</label>
+        </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary wew" data-dismiss="modal">Close</button>
