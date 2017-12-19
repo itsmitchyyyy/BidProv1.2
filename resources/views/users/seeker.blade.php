@@ -11,6 +11,7 @@
   POST
 </button>
 <!-- ADD PROJECT -->
+
 @foreach($projects as $project)
 <div class="card w-75 m-t-10 m-b-5">
 <div class="card-header">{{ ucwords($project->title) }}
@@ -22,17 +23,37 @@
     <div class="row">
         <div class="col-md-12">
             <img src="uploads/blank.png" style="float:left;width:130px;height:100px; margin-right:10%; border-radius:50%;" alt="">
-            <p class="card-text">Details: {{ substr(ucfirst($project->details), 0, 100) }} ... 
-            <br>Date Start: {{ $project->start }}
-            <br>Date End: {{ $project->end }}
-            <br>Cost: {{ $project->cost }}<i class="fa fa-dollar"></i> 
+            <p class="card-text">
+             {{ substr(ucfirst($project->details), 0, 150) }} ... 
             </p>
             
         </div>
     </div>
-  <button type="button" class="btn btn-info text-uppercase waves-effect waves-light float-right" style="background-color:#ee4b28;border:2px solid #ee4b28;" data-toggle="modal" data-target="#viewProfile">View Project</button>
+  <button type="button" class="btn btn-info text-uppercase waves-effect waves-light float-right" style="background-color:#ee4b28;border:2px solid #ee4b28;" data-toggle="modal" data-target="#viewProject{{ $project->project_id }}">View More</button>
 </div>
 </div>
+
+ <!-- START OF VIEW PROFILE -->
+ <div class="modal fade" id="viewProject{{ $project->project_id }}" tabindex="-1" role="dialog" aria-labelledby="viewProfileLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h5 class="modal-title" id="viewProfileLabel">Project Details</h5>
+      </div>
+      <div class="modal-body">
+        Details: {{ $project->details }}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary wew" data-dismiss="modal" >Close</button>
+        <!--<button type="submit" class="btn btn-primary wew" style="background-color:#ee4b28;border:2px solid #ee4b28">Delete</button>-->
+      </div>
+    </div>
+  </div>
+</div>
+  <!-- END OF VIEW PROFILE -->
 @endforeach
 <!-- ADD PROject -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -57,7 +78,7 @@
             @endif
         </div>
         <div class="form-group m-b-30 m-t-15{{ $errors->has('details') ? ' has-error' : ''}}">
-            <textarea name="details" id="details" rows="4"  class="form-control" style="height:auto" required></textarea>
+            <textarea name="details" maxlength="255" id="details" rows="4"  class="form-control" style="height:auto" required></textarea>
             <span class=""></span><span class="bar"></span>
             <label for="details">Details</label>
             @if($errors->has('details'))
@@ -114,28 +135,7 @@
 </div>
   <!-- END OF ADD PROJECT -->
 
-  <!-- START OF VIEW PROFILE -->
-  <div class="modal fade" id="viewProfile" tabindex="-1" role="dialog" aria-labelledby="viewProfileLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-        <h5 class="modal-title" id="viewProfileLabel">Profile Details</h5>
-      </div>
-      <div class="modal-body">
-            
-       
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary wew" data-dismiss="modal" >Close</button>
-        <!--<button type="submit" class="btn btn-primary wew" style="background-color:#ee4b28;border:2px solid #ee4b28">Delete</button>-->
-      </div>
-    </div>
-  </div>
-</div>
-  <!-- END OF VIEW PROFILE -->
+ 
 </div>
 
 @endsection
