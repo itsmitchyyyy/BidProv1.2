@@ -15,14 +15,18 @@
 @foreach($projects as $project)
 <div class="card w-75 m-t-10 m-b-5">
 <div class="card-header">{{ ucwords($project->title) }}
-<a href="http://" class="action-button float-right"><i class="fa fa-gavel"></i></a>
+
 </div>
 <div class="card-block">
     
   <h4 class="card-title ml-2">{{ ucwords($project->name) }} </h4>
     <div class="row">
         <div class="col-md-12">
+        @if($project->avatar == null)
             <img src="uploads/blank.png" style="float:left;width:130px;height:100px; margin-right:10%; border-radius:50%;" alt="">
+        @else
+           <img src="{{ $project->avatar }}" style="float:left;width:130px;height:100px; margin-right:10%; border-radius:50%;" alt="">          
+        @endif  
             <p class="card-text">
              {{ substr(ucfirst($project->details), 0, 150) }} ... 
             </p>
