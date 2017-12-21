@@ -34,5 +34,7 @@ class RegisterController extends Controller
         $type = Input::get('type');
         $user->save();
         $user->roles()->attach(Role::where('name', $type)->first());
+
+        return redirect()->route('seeker');
     }
 }
