@@ -51,7 +51,10 @@
                                 <input id="checkbox-signup" type="checkbox">
                                 <label for="checkbox-signup"> Remember me </label>
                             </div>
+<<<<<<< HEAD
                             -->
+=======
+>>>>>>> resetemail
                             <a href="{{ route('password.email') }}" class="text-dark pull-right"><i class="fa fa-lock m-r-5"></i> Forgot pwd?</a> </div>
                     </div>
                     
@@ -75,9 +78,15 @@
                             <p>Don't have an account? <a href="{{ route('register') }}" class="text-primary m-l-5"><b>Sign Up</b></a></p>
                         </div>
                     </div>
+<<<<<<< HEAD
                 
                 
                 
+=======
+                </form>
+                
+                </form>
+>>>>>>> resetemail
             </div>
         </div>
     </section>
