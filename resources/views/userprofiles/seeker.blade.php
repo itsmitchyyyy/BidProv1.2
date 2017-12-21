@@ -1,5 +1,22 @@
 @extends('layouts.seekerapp')
 @section('content')
+
+<div class="modal fade" id="profileImage" tabindex="-1" role="dialog" aria-labelledby="profileImage" aria-hidden="true">
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" data-dismiss="modal" class="close"><span aria-hidden="true">x</span></button>
+            <h4 class="modal-title" id="profileImageLabel">Set new profile picture</h4>
+        </div>
+        <div class="modal-body">
+            <img src="" id="previewImage" alt="profile picture">
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+    </div>
+</div>
+</div>
   <!-- Page Content -->
             <div id="">
             <div class="container-fluid">
@@ -10,15 +27,23 @@
                 </div>
                 <!-- /.row -->
                 <!-- .row -->
+
                 <div class="row">
                     <div class="col-md-4 col-xs-12">
                         <div class="white-box">
-                            <div class="user-bg"> <img width="100%" alt="user" src="/img/large/img1.jpg">
+                            <div class="user-bg"> 
+                            <img width="100%" alt="user" src="/uploads/blank.png">
+                            
                                 <div class="overlay-box">
                                     <div class="user-content">
-                                        <a href="javascript:void(0)"><img src="/img/users/genu.jpg" class="thumb-lg img-circle" alt="img"></a>
-                                        <h4 class="text-white">User Name</h4>
-                                        <h5 class="text-white">info@myadmin.com</h5> </div>
+                                    @if($data->avatar == null)
+                                        <a href="javascript:void(0)" id="newDP"><img src="/uploads/blank.png" id="imageSrc" class="thumb-lg img-circle" alt="img"></a>
+                                    @else
+                                        <a href="javascript:void(0)" id="newDP"1><img src="{{$data->avatar}}" id="imageSrc" class="thumb-lg img-circle" alt="img"></a>
+                                    @endif
+                                        <!--<h6><a href="#" id="newDP" class="text-white" data-toggle="tooltip" title="Set new profile picture">Edit Profile Picture</a></h6>-->
+                                        <h4 class="text-white">{{$data->name}}</h4>
+                                        <h5 class="text-white">{{$data->email}}</h5> </div>
                                 </div>
                             </div>
                             <div class="user-btm-box">
@@ -45,7 +70,7 @@
                             <div class="tab-content">
                                 <div class="tab-pane active" id="home">
                                     <div class="steamline">
-                                        <div class="sl-item">
+                                         <!--  <div class="sl-item">
                                             <div class="sl-left"> <img src="/img/users/genu.jpg" alt="user" class="img-circle" /> </div>
                                             <div class="sl-right">
                                                 <div class="m-l-40"><a href="#" class="text-info">John Doe</a> <span class="sl-date">5 minutes ago</span>
@@ -55,7 +80,7 @@
                                             </div>
                                         </div>
                                         <hr>
-                                    <div class="sl-item">
+                                   <div class="sl-item">
                                             <div class="sl-left"> 
                                                 <img src="/img/users/sonu.jpg" alt="user" class="img-circle" />
                                             </div>
@@ -80,41 +105,42 @@
                                                     <p class="m-t-10"> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Praesent mauris. Fusce nec tellus sed augue semper </p>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <hr>
+                                        </div>-->
+                                        
                                         <div class="sl-item">
                                             <div class="sl-left"> <img src="/img/users/govinda.jpg" alt="user" class="img-circle" /> </div>
                                             <div class="sl-right">
-                                                <div class="m-l-40"><a href="#" class="text-info">John Doe</a> <span class="sl-date">5 minutes ago</span>
+                                                <div class="m-l-40"><a href="#" class="text-info">{{ $data->name }}</a> <span class="sl-date">5 minutes ago</span>
                                                     <p>assign a new task <a href="#"> Design weblayout</a></p>
                                                 </div>
                                             </div>
                                         </div>
+                                        <hr>
                                     </div>
                                 </div>
                                 <div class="tab-pane" id="profile">
                                     <div class="row">
                                         <div class="col-md-3 col-xs-6 b-r"> <strong>Full Name</strong>
                                             <br>
-                                            <p class="text-muted">Johnathan Deo</p>
+                                            <p class="text-muted">{{ $data->name }}</p>
                                         </div>
                                         <div class="col-md-3 col-xs-6 b-r"> <strong>Mobile</strong>
                                             <br>
-                                            <p class="text-muted">(123) 456 7890</p>
+                                            <p class="text-muted">{{ $data->contact }}</p>
                                         </div>
                                         <div class="col-md-3 col-xs-6 b-r"> <strong>Email</strong>
                                             <br>
-                                            <p class="text-muted">johnathan@admin.com</p>
+                                            <p class="text-muted">{{ $data->email }}</p>
                                         </div>
                                         <div class="col-md-3 col-xs-6"> <strong>Location</strong>
                                             <br>
-                                            <p class="text-muted">London</p>
+                                            <p class="text-muted">{{ $data->address }}</p>
                                         </div>
                                     </div>
-                                    <hr>
+                                    <!--<hr>
                                     <p class="m-t-30">Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt.Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim.</p>
                                     <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries </p>
-                                    <p>It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+                                    <p>It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>-->
                                     <h4 class="font-bold m-t-30">Skill Set</h4>
                                     <hr>
                                     <h5>Wordpress <span class="pull-right">80%</span></h5>

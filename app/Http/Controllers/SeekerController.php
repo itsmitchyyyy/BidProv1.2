@@ -18,7 +18,9 @@ class SeekerController extends Controller
         return view('admin/seekers');
     }
 
-    public function seekerProfile(){
+    public function seekerProfile($id){
+        $users = User::findOrFail($id);
         
+        return view('userprofiles/seeker')->with(array('data'=>$users));
     }
 }

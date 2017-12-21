@@ -40,7 +40,8 @@ Route::group(['middleware' => ['auth']], function(){
     //seeker
     Route::get('seeker', ['as' => 'seeker', 'uses' => 'ProjectController@getProjects']);
     Route::post('seeker', ['uses' => 'ProjectController@create']);
-    Route::get('seeker/profile', function(){
+   /* Route::get('seeker/profile', function(){
         return view('userprofiles/seeker');
-    });
+    });*/
+    Route::get('seeker/profile/{id}', ['as' => 'profile', 'uses' => 'SeekerController@seekerProfile']);
 });

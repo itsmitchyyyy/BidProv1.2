@@ -1,7 +1,7 @@
 @extends('layouts.loginapp')
 @section('content')
 <section id="wrapper" class="login-register">
-        <div class="login-box" style="">
+        <div class="login-box" style="margin-top:3%">
             <div class="white-box">
                 <form class="form-horizontal" method="POST" id="loginform" action="{{ route('register') }}">
                     {{ csrf_field() }}

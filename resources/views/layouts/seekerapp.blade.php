@@ -43,5 +43,15 @@
             this.value = parseFloat(this.value).toFixed(2);
         });
     </script>
-   
+    <script>
+        $(document).ready(function(){
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
+   <script>
+        $('#newDP').on('click', function(){
+            $('#previewImage').attr('src', $('#imageSrc').attr('src'));
+            $('#profileImage').modal('show');
+        });
+   </script>
 </html>
