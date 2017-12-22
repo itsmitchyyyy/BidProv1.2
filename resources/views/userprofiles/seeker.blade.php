@@ -37,17 +37,17 @@
                                 <div class="overlay-box">
                                     <div class="user-content">
                                     @if($data->avatar == null)
-                                        <a href="javascript:void(0)" id="newDP"><img src="/uploads/blank.png" id="imageSrc" class="thumb-lg img-circle" alt="img"></a>
+                                        <a href="javascript:void(0)" id="newDP" data-toggle="tooltip" title="Update profile picture"><img src="/uploads/blank.png" id="imageSrc" class="thumb-lg img-circle" alt="img"></a>
                                     @else
-                                        <a href="javascript:void(0)" id="newDP"1><img src="{{$data->avatar}}" id="imageSrc" class="thumb-lg img-circle" alt="img"></a>
+                                        <a href="javascript:void(0)" id="newDP" data-toggle="tooltip" title="Update profile picture"><img src="{{$data->avatar}}" id="imageSrc" class="thumb-lg img-circle" alt="img"></a>
                                     @endif
                                         <!--<h6><a href="#" id="newDP" class="text-white" data-toggle="tooltip" title="Set new profile picture">Edit Profile Picture</a></h6>-->
                                         <h4 class="text-white">{{$data->name}}</h4>
                                         <h5 class="text-white">{{$data->email}}</h5> </div>
                                 </div>
                             </div>
-                            <div class="user-btm-box">
-                                <div class="col-md-4 col-sm-4 text-center">
+                           <div class="user-btm-box">
+                                <!--<div class="col-md-4 col-sm-4 text-center">
                                     <p class="text-purple"><i class="ti-facebook"></i></p>
                                     <h1>258</h1> </div>
                                 <div class="col-md-4 col-sm-4 text-center">
@@ -55,16 +55,17 @@
                                     <h1>125</h1> </div>
                                 <div class="col-md-4 col-sm-4 text-center">
                                     <p class="text-danger"><i class="ti-dribbble"></i></p>
-                                    <h1>556</h1> </div>
+                                    <h1>556</h1> </div>-->
                             </div>
                         </div>
                     </div>
                     <div class="col-md-8 col-xs-12">
                         <div class="white-box">
-                            <ul class="nav customtab nav-tabs" role="tablist">
+                            <ul class="nav customtab nav-tabs" id="tabMenu" role="tablist">
                                 <li role="presentation" class="nav-item"><a href="#home" class="nav-link active" aria-controls="home" role="tab" data-toggle="tab" aria-expanded="true"><span class="visible-xs"><i class="fa fa-home"></i></span><span class="hidden-xs"> Activity</span></a></li>
                                 <li role="presentation" class="nav-item"><a href="#profile" class="nav-link" aria-controls="profile" role="tab" data-toggle="tab" aria-expanded="false"><span class="visible-xs"><i class="fa fa-user"></i></span> <span class="hidden-xs">Profile</span></a></li>
                                <!-- <li role="presentation" class="nav-item"><a href="#messages" class="nav-link" aria-controls="messages" role="tab" data-toggle="tab" aria-expanded="false"><span class="visible-xs"><i class="fa fa-envelope-o"></i></span> <span class="hidden-xs">Message</span></a></li>-->
+                               <li role="presentation" class="nav-item"><a href="#password" class="nav-link" aria-controls="password" role="tab" data-toggle="tab" aria-expanded="false"><span class="visible-xs"><i class="fa fa-key"></i></span> <span class="hidden-xs">Password</span></a></li>
                                 <li role="presentation" class="nav-item"><a href="#settings" class="nav-link" aria-controls="messages" role="tab" data-toggle="tab" aria-expanded="false"><span class="visible-xs"><i class="fa fa-cog"></i></span> <span class="hidden-xs">Setting</span></a></li>
                             </ul>
                             <div class="tab-content">
@@ -204,49 +205,94 @@
                                         </div>
                                     </div>
                                 </div>-->
+                                <div class="tab-pane" id="password">
+                                    <form action="{{ route('profile', ['id' => Auth::user()->id]) }}" class="form-horizontal form-material" method="post">
+                                        @if(session()->get('success'))
+                                            <div class="alert alert-success alert-dismissable fade show">
+                                                <button type="button" class="close" data-dismiss="alert"><i class="fa fa-close"></i></button>
+                                                {{ session()->get('success') }}
+                                            </div>
+                                        @endif
+                                        <div class="form-group{{ $errors->has('current_password') ? ' has-error' : ''}}">
+                                            <label class="col-md-12" for="current_password">Current Password</label>
+                                            <div class="col-md-12">
+                                                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                                <input type="password" name="current_password" placeholder="Current Password" id="current_password" class="form-control form-control-line">
+                                                @if($errors->has('current_password'))
+                                                    <p class="help-block" style="color:red">{{ $errors->first('current_password') }}</p>
+                                                @endif
+                                            </div>
+                                        </div>
+                                        <div class="form-group{{ $errors->has('password') ? ' has-error' : ''}}">
+                                            <label class="col-md-12">New Password</label>
+                                            <div class="col-md-12">
+                                                <input type="password" name="password" id="password" placeholder="New Password" class="form-control form-control-line">
+                                                @if($errors->has('password'))
+                                                    <p class="help-block" style="color:red">{{ $errors->first('password') }}</p>
+                                                @endif
+                                            </div>
+                                        </div>
+                                        <div class="form-group{{ $errors->has('password_confirmation') ? ' has-error' : ''}}">
+                                            <label class="col-md-12">Confirm Password</label>
+                                            <div class="col-md-12">
+                                                <input type="password" name="password_confirmation" id="password_confirmation" placeholder="Confirm Password" class="form-control form-control-line">
+                                                @if($errors->has('password_confirmation'))
+                                                    <p class="help-block" style="color:red">{{ $errors->first('password_confirmation') }}</p>
+                                                @endif
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-sm-12">
+                                                <button type="submit" class="btn btn-primary wew" style="background-color:#ee4b28;border:1px solid #ee4b28">Update Password</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <!-- SETTINGS TAB -->
                                 <div class="tab-pane" id="settings">
-                                    <form class="form-horizontal form-material">
+                                    <form class="form-horizontal form-material" method="post" action="">
                                         <div class="form-group">
                                             <label class="col-md-12">Full Name</label>
                                             <div class="col-md-12">
-                                                <input type="text" placeholder="Johnathan Doe" class="form-control form-control-line"> </div>
+                                                <input type="text" placeholder="Full Name" name="name" value="{{ $data->name }}" class="form-control form-control-line"> </div>
                                         </div>
                                         <div class="form-group">
                                             <label for="example-email" class="col-md-12">Email</label>
                                             <div class="col-md-12">
-                                                <input type="email" placeholder="johnathan@admin.com" class="form-control form-control-line" name="example-email" id="example-email"> </div>
+                                                <input type="email" placeholder="Email" name="email" value="{{ $data->email }}" class="form-control -line" name="example-email" id="example-email"> </div>
                                         </div>
-                                        <div class="form-group">
+                                        <!--<div class="form-group">
                                             <label class="col-md-12">Password</label>
                                             <div class="col-md-12">
                                                 <input type="password" value="password" class="form-control form-control-line"> </div>
-                                        </div>
+                                        </div>-->
                                         <div class="form-group">
-                                            <label class="col-md-12">Phone No</label>
+                                            <label class="col-md-12">Contact No</label>
                                             <div class="col-md-12">
-                                                <input type="text" placeholder="123 456 7890" class="form-control form-control-line"> </div>
+                                                <input type="text" placeholder="Contact No" name="contact" value="{{ $data->contact }}"  class="form-control form-control-line"> </div>
                                         </div>
-                                        <div class="form-group">
+                                       <!-- <div class="form-group">
                                             <label class="col-md-12">Message</label>
                                             <div class="col-md-12">
                                                 <textarea rows="5" class="form-control form-control-line"></textarea>
                                             </div>
-                                        </div>
+                                        </div>-->
                                         <div class="form-group">
-                                            <label class="col-sm-12">Select Country</label>
+                                            <label class="col-sm-12">Address</label>
                                             <div class="col-sm-12">
-                                                <select class="form-control form-control-line">
+                                            <input type="text" name="address" id="address" name="address" placeholder="Address" value="{{ $data->address }}" class="form-control form-control-line">
+                                               <!-- <select class="form-control form-control-line">
                                                     <option>London</option>
                                                     <option>India</option>
                                                     <option>Usa</option>
                                                     <option>Canada</option>
                                                     <option>Thailand</option>
-                                                </select>
+                                                </select>-->
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <div class="col-sm-12">
-                                                <button class="btn btn-success">Update Profile</button>
+                                                <button class="btn btn-primary wew" style="background-color:#ee4b28;border:1px solid #ee4b28">Update Profile</button>
                                             </div>
                                         </div>
                                     </form>
@@ -257,7 +303,7 @@
                 </div>
                 <!-- /.row -->
                 <!-- .right-sidebar -->
-                <div class="right-sidebar">
+                <!--<div class="right-sidebar">
                     <div class="slimscrollright">
                         <div class="rpanel-title"> Service Panel <span><i class="ti-close right-side-toggle"></i></span> </div>
                         <div class="r-panel-body">
@@ -328,11 +374,11 @@
                             </ul>
                         </div>
                     </div>
-                </div>
+                </div>-->
                 <!-- /.right-sidebar -->
             </div>
             <!-- /.container-fluid -->
-            <footer class="footer text-center"> 2017 &copy; Elite Admin brought to you by themedesigner.in </footer>
+            <footer class="footer text-center"> 2017 &copy;  brought to you by BidPro </footer>
         </div>
         <!-- /#page-wrapper -->
 @endsection
