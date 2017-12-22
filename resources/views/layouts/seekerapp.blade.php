@@ -59,4 +59,26 @@
         $('#tabMenu a[href="#{{ old('tab') }}"]').tab('show');
     });
    </script>
+   <script>
+    $(function(){
+        var addDiv = $('#addInput');
+        var i = $('#addInput p').length + 1;
+
+        $('#addNew').on('click', function(){
+            $('<p><input type="text" id="pNew" name="pNew[]" placeholder="New skill" class="form-control form-control-line"/><a href="#" id="remNew">Remove</a> </p>').appendTo(addDiv);
+            i++;
+            return false;
+        });
+
+        $('#addInput').on('click','#remNew', function(){
+            if( i > 2){
+                $(this).parents('p').remove();
+                i--;
+            }
+            return false;
+        });
+    });
+
+  
+   </script>
 </html>

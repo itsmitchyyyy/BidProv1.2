@@ -62,7 +62,20 @@ class SeekerController extends Controller
         }
     }
 
-    public function updateProfile(Request $request){
-        
+    public function updateProfile(Request $request, $id){
+     // $user =  User::find($id)->update($request->all());
+     $validator = Validator::make($request->all, [
+        'email' => 'email',
+        'contact' => 'numeric|size:11',
+     ]);
+        $user = User::find($id);
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->contact = $request->contact;
+        $user->address = $request->address;
+        $user->save(); 
+       return redirect('/seeker/profile/'.$user)
+            ->withInput(['tab' => 'settings'])
+            ->with('success','Profile updated');
     }
 }

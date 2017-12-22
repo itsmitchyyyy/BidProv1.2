@@ -144,6 +144,14 @@
                                     <p>It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>-->
                                     <h4 class="font-bold m-t-30">Skill Set</h4>
                                     <hr>
+                                    <form action="" class="form-horizontal form-material">
+                                    <div id="addInput" class="form-group">
+                                    <p>
+                                    <input type="text" id="pNew" name="pNew" placeholder="New skill" class="form-control form-control-line">
+                                     <a href="#" id="addNew">Add more</a>
+                                    </p>
+                                    </div>
+                                    </form>
                                     <h5>Wordpress <span class="pull-right">80%</span></h5>
                                     <div class="progress">
                                         <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width:80%;"> <span class="sr-only">50% Complete</span> </div>
@@ -250,16 +258,25 @@
                                 </div>
                                 <!-- SETTINGS TAB -->
                                 <div class="tab-pane" id="settings">
-                                    <form class="form-horizontal form-material" method="post" action="">
+                                    <form class="form-horizontal form-material" method="post" action="{{ route('profile', ['id' => Auth::user()->id]) }}">
+                                     
+                                        @if(session()->get('success'))
+                                            <div class="alert alert-success alert-dismissable fade show">
+                                                <button type="button" class="close" data-dismiss="alert"><i class="fa fa-close"></i></button>
+                                                {{ session()->get('success') }}
+                                            </div>
+                                        @endif
+                                        <input type="hidden" name="_method" value="PATCH">
+                                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                         <div class="form-group">
-                                            <label class="col-md-12">Full Name</label>
+                                            <label class="col-md-12">Name</label>
                                             <div class="col-md-12">
-                                                <input type="text" placeholder="Full Name" name="name" value="{{ $data->name }}" class="form-control form-control-line"> </div>
+                                                <input type="text" placeholder="Name" name="name" value="{{ $data->name }}" class="form-control form-control-line"> </div>
                                         </div>
                                         <div class="form-group">
                                             <label for="example-email" class="col-md-12">Email</label>
                                             <div class="col-md-12">
-                                                <input type="email" placeholder="Email" name="email" value="{{ $data->email }}" class="form-control -line" name="example-email" id="example-email"> </div>
+                                                <input type="email" placeholder="Email" name="email" value="{{ $data->email }}" class="form-control -line"  id="example-email"> </div>
                                         </div>
                                         <!--<div class="form-group">
                                             <label class="col-md-12">Password</label>
