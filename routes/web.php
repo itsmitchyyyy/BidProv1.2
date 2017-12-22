@@ -44,4 +44,5 @@ Route::group(['middleware' => ['auth']], function(){
         return view('userprofiles/seeker');
     });*/
     Route::get('seeker/profile/{id}', ['as' => 'profile', 'uses' => 'SeekerController@seekerProfile']);
+    Route::post('seeker/profile/{id}', ['uses' => 'SeekerController@updatePassword']);
 });
