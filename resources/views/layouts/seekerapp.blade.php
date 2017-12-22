@@ -54,4 +54,9 @@
             $('#profileImage').modal('show');
         });
    </script>
+   <script>
+    $(document).ready(function(){
+        $('#tabMenu a[href="#{{ old('tab') }}"]').tab('show');
+    });
+   </script>
 </html>
