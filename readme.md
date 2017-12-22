@@ -8,7 +8,7 @@ BidPro is an online bidding system for software development projects.
 
 ## BidPro Sponsors
 
-We would like to extend our thanks to the following sponsors for helping fund on-going BidPro development. If you are interested in becoming a sponsor, please visit the BidPro (http://localhost:8000):
+We would like to extend our thanks to the following sponsors for helping the codes we dont know for our on-going BidPro development. If you are interested in becoming a sponsor, please visit the BidPro (http://localhost:8000):
 
 - **[Stackoverflow](https://stackoverflow.com)**
 - **[Google](https://google.com)**
