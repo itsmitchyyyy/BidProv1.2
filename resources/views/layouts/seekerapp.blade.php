@@ -31,6 +31,12 @@
      @endif
     </script>
     <script>
+    @if(count($errors))
+        $('#profileImage').modal('show');
+        $('#profileImage').data('bs.modal').handleUpdate();
+    @endif
+    </script>
+    <script>
         var maxChar = 255;
         $('#charLeft').text(maxChar + ' characters left');
         $('#details').keyup(function(){

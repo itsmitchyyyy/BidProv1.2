@@ -13,11 +13,20 @@
         <label for="upload">
             <img src="" id="previewImage"  alt="profile picture" class="img wew" data-toggle="tooltip" title="Select Image">
             </label>
-            <input type="file" name="upload" id="upload" style="display:none" onchange="loadImage(event)">
+            <form method="POST" enctype="multipart/form-data" action="{{ route('profile', ['id' => Auth::user()->id]) }}">
+            <input type="hidden" name="_method" value="PATCH">
+            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+            <input type="file" name="avatar" id="upload" style="display:none" onchange="loadImage(event)">
+            
+            @if($errors->has('avatar'))
+                <p class="help-block">{{ $errors->first('avatar') }}</p>
+            @endif
         </div>
         </div>
         <div class="modal-footer">
             <button type="button" class="btn wew btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn wew btn-primary" style="background-color:#ee4b28">Update</button>
+            </form>
         </div>
     </div>
 </div>
@@ -44,7 +53,7 @@
                                     @if($data->avatar == null)
                                         <a href="javascript:void(0)" id="newDP" data-toggle="tooltip" title="Update profile picture"><img src="/uploads/blank.png" id="imageSrc" class="thumb-lg img-circle" alt="img"></a>
                                     @else
-                                        <a href="javascript:void(0)" id="newDP" data-toggle="tooltip" title="Update profile picture"><img src="{{$data->avatar}}" id="imageSrc" class="thumb-lg img-circle" alt="img"></a>
+                                        <a href="javascript:void(0)" id="newDP" data-toggle="tooltip" title="Update profile picture"><img src="/{{$data->avatar}}" id="imageSrc" class="thumb-lg img-circle" alt="img"></a>
                                     @endif
                                         <!--<h6><a href="#" id="newDP" class="text-white" data-toggle="tooltip" title="Set new profile picture">Edit Profile Picture</a></h6>-->
                                         <h4 class="text-white">{{$data->name}}</h4>

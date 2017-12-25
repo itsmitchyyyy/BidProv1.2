@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
+//use Intervention\Image\Facades\Image;
 use Hash;
+use Image;
 //use Illuminate\Support\Facades\Redirect;
 use App\User;
 class SeekerController extends Controller
@@ -85,4 +87,29 @@ class SeekerController extends Controller
             ->with('success','Profile updated');
         }
         }
+
+    public function updateAvatar(Request $request, $id){
+        $validator = Validator::make($request->all(),[
+            'avatar' => 'image',
+        ]);
+        if($validator->fails()){
+           
+            return redirect('/seeker/profile/'.$id)
+                ->withErrors($validator);
+           
+            }else{
+            if($request->hasFile('avatar')){
+                $user = User::find($id);
+                $file = $request->file('avatar');
+                $file->move('uploads', $file->getClientOriginalName());
+                $image_path = "uploads/". $file->getClientOriginalName();
+               // Image::make($file->getRealPath())->resize(225,225)->save($image_path);
+                //$image = Image::make(sprintf('resize/%s', $file->getClientOriginalName()))-resize(225,225)->save();
+                $user->avatar = $image_path;
+                $user->save();
+
+                return redirect('/seeker/profile/'.$id);
+            }
+        }
+    }
 }
