@@ -265,7 +265,7 @@
                                         </div>
                                         <div class="form-group">
                                             <div class="col-sm-12">
-                                                <button type="submit" class="btn btn-primary wew" style="background-color:#ee4b28;border:1px solid #ee4b28">Update Password</button>
+                                                <button type="submit" id="updatePassword" class="btn btn-primary wew" style="background-color:#ee4b28;border:1px solid #ee4b28">Update Password</button>
                                             </div>
                                         </div>
                                     </form>
@@ -335,7 +335,7 @@
                                         </div>
                                         <div class="form-group">
                                             <div class="col-sm-12">
-                                                <button class="btn btn-primary wew" style="background-color:#ee4b28;border:1px solid #ee4b28">Update Profile</button>
+                                                <button class="btn btn-primary wew" id="updateProfile"  style="background-color:#ee4b28;border:1px solid #ee4b28">Update Profile</button>
                                             </div>
                                         </div>
                                     </form>
