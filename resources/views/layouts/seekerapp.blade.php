@@ -41,6 +41,47 @@
     });
     </script>
     <script>
+        $(document).ready(function(){
+            $('#updatePassword').attr('disabled',true);
+            $('form :input').not('#updatePassword').bind('keyup', function(){
+                if($(this).val().length != 0){
+                    $('#updatePassword').attr('disabled', false);
+                }else{
+                    $('#updatePassword').attr('disabled', true);
+                }
+            });
+        })
+    </script>
+    <script>
+        $('form').each(function(){
+            $(this).data('serialized', $(this).serialize())
+        }).on('change input', function(){
+            $(this).find('#updateProfile').prop('disabled', $(this).serialize() == $(this).data('serialized'));
+        }).find('#updateProfile').prop('disabled',true);
+    </script>
+    <!--<script>
+        var button = $('#updateProfile');
+        button.attr('disabled',true);
+        $('form :input').not(button).bind('keyup change', function(){
+            var changed = $('form :input').not(button).filter(function(){
+                if(this.type == 'radio' || this.type == 'checkbox'){
+                    return this.checked != $(this).data('default');
+                }else{
+                    return this.value != $(this).data('default');
+                }
+            });
+            $('#updateProfile').prop('disabled', !changed.length);
+        });
+    </script>-->
+    <!--<script>
+        $(document).ready(function(){
+            $('#updateProfile').attr('disabled',true);
+            $('form :input').not('#updateProfile').bind('keyup change',function(){
+                $('#updateProfile').attr('disabled',false);
+            });
+        });
+    </script>-->
+    <script>
         var maxChar = 255;
         $('#charLeft').text(maxChar + ' characters left');
         $('#details').keyup(function(){
