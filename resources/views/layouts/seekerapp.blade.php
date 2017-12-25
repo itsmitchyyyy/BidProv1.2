@@ -10,6 +10,11 @@
         .wew:hover{
             cursor:pointer;
         }
+        .img{
+            height:150px;
+            width:200px;
+            -o-object-fit:contain;
+        }
     </style>
     <link rel="stylesheet" href="{{ asset('css/seeker/seeker.css') }}">
     <script src="{{ asset('js/app.js') }}"></script>
@@ -80,5 +85,11 @@
     });
 
   
+   </script>
+   <script>
+        var loadImage = function(event){
+            var image = document.getElementById('previewImage');
+            image.src = URL.createObjectURL(event.target.files[0]);
+        }
    </script>
 </html>

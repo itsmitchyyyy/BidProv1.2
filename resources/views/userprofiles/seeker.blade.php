@@ -8,11 +8,16 @@
             <button type="button" data-dismiss="modal" class="close"><span aria-hidden="true">x</span></button>
             <h4 class="modal-title" id="profileImageLabel">Set new profile picture</h4>
         </div>
-        <div class="modal-body">
-            <img src="" id="previewImage" alt="profile picture">
+        <div class="modal-body text-center">
+        <div style="height:150px;width:200px;" class="ml-auto mr-auto">
+        <label for="upload">
+            <img src="" id="previewImage"  alt="profile picture" class="img wew" data-toggle="tooltip" title="Select Image">
+            </label>
+            <input type="file" name="upload" id="upload" style="display:none" onchange="loadImage(event)">
+        </div>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn wew btn-secondary" data-dismiss="modal">Close</button>
         </div>
     </div>
 </div>
@@ -268,25 +273,34 @@
                                         @endif
                                         <input type="hidden" name="_method" value="PATCH">
                                          <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                        <div class="form-group">
+                                        <div class="form-group{{ $errors->has('name') ? ' has-error' : ''}}">
                                             <label class="col-md-12">Name</label>
                                             <div class="col-md-12">
                                                 <input type="text" placeholder="Name" name="name" value="{{ $data->name }}" class="form-control form-control-line"> </div>
+                                                @if($errors->has('name'))
+                                                    <p class="help-block">{{ $errors->first('name') }}</p>
+                                                @endif
                                         </div>
-                                        <div class="form-group">
+                                        <div class="form-group{{ $errors->has('email') ? ' has-error' : ''}}">
                                             <label for="example-email" class="col-md-12">Email</label>
                                             <div class="col-md-12">
                                                 <input type="email" placeholder="Email" name="email" value="{{ $data->email }}" class="form-control -line"  id="example-email"> </div>
+                                                @if($errors->has('name'))
+                                                    <p class="help-block">{{ $errors->first('email') }}</p>
+                                                @endif
                                         </div>
                                         <!--<div class="form-group">
                                             <label class="col-md-12">Password</label>
                                             <div class="col-md-12">
                                                 <input type="password" value="password" class="form-control form-control-line"> </div>
                                         </div>-->
-                                        <div class="form-group">
+                                        <div class="form-group{{ $errors->has('contact') ? ' has-error' : ''}}">
                                             <label class="col-md-12">Contact No</label>
                                             <div class="col-md-12">
                                                 <input type="text" placeholder="Contact No" name="contact" value="{{ $data->contact }}"  class="form-control form-control-line"> </div>
+                                                @if($errors->has('contact'))
+                                                    <p class="help-block">{{ $errors->first('contact') }}</p>
+                                                @endif
                                         </div>
                                        <!-- <div class="form-group">
                                             <label class="col-md-12">Message</label>
@@ -294,7 +308,7 @@
                                                 <textarea rows="5" class="form-control form-control-line"></textarea>
                                             </div>
                                         </div>-->
-                                        <div class="form-group">
+                                        <div class="form-group{{ $errors->has('address') ? ' has-error' : ''}}">
                                             <label class="col-sm-12">Address</label>
                                             <div class="col-sm-12">
                                             <input type="text" name="address" id="address" name="address" placeholder="Address" value="{{ $data->address }}" class="form-control form-control-line">
@@ -305,6 +319,9 @@
                                                     <option>Canada</option>
                                                     <option>Thailand</option>
                                                 </select>-->
+                                                @if($errors->has('address'))
+                                                    <p class="help-block">{{ $errors->first('address') }}</p>
+                                                @endif
                                             </div>
                                         </div>
                                         <div class="form-group">
