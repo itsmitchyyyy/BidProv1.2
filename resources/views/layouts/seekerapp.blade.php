@@ -31,10 +31,14 @@
      @endif
     </script>
     <script>
-    @if(count($errors))
+    @if($errors->has('avatar'))
         $('#profileImage').modal('show');
         $('#profileImage').data('bs.modal').handleUpdate();
     @endif
+    $('#profileImage').on('hidden.bs.modal', function(){
+        $(this).removeData();
+        $('#uploadBtn').attr('disabled','disabled');
+    });
     </script>
     <script>
         var maxChar = 255;
@@ -89,13 +93,20 @@
             return false;
         });
     });
-
-  
    </script>
    <script>
         var loadImage = function(event){
             var image = document.getElementById('previewImage');
             image.src = URL.createObjectURL(event.target.files[0]);
         }
+   </script>
+   <script>
+   $('#myUpload').change(function(){
+        if($(this).val()){
+            $('#uploadBtn').attr('disabled',false);
+        }else{
+            $('#uploadBtn').attr('disabled', 'disabled');
+        }
+   });
    </script>
 </html>

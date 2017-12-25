@@ -10,13 +10,13 @@
         </div>
         <div class="modal-body text-center">
         <div style="height:150px;width:200px;" class="ml-auto mr-auto">
-        <label for="upload">
+        <label for="myUpload">
             <img src="" id="previewImage"  alt="profile picture" class="img wew" data-toggle="tooltip" title="Select Image">
             </label>
             <form method="POST" enctype="multipart/form-data" action="{{ route('profile', ['id' => Auth::user()->id]) }}">
             <input type="hidden" name="_method" value="PATCH">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
-            <input type="file" name="avatar" id="upload" style="display:none" onchange="loadImage(event)">
+            <input type="file" name="avatar" id="myUpload" style="display:none"  onchange="loadImage(event)">
             
             @if($errors->has('avatar'))
                 <p class="help-block">{{ $errors->first('avatar') }}</p>
@@ -24,8 +24,8 @@
         </div>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn wew btn-secondary" data-dismiss="modal">Close</button>
-            <button type="submit" class="btn wew btn-primary" style="background-color:#ee4b28">Update</button>
+            <button type="button"  class="btn wew btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" disabled id="uploadBtn" class="btn wew btn-primary" style="background-color:#ee4b28">Update</button>
             </form>
         </div>
     </div>
