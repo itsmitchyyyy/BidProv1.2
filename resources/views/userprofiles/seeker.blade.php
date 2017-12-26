@@ -13,7 +13,7 @@
         <label for="myUpload">
             <img src="" id="previewImage"  alt="profile picture" class="img wew" data-toggle="tooltip" title="Select Image">
             </label>
-            <form method="POST" enctype="multipart/form-data" action="{{ route('profile', ['id' => Auth::user()->id]) }}">
+            <form method="POST" enctype="multipart/form-data" action="{{ route('avatar', ['id' => Auth::user()->id]) }}">
             <input type="hidden" name="_method" value="PATCH">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
             <input type="file" name="avatar" id="myUpload" style="display:none"  onchange="loadImage(event)">
