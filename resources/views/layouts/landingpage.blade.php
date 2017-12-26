@@ -10,8 +10,25 @@
     <!--<script src="{{ asset('js/app.js') }}"></script>-->
 </head>
 <body id="page-top">
+    @if(Auth::check())
+    @if(Auth::user()->hasRoles('admin'))
+    <script>
+        window.location.href = "{{ route('admin') }}";
+    </script>
+    @elseif(Auth::user()->hasRoles('seeker'))
+    <script>
+        window.location.href = "{{ route('seeker') }}";
+    </script>
+    @elseif(Auth::user()->hasRoles('bidder'))
+    <script>
+        window.location.href = "{{ route('bidder') }}";
+    </script>
+    @endif
+    @else
     @include('inc.landingNav')
     @yield('content')
+    @endif
+    
 </body>
     <!--<script src="{{ asset('js//bower_components/jquery/dist/jquery.min.js') }}"></script>-->
     <script src="{{ asset('js/landing-page/jquery/jquery.min.js') }}"></script>
