@@ -69,7 +69,7 @@ class SeekerController extends Controller
      $validator = Validator::make($request->all(), [
         'email' => 'required|string|email',
         'name' => 'required|max:255',
-        'contact' => 'digits:11',
+        'contact' => 'sometimes|nullable|digits:11',
      ]);
      if($validator->fails()){
          return redirect('/seeker/profile/'.$id)
