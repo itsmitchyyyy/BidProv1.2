@@ -45,11 +45,11 @@
                                             <td>{{ $seeker->id }}</td>
                                             <td>{{ $seeker->name }}</td>
                                             <td>{{ $seeker->email }}</td>
-                                            <td>61</td>
-                                            <td>2011/04/25</td>
+                                            <td>{{ $seeker->contact }}</td>
+                                            <td>{{ $seeker->address }}</td>
                                             <td class="text-nowrap">
-                                                <a href="edit-profile-seek.html" data-toggle="tooltip" data-original-title="Edit"> <i class="fa fa-pencil text-inverse m-r-10"></i> </a>
-                                                <a href="#" data-toggle="tooltip" data-original-title="Close"> <i class="fa fa-trash text-danger m-r-10"></i> </a>
+                                                <a href="edit-profile-seek.html" data-toggle="tooltip" title="Edit" data-original-title="Edit"> <i class="fa fa-pencil text-inverse m-r-10"></i> </a>
+                                                <a href="#" data-toggle="tooltip" tilte="Delete" data-original-title="Close"> <i class="fa fa-trash text-danger m-r-10"></i> </a>
                                                 <a href="view-profile-seek.html" data-toggle="tooltip" data-original-title="View"> <i class="fa fa-eye text-success m-r-10"></i> </a>
                                             </td>
                                         </tr>
