@@ -22,7 +22,7 @@ Route::get('logout', 'LoginController@logout')->name('logout');
 Route::get('register', 'RegisterController@registerForm')->name('register');
 Route::post('register', 'RegisterController@register');
 Route::get('reset/{token}' ,'ResetController@getReset')->name('password.reset');
-Route::post('reset', 'RestController@postReset')->name('password.request');
+Route::post('reset', 'ResetController@postReset')->name('password.request');
 Route::group(['middleware' => ['auth']], function(){
 
     //admin
@@ -46,5 +46,5 @@ Route::group(['middleware' => ['auth']], function(){
     Route::get('seeker/profile/{id}', ['as' => 'profile', 'uses' => 'SeekerController@seekerProfile']);
     Route::post('seeker/profile/{id}', ['uses' => 'SeekerController@updatePassword']);
     Route::patch('seeker/profile/{id}', [ 'uses' => 'SeekerController@updateProfile']);
-    Route::patch('seeker/profile/{id}', ['uses' => 'SeekerController@updateAvatar']);
+    Route::patch('seeker/avatar/{id}', ['as' => 'avatar', 'uses' => 'SeekerController@updateAvatar']);
 });
