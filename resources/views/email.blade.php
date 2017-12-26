@@ -16,12 +16,12 @@
                             </div>
                         @endif
                     </div>
-                    <div class="form-group ">
+                    <div class="form-group{{ $errors->has('email') ? ' has-error' : ''}} ">
                         <div class="col-xs-12">
                             <input class="form-control" type="email" required="" name="email" placeholder="Email">
                         </div>
                         @if($errors->has('email'))
-                            <span class="help-block">
+                            <span class="help-block" style="color:red">
                                 <strong>{{ $errors->first('email') }}</strong>
                             </span>
                         @endif
