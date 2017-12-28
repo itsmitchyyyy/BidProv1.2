@@ -21,7 +21,7 @@ class UserTableSeeder extends Seeder
         $admin->email = 'admin@bidpro.com';
         $admin->username = 'admin';
         $admin->password = bcrypt('admin!@#');
-        $admin->avatar = '/uploads/blank.png';
+        $admin->avatar = 'uploads/blank.png';
         $admin->save();
         $admin->roles()->attach($role_admin);
 
@@ -30,7 +30,7 @@ class UserTableSeeder extends Seeder
         $bidder->email = 'bidder@bidpro.com';
         $bidder->username = 'bidder';
         $bidder->password = bcrypt('bidder!@#');
-        $bidder->avatar = '/uploads/blank.png';
+        $bidder->avatar = 'uploads/blank.png';
         $bidder->save();
         $bidder->roles()->attach($role_bidder);
     
@@ -39,7 +39,7 @@ class UserTableSeeder extends Seeder
         $seeker->email = 'seeker@bidpro.com';
         $seeker->username = 'seeker';
         $seeker->password = bcrypt('seeker!@#');
-        $seeker->avatar = '/uploads/blank.png';
+        $seeker->avatar = 'uploads/blank.png';
         $seeker->save();
         $seeker->roles()->attach($role_seeker);
     }
