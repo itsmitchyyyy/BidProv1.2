@@ -26,5 +26,5 @@
     <script src="{{ asset('js/jquery.slimscroll.js') }}"></script>
     <script src="{{ asset('js/waves.js') }}"></script>
     <script src="{{ asset('js/custom.min.js') }}"></script>
-    <script src="{{ asset('js/bower_components/styleswitcher/jQuery.style.switcher.js') }}"></script>x`
+    <script src="{{ asset('js/bower_components/styleswitcher/jQuery.style.switcher.js') }}"></script>
     </html>
