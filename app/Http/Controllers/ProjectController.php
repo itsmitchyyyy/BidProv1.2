@@ -50,6 +50,17 @@ class ProjectController extends Controller
             
         return view('users/seeker')->with(array('projects'=>$projects));
     }
+
+    public function getProjectsBidder()
+    {
+        $projects = DB::table('projects')
+            ->join('users', 'projects.user_id', '=', 'users.id')
+            ->orderBy('projects.id','desc')
+            ->select('*','projects.id as project_id')
+            ->get();
+
+            return view('users/bidder')->with(array('projects'=>$projects));
+    }
     public function seekerView(){
         return view('users/seeker');
     }
