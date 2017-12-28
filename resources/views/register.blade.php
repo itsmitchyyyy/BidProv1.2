@@ -9,7 +9,7 @@
                     <h3 class="box-title m-b-20">Sign Up</h3>
                     <div class="floating-labels">
                   <div class="form-group{{ $errors->has('name') ? ' has-error' : ''}} ">
-                    <input type="text" name="name" id="name" class="form-control" required>
+                    <input type="text" name="name" id="name" value="{{ old('name') }}" class="form-control" required>
                     <span class="highlight"></span><span class="bar"></span>
                     <label for="name">Name</label>
                     @if($errors->has('name'))
@@ -19,7 +19,7 @@
                   </div>
                   <div class="floating-labels">
                   <div class="form-group{{ $errors->has('email') ? ' has-error' : ''}} ">
-                    <input type="text" name="email" id="email" class="form-control" required>
+                    <input type="text" name="email" id="email"  class="form-control" required>
                     <span class="highlight"></span><span class="bar"></span>
                     <label for="email">Email</label>
                     @if($errors->has('email'))
@@ -29,7 +29,7 @@
                   </div>
                   <div class="floating-labels">
                   <div class="form-group{{ $errors->has('username') ? ' has-error' : ''}} ">
-                    <input type="text" name="username" id="username" class="form-control" required>
+                    <input type="text" name="username" id="username"  class="form-control" required>
                     <span class="highlight"></span><span class="bar"></span>
                     <label for="username">Username</label>
                     @if($errors->has('username'))
@@ -39,7 +39,7 @@
                   </div>
                   <div class="floating-labels">
                   <div class="form-group{{ $errors->has('password') ? ' has-error' : ''}} ">
-                    <input type="password" name="password" id="password" class="form-control" required>
+                    <input type="password" name="password" id="password"  class="form-control" required>
                     <span class="highlight"></span><span class="bar"></span>
                     <label for="password">Password</label>
                     @if($errors->has('password'))
