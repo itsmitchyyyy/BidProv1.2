@@ -47,4 +47,8 @@ Route::group(['middleware' => ['auth']], function(){
     Route::post('seeker/profile/{id}', ['uses' => 'SeekerController@updatePassword']);
     Route::patch('seeker/profile/{id}', [ 'uses' => 'SeekerController@updateProfile']);
     Route::patch('seeker/avatar/{id}', ['as' => 'avatar', 'uses' => 'SeekerController@updateAvatar']);
+
+    //bidder
+
+    Route::get('bidder', ['as' => 'bidder', 'uses' => 'ProjectCOntroller@getProjectsBidder']);
 });
