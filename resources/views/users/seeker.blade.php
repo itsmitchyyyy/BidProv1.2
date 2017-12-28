@@ -1,7 +1,7 @@
 @extends('layouts.seekerapp')
 @section('content')
  
-<div class="container m-t-10">
+<div class="container-fluid m-t-10">
     @if(session()->has('success'))
     <div class="alert alert-success">
         {{ session()->get('success') }}
@@ -73,7 +73,7 @@
        
             <form action="{{ route('seeker') }}" class="floating-labels" method="post">
                 {{ csrf_field() }}
-        <div class="form-group{{ $errors->has('title') ? ' has-error' : ''}} m-b-40 m-t-15">
+        <div id="form-group" class="form-group{{ $errors->has('title') ? ' has-error' : ''}} m-b-40 m-t-15">
             <input type="text" name="title" id="title" class="form-control" required>
             <span class=""></span><span class="bar"></span>
             <label for="title">Title</label>
@@ -131,7 +131,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary wew" data-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-primary wew" style="background-color:#ee4b28;border:2px solid #ee4b28">Post</button>
+        <button type="submit" id="addBtn" class="btn btn-primary wew" style="background-color:#ee4b28;border:2px solid #ee4b28">Post</button>
       </div>
       </form>
     </div>
