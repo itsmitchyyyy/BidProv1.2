@@ -29,7 +29,7 @@ class LoginController extends Controller
                 if($request->user()->hasRoles('admin')){
                     return redirect()->route('admin');
                 }elseif ($request->user()->hasRoles('bidder')) {
-                    # code...
+                    return redirect()->route('bidder');
                 }elseif ($request->user()->hasRoles('seeker')) {
                     return redirect()->route('seeker');
                 }else {
@@ -41,7 +41,7 @@ class LoginController extends Controller
             if($request->user()->hasRoles('admin')){
                 return redirect()->route('admin');
             }elseif ($request->user()->hasRoles('bidder')) {
-              
+                return redirect()->route('bidder');
             }elseif ($request->user()->hasRoles('seeker')) {
                 return redirect()->route('seeker');
             }
