@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Auth;
 use App\User;
 use App\Role;
 class RegisterController extends Controller
@@ -34,7 +35,8 @@ class RegisterController extends Controller
         $type = Input::get('type');
         $user->save();
         $user->roles()->attach(Role::where('name', $type)->first());
-
-        return redirect()->route('seeker');
+        Auth::login($user);
+        return redirect('seeker/profile/'.$user->id)
+            ->withInput(['tab' => 'settings']);
     }
 }
