@@ -17,4 +17,6 @@ class BidderController extends Controller
    public function bidderView(){
        return view('admin/developers');
    }
+
+   
 }
