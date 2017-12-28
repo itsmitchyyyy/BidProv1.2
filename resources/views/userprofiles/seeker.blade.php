@@ -123,7 +123,13 @@
                                         </div>-->
                                         
                                         <div class="sl-item">
-                                            <div class="sl-left"> <img src="/img/users/govinda.jpg" alt="user" class="img-circle" /> </div>
+                                            <div class="sl-left">
+                                            @if($data->avatar !== null)
+                                             <img src="/{{ $data->avatar }}" alt="user" class="img-circle" />
+                                             @else
+                                             <img src="/uploads/blank.png" alt="user" class="img-circle" />
+                                             @endif
+                                             </div>
                                             <div class="sl-right">
                                                 <div class="m-l-40"><a href="#" class="text-info">{{ $data->name }}</a> <span class="sl-date">5 minutes ago</span>
                                                     <p>assign a new task <a href="#"> Design weblayout</a></p>
