@@ -26,7 +26,7 @@
         {{ ucwords(Auth::user()->name) }}
       </a>
       <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-        <a class="dropdown-item" href="{{ route('profile',['id' => Auth::user()->id]) }}"><i class="ti-user"></i> Profile</a>
+        <a class="dropdown-item" href="{{ route('bidderprofile',['id' => Auth::user()->id]) }}"><i class="ti-user"></i> Profile</a>
         <a class="dropdown-item" href="{{ route('logout') }}"><i class="fa fa-power-off"></i> Logout</a>
       </div>
     </li>
