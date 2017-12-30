@@ -48,7 +48,7 @@ class ProjectController extends Controller
             ->get();
         
             
-        return view('users/seeker')->with(array('projects'=>$projects));
+        return view('projects/seeker')->with(array('projects'=>$projects));
     }
 
     public function getProjectsBidder()
