@@ -52,7 +52,4 @@ Route::group(['middleware' => ['auth']], function(){
     //bidder
     Route::get('bidder', ['as' => 'bidder', 'uses' => 'ProjectCOntroller@getProjectsBidder']);
     Route::get('bidder/profile/{id}', ['as' => 'bidderprofile', 'uses' => 'BidderController@bidderProfile']);
-    Route::get('bidder/proposal', function(){
-        return view('proposal/bidder');
-    });
 });
