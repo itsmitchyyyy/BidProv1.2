@@ -36,7 +36,12 @@ class RegisterController extends Controller
         $user->save();
         $user->roles()->attach(Role::where('name', $type)->first());
         Auth::login($user);
+        if(Auth::user()->hasRoles('seeker')){
         return redirect('seeker/profile/'.$user->id)
             ->withInput(['tab' => 'settings']);
+        }elseif(Auth::user()->hasRoles('bidder')){
+            return redirect('bidder/profile/'.$user->id)
+            ->withInput(['tab' => 'settings']);
+        }
     }
 }
