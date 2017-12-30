@@ -112,7 +112,7 @@
   <div class="modal-dialog modal-md" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <button class="close"  data-toggle="modal" data-dismiss="modal" data-target="#viewProject{{ $project->project_id }}"><i class="fa fa-close"></i></button>
+        <button class="close"   data-dismiss="modal"><i class="fa fa-close"></i></button>
         <h3 class="modal-title">Proposal</h3>
       </div>
       <div class="modal-body">
@@ -124,6 +124,18 @@
               <label for="details">Proposal Details</label>
             </div>
           </div>
+      
+            <div class="floating-labels">
+              <div class="form-group" id="divModule">
+              <h4>Modules</h4>
+              <p>
+              <input type="text" name="module[]" id="newModule" placeholder="New Module" class="form-control">
+              <span class="bar"></span>
+               <a href="#" id="addModule">Add Module</a>
+               </p>
+              </div>
+            </div>
+         
           <div class="floating-labels">
             <div class="form-group">
               <input type="number" name="price" id="price" class="form-control" required>
