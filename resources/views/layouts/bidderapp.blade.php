@@ -27,4 +27,21 @@
     @yield('content')
     
 </body>
+<script>
+    $(".proposeBtn").on('click',function(e){
+        var id = $(this).data('id');
+        e.preventDefault();
+        $('.viewModal')
+            .modal('hide')
+            .on('hidden.bs.modal',function(e){
+                $('#proposeModal'+id).modal('show');
+                $(this).off('hidden.bs.modal');
+            });
+    });
+</script>
+<script>
+    $('#price').change(function(){
+        this.value = parseFloat(this.value).toFixed(2);
+    })
+</script>
 </html>
