@@ -81,7 +81,7 @@
 </div>
 
  <!-- START OF VIEW PROFILE -->
- <div class="modal fade" id="viewProject{{ $project->project_id }}" tabindex="-1" role="dialog" aria-labelledby="viewProfileLabel" aria-hidden="true">
+ <div class="modal fade viewModal" id="viewProject{{ $project->project_id }}" tabindex="-1" role="dialog" aria-labelledby="viewProfileLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -91,7 +91,7 @@
         <h5 class="modal-title" id="viewProfileLabel">Project Details</h5>
       </div>
       <div class="modal-body">
-        <label>Project Title: <label><h3>{{ $project->title }}</h3>
+        <b>Project Title: </b><h3>{{ $project->title }}</h3>
         <label>Details: </label><h4>{{ $project->details }}</h4>
         <label>Start Date: </label><p>{{ $project->start }}</p>
         <label>Due Date: </label><p>{{ $project->end }}</p>
@@ -100,12 +100,53 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary wew" data-dismiss="modal" >Close</button>
-        <button type="submit" class="btn btn-primary wew" style="background-color:#ee4b28;border:2px solid #ee4b28">Accept Bid</button>
+        <button type="submit" class="btn btn-primary wew proposeBtn" style="background-color:#ee4b28;border:2px solid #ee4b28" data-id="{{ $project->project_id }}" data-toggle="modal">Propose</button>
       </div>
     </div>
   </div>
 </div>
   <!-- END OF VIEW PROFILE -->
+
+  <!-- PROPOSE MODAL -->
+<div class="modal fade proposeModal" id="proposeModal{{ $project->project_id }}" tab-index="-1" role="dialog">
+  <div class="modal-dialog modal-md" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close"  data-toggle="modal" data-dismiss="modal" data-target="#viewProject{{ $project->project_id }}"><i class="fa fa-close"></i></button>
+        <h3 class="modal-title">Proposal</h3>
+      </div>
+      <div class="modal-body">
+        <form action="" class="form-horizontal">
+          <div class="floating-labels">
+            <div class="form-group">
+              <textarea name="details" id="details" style="height:auto" class="form-control" rows="4" maxlength="255" required></textarea>
+              <span class="highlight"></span><span class="bar"></span>
+              <label for="details">Proposal Details</label>
+            </div>
+          </div>
+          <div class="floating-labels">
+            <div class="form-group">
+              <input type="number" name="price" id="price" class="form-control" required>
+              <span class="highlight"></span><span class="bar"></span>
+              <label for="price">Price</label>
+            </div>
+          </div>
+          <div class="floating-labels">
+            <div class="form-group">
+              <input type="text" name="date" id="date" class="form-control"  required>
+              <span class="highlight"></span><span class="bar"></span>
+              <label for="Date">Duration</label>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary wew" data-toggle="modal" data-dismiss="modal" data-target="#viewProject{{ $project->project_id }}">Cancel</button>
+        <button type="submit" class="btn btn-primary wew" style="background-color:#ee4b28;border-bottom-color:#ee4b28">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>
 @endforeach
   </div>
 </div>
