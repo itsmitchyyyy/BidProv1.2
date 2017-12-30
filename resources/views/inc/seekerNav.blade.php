@@ -8,6 +8,9 @@
     <li class="nav-item{{ Request::is('seeker') ? ' active' : ''}}">
       <a class="nav-link" href="{{ route('seeker') }}">Home <span class="sr-only">(current)</span></a>
     </li>
+    <li class="nav item{{ Request::is('seeker/projects') ? ' active' : ''}}">
+      <a href="{{ route('projects') }}" class="nav-link">Projects</a>
+    </li>
    <!--<li class="nav-item">
       <a class="nav-link" href="#">Features</a>
     </li>
