@@ -44,4 +44,24 @@
         this.value = parseFloat(this.value).toFixed(2);
     })
 </script>
+<script>
+$(function(){
+    var divModule = $("#divModule");
+    var i = $("#divModule p").length + 1;
+
+    $('#addModule').on('click', function(){
+        $('<p><input type="text" id="newModule" name="module[]" class="form-control" placeholder="New Module"><span class="bar"></span><a href="#" id="remModule">Remove Module</a></p>').appendTo(divModule);
+        i++;
+        return false;
+    });
+
+    $('#divModule').on('click', '#remModule', function(){
+        if(i > 2){
+            $(this).parents('p').remove();
+            i--;
+        }
+        return false;
+    });
+});
+</script>
 </html>
