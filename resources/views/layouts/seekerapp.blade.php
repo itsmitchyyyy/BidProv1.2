@@ -39,6 +39,11 @@
     });
 </script>
 <script>
+    $(document).ready(function(){
+        $('[data-tooltip="true"]').tooltip();
+    });
+</script>
+<script>
      @if(count($errors))
             $('#myModal').modal('show');
             $('#myModal').data('bs.modal').handleUpdate();
