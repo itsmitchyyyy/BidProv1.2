@@ -24,6 +24,7 @@ class ProjectController extends Controller
         if($validator->fails()){
             return redirect()->route('seeker')
                 ->withInput()
+                ->with('adding_error',5)
                 ->withErrors($validator);
         }
 
@@ -54,6 +55,15 @@ class ProjectController extends Controller
           
     }
 
+    public function myProjects(){
+        $projects = DB::table('projects')
+            ->where('user_id', '=', Auth::user()->id)
+            ->orderByRaw('created_at DESC')
+            ->get();
+
+            return view('projects/seeker')
+                ->with(array('projects'=>$projects));
+    }
     public function getProjects(){
         $projects = DB::table('projects')
             ->join('users', 'projects.user_id', '=', 'users.id')
@@ -74,6 +84,32 @@ class ProjectController extends Controller
             ->get();
 
             return view('users/bidder')->with(array('projects'=>$projects));
+    }
+
+    public function updateProject(Request $request, $id)
+    {
+        
+        $project = Project::findOrFail($id);
+        $validator = Validator::make($request->all(),[
+            'titles' => 'required|max:255',
+            'detailss' => 'required|max:255',
+            'categorys' => 'required|not_in:--'
+        ]);
+        if($validator->fails()){
+            return redirect()->route('projects')
+                ->withInput()
+                ->with('error_code', $id)
+                ->withErrors($validator);
+        }
+
+        $project->title = $request->titles;
+        $project->details = $request->detailss;
+        $project->category = $request->categorys;
+        $project->save();
+
+        return redirect('seeker/projects')
+            ->with('success' , 'Project updated');
+
     }
     public function seekerView(){
         return view('users/seeker');
