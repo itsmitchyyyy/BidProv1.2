@@ -39,8 +39,9 @@ Route::group(['middleware' => ['auth']], function(){
     }]);
     //seeker
     Route::get('seeker/projects', ['as' => 'projects', 'uses' => 'ProjectController@getProjects']);
-    Route::get('seeker', ['as' => 'seeker', 'uses' => 'ProjectController@getProjects']);
+    Route::get('seeker', ['as' => 'seeker', 'uses' => 'ProjectController@recentProjects']);
     Route::post('seeker', ['uses' => 'ProjectController@create']);
+   
    /* Route::get('seeker/profile', function(){
         return view('userprofiles/seeker');
     });*/
@@ -52,4 +53,7 @@ Route::group(['middleware' => ['auth']], function(){
     //bidder
     Route::get('bidder', ['as' => 'bidder', 'uses' => 'ProjectCOntroller@getProjectsBidder']);
     Route::get('bidder/profile/{id}', ['as' => 'bidderprofile', 'uses' => 'BidderController@bidderProfile']);
+    Route::get('bidder/inbox', function(){
+        return view('inbox/bidder');
+    });
 });
