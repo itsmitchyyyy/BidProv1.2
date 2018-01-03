@@ -38,7 +38,8 @@ Route::group(['middleware' => ['auth']], function(){
         return view('admin/post');
     }]);
     //seeker
-    Route::get('seeker/projects', ['as' => 'projects', 'uses' => 'ProjectController@getProjects']);
+    Route::get('seeker/projects', ['as' => 'projects', 'uses' => 'ProjectController@myProjects']);
+    Route::patch('seeker/projects/{id}', ['as' => 'updateproject', 'uses' => 'ProjectController@updateProject']);
     Route::get('seeker', ['as' => 'seeker', 'uses' => 'ProjectController@recentProjects']);
     Route::post('seeker', ['uses' => 'ProjectController@create']);
    
