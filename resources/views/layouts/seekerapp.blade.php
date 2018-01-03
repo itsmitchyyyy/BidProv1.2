@@ -7,6 +7,14 @@
     <link rel="shortcut icon" href="/img/bidprologo.png" type="image/x-icon">
     <title>BidPro</title>
     <style>
+     
+     input {
+  padding:10px;
+	font-family: FontAwesome, "Open Sans", Verdana, sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    text-decoration: inherit;
+}
         .wew:hover{
             cursor:pointer;
         }
@@ -24,6 +32,12 @@
     @yield('content')
     
 </body>
+<script src="{{ asset('js/bower_components/datatables/jquery.dataTables.min.js') }}"></script>
+<script>
+    $(document).ready(function(){
+        $('#myProject').DataTable();
+    });
+</script>
 <script>
      @if(count($errors))
             $('#myModal').modal('show');
@@ -95,7 +109,11 @@
         });
     </script>
     <script>
-        $('#cost').change(function(){
+        $('#min').change(function(){
+            this.value = parseFloat(this.value).toFixed(2);
+        });
+
+        $('#max').change(function(){
             this.value = parseFloat(this.value).toFixed(2);
         });
     </script>
@@ -150,4 +168,12 @@
         }
    });
    </script>
+ <!--  <script>
+    $('#max').focus(function(){
+        $(this).attr('placeholder', 'Max Price');
+    });
+    $('#max').focusout(function(){
+        $(this).attr('placeholder','');
+    });
+   </script>-->
 </html>
