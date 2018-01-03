@@ -37,11 +37,57 @@
     <td>{{ $project->name }}</td>
     <td>{{ $project->name }}</td>
     <td>
-      <button class="btn btn-link wew" title="Edit" data-toggle="tooltip"><i class="fa fa-pencil-square-o"></i></button>
-      <button class="btn btn-link wew" data-toggle="tooltip" title="Delete"><i class="text-danger fa fa-trash"></i></button>
-      <button class="btn btn-link wew" data-toggle="tooltip" title="Award"><i style="color:yellow" class="fa fa-trophy"></i></button>
-      <button class="btn btn-link wew" data-toggle="tooltip" title="Close"><i class="fa fa-close"></i></button>
+      <button class="btn btn-link wew" title="Edit" data-tooltip="true" data-toggle="modal" data-target="#editModal{{ $project->project_id }}"><i class="fa fa-pencil-square-o"></i></button>
+      <button class="btn btn-link wew" data-tooltip="true" title="Delete" data-toggle="modal" data-target="#deleteModal{{ $project->project_id }}"><i class="text-danger fa fa-trash"></i></button>
+      <button class="btn btn-link wew" data-tooltip="true" title="Award"><i style="color:yellow" class="fa fa-trophy"></i></button>
+      <button class="btn btn-link wew" data-tooltip="true" title="Close" data-toggle="modal" data-target="#closeModal{{ $project->project_id }}"><i class="fa fa-close"></i></button>
     </td>
+  <!-- EditMODAL -->
+    <div class="modal fade" id="editModal{{ $project->project_id }}" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+           <button type="button" class="close" data-dismiss="modal">
+            <span aria-hidden="true">&times;</span>
+          </button>
+            <h3 class="modal-title" id="editModalLabel">Edit</h3>
+          </div>
+          <div class="modal-body">
+            <form action="" class="form-horizontal" method="POST">
+              <div class="floating-labels">
+                <div class="form-group m-b-40 m-t-15">
+                  <input type="text" name="title" id="titles" class="form-control" value="{{ $project->title }}" required>
+                  <span class="highlight"></span><span class="bar"></span>
+                  <label for="titles" class="text-dark">Title</label>
+                </div>
+                <div class="form-group m-b-40 m-t-15">
+                  <textarea name="details" id="details" class="form-control" rows="4" style="height:auto" required>{{ $project->details}}</textarea>
+                  <span class="highlight"></span><span class="bar"></span>
+                  <label for="details" class="text-dark">Details</label>
+                </div>
+                <div class="form-group m-b-40 m-t-15">
+                  <select name="category" id="category" class="form-control">
+                    <?php $category = array('Mobile Development' => 'Mobile', 'Web Development' => 'Web'); ?>
+                    @foreach($category as $categor => $val)
+                      @if($val == $project->category)
+                        <option value="{{ $val }}" selected>{{ $categor }}</option>
+                      @else
+                      <option value="{{ $val }}">{{ $categor }}</option>
+                      @endif
+                    @endforeach
+                 </select>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary wew" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary wew" style="background-color:#ee4b28;border:1px solid #ee4b28;">Update</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  <!-- END OF EDIT MODAL -->
   </tr>
   @endforeach
   </tbody>
@@ -56,7 +102,7 @@
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
-        <h5 class="modal-title" id="exampleModalLabel">Project Details</h5>
+        <h3 class="modal-title" id="exampleModalLabel">Project Details</h3>
       </div>
       <div class="modal-body">
        
@@ -100,9 +146,8 @@
         <div class="form-group m-b-30 m-t-15{{ $errors->has('category') ? ' has-error' : ''}}">
           <select name="category" id="category" class="form-control" required>
             <option disabled selected></option>
-            <option value="Test1">Test1</option>
-            <option value="Test2">Test2</option>
-            <option value="Test3">Test3</option>
+            <option value="Mobile">Mobile Development</option>
+            <option value="Web">Web Development</option>
           </select>
           <span class="highlight"></span><span class="bar"></span>
           <label for="category">Category</label>
