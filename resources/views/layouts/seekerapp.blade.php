@@ -7,7 +7,9 @@
     <link rel="shortcut icon" href="/img/bidprologo.png" type="image/x-icon">
     <title>BidPro</title>
     <style>
-     
+     .gap-right{
+         margin-right:10px;
+     }
      input {
   padding:10px;
 	font-family: FontAwesome, "Open Sans", Verdana, sans-serif;
@@ -34,6 +36,13 @@
 </body>
 <script src="{{ asset('js/bower_components/datatables/jquery.dataTables.min.js') }}"></script>
 <script>
+    /*$('.modal-body form').each(function(){
+        $(this).data('serialized', $(this).serialize())
+    }).on('change input', function(){
+        $(this).find('#projectUpdate').prop('disabled', $(this).serialize() == $(this).data('serialized'));
+    }).find('#projectUpdate').prop('disabled',true);*/
+</script>
+<script>
     $(document).ready(function(){
         $('#myProject').DataTable();
     });
@@ -44,7 +53,23 @@
     });
 </script>
 <script>
-     @if(count($errors))
+    $(".editBtn").on('click',function(e){
+        var id = $(this).data('id');
+        $('#editModal'+id).modal('show');
+        //$('#projectUpdate').prop('disabled',true);
+     
+    });
+</script>
+<script>
+    //alert({{Session::get('error_code')}})
+    @if(!empty(Session::get('error_code')))
+    $(document).ready(function(){
+        $('#editModal'+{{Session::get('error_code')}}).modal('show');
+    });
+    @endif
+</script>
+<script>
+     @if(!empty(Session::get('adding_error')) && Session::get('adding_error') == 5)
             $('#myModal').modal('show');
             $('#myModal').data('bs.modal').handleUpdate();
      @endif
@@ -79,7 +104,7 @@
         }).find('#updateProfile').prop('disabled',true);
     </script>
     <!--<script>
-        var button = $('#updateProfile');
+        var button = $('#updateProject');
         button.attr('disabled',true);
         $('form :input').not(button).bind('keyup change', function(){
             var changed = $('form :input').not(button).filter(function(){
@@ -89,7 +114,7 @@
                     return this.value != $(this).data('default');
                 }
             });
-            $('#updateProfile').prop('disabled', !changed.length);
+            $('#updateProject').prop('disabled', !changed.length);
         });
     </script>-->
     <!--<script>
@@ -173,6 +198,11 @@
         }
    });
    </script>
+  <!-- <script>
+    $('#title').focus(function(){
+        $(this).attr('value','ASDSAD');
+    });
+   </script>-->
  <!--  <script>
     $('#max').focus(function(){
         $(this).attr('placeholder', 'Max Price');

@@ -1,7 +1,14 @@
 @extends('layouts.seekerapp')
 @section('content')
  
+<!--<div class="clearfix">
+<img src="/uploads/blank.png" alt="" class=" rounded-circle float-left gap-right" style="width:100px;height:100px;margin-left:50px;">
+<strong style="margin-left:15px;color:212834">Dr. Psych</strong>
+<p>Hi<br>asds</p>
+</div>-->
+
 <div class="container-fluid m-t-10">
+
     @if(session()->has('success'))
     <div class="alert alert-success">
         {{ session()->get('success') }}
@@ -33,17 +40,17 @@
   @foreach($projects as $project)
   <tr>
     <td><a href="#"><b>{{ ucwords($project->title) }}</b></a></td>
-    <td>{{ $project->name }}</td>
-    <td>{{ $project->name }}</td>
-    <td>{{ $project->name }}</td>
+    <td>{{ $project->title }}</td>
+    <td>{{ $project->title }}</td>
+    <td>{{ $project->title }}</td>
     <td>
-      <button class="btn btn-link wew" title="Edit" data-tooltip="true" data-toggle="modal" data-target="#editModal{{ $project->project_id }}"><i class="fa fa-pencil-square-o"></i></button>
-      <button class="btn btn-link wew" data-tooltip="true" title="Delete" data-toggle="modal" data-target="#deleteModal{{ $project->project_id }}"><i class="text-danger fa fa-trash"></i></button>
+      <button class="btn btn-link wew editBtn" title="Edit" data-tooltip="true" data-toggle="modal" data-target="#editModal{{ $project->id }}"><i class="fa fa-pencil-square-o"></i></button>
+      <button class="btn btn-link wew" data-tooltip="true" title="Delete" data-toggle="modal" data-target="#deleteModal{{ $project->id }}"><i class="text-danger fa fa-trash"></i></button>
       <button class="btn btn-link wew" data-tooltip="true" title="Award"><i style="color:yellow" class="fa fa-trophy"></i></button>
-      <button class="btn btn-link wew" data-tooltip="true" title="Close" data-toggle="modal" data-target="#closeModal{{ $project->project_id }}"><i class="fa fa-close"></i></button>
+      <button class="btn btn-link wew" data-tooltip="true" title="Close" data-toggle="modal" data-id="{{ $project->id }}"><i class="fa fa-close"></i></button>
     </td>
   <!-- EditMODAL -->
-    <div class="modal fade" id="editModal{{ $project->project_id }}" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal fade" id="editModal{{ $project->id }}" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
           <div class="modal-header">
@@ -53,21 +60,29 @@
             <h3 class="modal-title" id="editModalLabel">Edit</h3>
           </div>
           <div class="modal-body">
-            <form action="" class="form-horizontal" method="POST">
+            <form id="editForm" action="{{ route('updateproject', ['id' => $project->id]) }}" class="form-horizontal" method="POST">
+              <input type="hidden" name="_token" value="{{ csrf_token() }}">
+              <input type="hidden" name="_method" value="PATCH">
               <div class="floating-labels">
-                <div class="form-group m-b-40 m-t-15">
-                  <input type="text" name="title" id="titles" class="form-control" value="{{ $project->title }}" required>
+                <div class="form-group{{ $errors->has('titles') ? ' has-error' : ''}} m-b-40 m-t-15">
+                  <input type="text" name="titles" id="title" class="form-control" value="{{ $project->title }}" required>
                   <span class="highlight"></span><span class="bar"></span>
                   <label for="titles" class="text-dark">Title</label>
+                  @if($errors->has('titles'))
+                    <p>{{ $errors->first('titles') }}</p>
+                  @endif
                 </div>
-                <div class="form-group m-b-40 m-t-15">
-                  <textarea name="details" id="details" class="form-control" rows="4" style="height:auto" required>{{ $project->details}}</textarea>
+                <div class="form-group{{ $errors->has('detailss') ? ' has-error' : ''}} m-b-40 m-t-15">
+                  <textarea name="detailss" id="details" class="form-control" rows="4" style="height:auto" required>{{ $project->details}}</textarea>
                   <span class="highlight"></span><span class="bar"></span>
                   <label for="details" class="text-dark">Details</label>
+                  @if($errors->has('detailss'))
+                    <p>{{ $errors->first('detailss') }}</p>
+                  @endif
                 </div>
-                <div class="form-group m-b-40 m-t-15">
-                  <select name="category" id="category" class="form-control">
-                    <?php $category = array('Mobile Development' => 'Mobile', 'Web Development' => 'Web'); ?>
+                <div class="form-group{{ $errors->has('categorys') ? ' has-error' : ''}} m-b-40 m-t-15">
+                  <select name="categorys" id="category" class="form-control">
+                    <?php $category = array('--' => '--', 'Mobile Development' => 'Mobile', 'Web Development' => 'Web'); ?>
                     @foreach($category as $categor => $val)
                       @if($val == $project->category)
                         <option value="{{ $val }}" selected>{{ $categor }}</option>
@@ -76,13 +91,18 @@
                       @endif
                     @endforeach
                  </select>
+                 <span class="highlight"></span><span class="bar"></span>
+                 <label for="category" class="text-dark">Category</label>
+                 @if($errors->has('categorys'))
+                    <p>{{ $errors->first('categorys') }}</p>
+                 @endif
                 </div>
               </div>
-            </form>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary wew" data-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary wew" style="background-color:#ee4b28;border:1px solid #ee4b28;">Update</button>
+            <button type="submit" id="projectUpdate"  class="btn btn-primary wew" style="background-color:#ee4b28;border:1px solid #ee4b28;">Update</button>
+            </form>
           </div>
         </div>
       </div>
