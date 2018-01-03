@@ -22,7 +22,8 @@ class CreateProjectsTable extends Migration
             $table->date('start');
             $table->date('end');
             $table->string('category');
-            $table->decimal('cost', 8,2);
+            $table->decimal('min', 8,2);
+            $table->decimal('max', 8,2);
             $table->timestamps();
         });
     }
