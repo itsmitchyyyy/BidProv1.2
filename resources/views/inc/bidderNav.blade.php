@@ -2,11 +2,11 @@
 <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
   <span class="navbar-toggler-icon"></span>
 </button>
-<a class="navbar-brand" href="{{ route('seeker') }}"><img src="/img/bidprologo.png" style="width:100px"></a>
+<a class="navbar-brand" href="{{ route('bidder') }}"><img src="/img/bidprologo.png" style="width:100px"></a>
 <div class="collapse navbar-collapse" id="navbarNavDropdown">
   <ul class="navbar-nav mr-auto">
     <li class="nav-item{{ Request::is('bidder') ? ' active' : ''}}">
-      <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+      <a class="nav-link" href="{{ route('bidder') }}">Home <span class="sr-only">(current)</span></a>
     </li>
    <!--<li class="nav-item">
       <a class="nav-link" href="#">Features</a>
@@ -35,7 +35,12 @@
           </div>
         </div>
         </a>
+        <hr>
+        <div class="text-center">
+        <a href="" class="text-dark"><strong>See all messages </strong><i class="fa fa-angle-right"></i></a>
+        </div>
       </div>
+     
     </li>
     <li class="nav-item dropdown{{ Request::is('bidder/profile/'.Auth::user()->id) ? ' active' : ''}}">
       <a class="nav-link dropdown-toggle" href="http://example.com" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
