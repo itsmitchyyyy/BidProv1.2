@@ -137,7 +137,11 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary wew" data-dismiss="modal">Cancel</button>
-          <button type="submit" class="btn btn-primary wew" style="background-color:#ee4b28;border:1px solid #ee4b28">Yes</button>
+          <form action="{{ route('deleteproject', ['id' => $project->id]) }}" method="POST">
+            {{ csrf_field() }}
+            <input type="hidden" name="_method" value="DELETE">
+            <button type="submit" class="btn btn-primary wew" style="background-color:#ee4b28;border:1px solid #ee4b28">Yes</button>
+          </form>
         </div>
       </div>
     </div>
