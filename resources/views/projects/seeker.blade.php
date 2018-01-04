@@ -9,7 +9,7 @@
 
 <div class="container-fluid m-t-10">
 
-  <ul class="nav customtab nav-tabs m-t-15 m-b-30" role="tablist">
+  <ul class="nav customtab nav-tabs m-t-15 m-b-30" id="tabMenu" role="tablist">
     <li class="nav-item" role="presentation">
       <a href="#open" class="nav-link active" aria-controls="open" role="tab" data-toggle="tab" aria-expanded="true">Open Projects</a>
     </li>
@@ -225,7 +225,9 @@
             <h3 class="modal-title" id="repostModalLabel">Repost Project</h3>
           </div>
           <div class="modal-body">
-            <form action="" class="form-horizontal" method="POST">
+            <form action="{{ route('repostproject', ['id' => $project->id]) }}" class="form-horizontal" method="POST">
+                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                <input type="hidden" name="_method" value="PATCH">
               <div class="floating-labels">
                 <div class="form-group{{ $errors->has('title') ? ' has-error' : ''}} m-b-40 m-t-15">
                   <input type="text" name="title" id="title" class="form-control" value="{{ $project->title }}" required>
