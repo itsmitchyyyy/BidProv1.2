@@ -115,8 +115,8 @@ class ProjectController extends Controller
     public function deleteProject($id)
     {
         Project::find($id)->delete();
-        return redirect('seeker/projects')
-            ->with('success', 'Project updated');
+        return redirect()->route('projects')
+            ->with('success', 'Project deleted');
     }
 
     public function seekerView(){
