@@ -40,6 +40,7 @@ Route::group(['middleware' => ['auth']], function(){
     //seeker
     Route::get('seeker/projects', ['as' => 'projects', 'uses' => 'ProjectController@myProjects']);
     Route::patch('seeker/projects/{id}', ['as' => 'updateproject', 'uses' => 'ProjectController@updateProject']);
+    Route::delete('/seeker/projects/delete/{id}', ['as' => 'deleteproject', 'uses' => 'ProjectController@deleteProject']);
     Route::get('seeker', ['as' => 'seeker', 'uses' => 'ProjectController@recentProjects']);
     Route::post('seeker', ['uses' => 'ProjectController@create']);
    
