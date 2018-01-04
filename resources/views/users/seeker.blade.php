@@ -5,7 +5,7 @@
   <div class="card w-75 m-t-15 mr-auto ml-auto">
     <div class="card-header">
       Recent Project
-      <a href="" class="pull-right">View all</a>
+      <a href="{{ route('projects') }}" class="pull-right">View all</a>
     </div>
     <div class="card-body">
     @if($projects->isEmpty())
