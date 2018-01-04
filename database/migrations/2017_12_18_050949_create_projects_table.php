@@ -24,6 +24,7 @@ class CreateProjectsTable extends Migration
             $table->string('category');
             $table->decimal('min', 8,2);
             $table->decimal('max', 8,2);
+            $table->string('status')->default('1');
             $table->timestamps();
         });
     }
