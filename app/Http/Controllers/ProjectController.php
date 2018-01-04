@@ -22,7 +22,7 @@ class ProjectController extends Controller
             'max' => 'required|regex:'.$regex
         ]);
         if($validator->fails()){
-            return redirect()->route('seeker')
+            return redirect()->route('projects')
                 ->withInput()
                 ->with('adding_error',5)
                 ->withErrors($validator);
@@ -39,10 +39,42 @@ class ProjectController extends Controller
         $projects->max = $request->max;
         $projects->save();
 
-        return redirect()->route('seeker')->with('success','Data added');
+        return redirect()->route('projects')->with('success','Data added');
 
     }
     
+
+    public function openProject(Request $request, $id){
+        $regex = '/^\d{0,8}(\.\d{1,2})?$/';
+        $validator = Validator::make($request->all(), [
+            'title' => 'required|string|max:255',
+            'details' => 'required|string|max:255',
+            'start' => 'required|date',
+            'end' => 'required|date',
+            'category' => 'required|not_in:0',
+            'min' => 'required|regex:'.$regex,
+            'max' => 'required|regex:'.$regex
+        ]);
+        if($validator->fails()){
+            return redirect()->route('projects')
+            ->withInput(['tab'=>'closed'])
+            ->with('adding_error',5)
+            ->withErrors($validator);
+        }
+        $projects = Project::findOrFail($id);
+        $projects->title = $request->title;
+        $projects->details = $request->details;
+        $projects->start = $request->start;
+        $projects->end = $request->end;
+        $projects->category = $request->category;
+        $projects->min = $request->min;
+        $projects->max = $request->max;
+        $projects->status = '1';
+        $projects->save();
+
+        return redirect()->route('projects')->with('success','Data Reposted');
+    }
+
     public function recentProjects()
     {
         $projects = DB::table('projects')
@@ -62,6 +94,7 @@ class ProjectController extends Controller
             ->update(array('status'=>0));
         
         return redirect()->route('projects')
+            ->withInput(['tab'=>'closed'])
             ->with('success','Project closed');
     }
 
