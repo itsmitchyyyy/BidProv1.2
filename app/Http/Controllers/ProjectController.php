@@ -55,14 +55,31 @@ class ProjectController extends Controller
           
     }
 
+    public function closeProject($id)
+    {
+        DB::table('projects')
+            ->where('id', '=', $id)
+            ->update(array('status'=>0));
+        
+        return redirect()->route('projects')
+            ->with('success','Project closed');
+    }
+
     public function myProjects(){
         $projects = DB::table('projects')
-            ->where('user_id', '=', Auth::user()->id)
+            ->where(['user_id' => Auth::user()->id,
+            'status' => '1'])
+            ->orderByRaw('created_at DESC')
+            ->get();
+
+      $closedprojects = DB::table('projects')
+            ->where(['user_id' => Auth::user()->id,
+            'status' => '0'])
             ->orderByRaw('created_at DESC')
             ->get();
 
             return view('projects/seeker')
-                ->with(array('projects'=>$projects));
+                ->with(array('projects'=>$projects))->with(array('closedprojects'=>$closedprojects));
     }
     public function getProjects(){
         $projects = DB::table('projects')
@@ -111,6 +128,17 @@ class ProjectController extends Controller
             ->with('success' , 'Project updated');
 
     }
+
+    /*public function closedProjects()
+    {
+        $projects = DB::table('projects')
+            ->where(['user_id' => Auth::user()->id,
+            'status' => '0'])
+            ->orderByRaw('created_at DESC')
+            ->get();
+
+            return view('users/seeker')->with(array('closedprojects'=>$projects));
+    }*/
 
     public function deleteProject($id)
     {
