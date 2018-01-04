@@ -58,7 +58,7 @@ class ProjectController extends Controller
         if($validator->fails()){
             return redirect()->route('projects')
             ->withInput(['tab'=>'closed'])
-            ->with('adding_error',5)
+            ->with('repost_error',$id)
             ->withErrors($validator);
         }
         $projects = Project::findOrFail($id);
