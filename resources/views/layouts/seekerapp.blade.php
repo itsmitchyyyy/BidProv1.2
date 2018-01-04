@@ -74,6 +74,13 @@
     });
 </script>
 <script>
+    @if(!empty(Session::get('repost_error')))
+        $(document).ready(function(){
+            $('#repostModal'+{{ Session::get('repost_error')}}).modal('show');
+        });
+    @endif
+</script>
+<script>
     //alert({{Session::get('error_code')}})
     @if(!empty(Session::get('error_code')))
     $(document).ready(function(){
