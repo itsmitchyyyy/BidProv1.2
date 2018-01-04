@@ -61,6 +61,18 @@
     });
 </script>
 <script>
+    $(".closeBtn").on('click', function(){
+        var id = $(this).data('id');
+        $('#closeModal'+id).modal('show');
+    });
+</script>
+<script>
+    $(".deleteBtn").on('click', function(){
+        var id = $(this).data('id');
+        $('#deleteModal'+id).modal('show');
+    });
+</script>
+<script>
     //alert({{Session::get('error_code')}})
     @if(!empty(Session::get('error_code')))
     $(document).ready(function(){
