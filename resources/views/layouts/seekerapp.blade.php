@@ -45,6 +45,7 @@
 <script>
     $(document).ready(function(){
         $('#myProject').DataTable();
+        $('#myProjectClose').DataTable();
     });
 </script>
 <script>
