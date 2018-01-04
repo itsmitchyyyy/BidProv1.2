@@ -111,6 +111,14 @@ class ProjectController extends Controller
             ->with('success' , 'Project updated');
 
     }
+
+    public function deleteProject($id)
+    {
+        Project::find($id)->delete();
+        return redirect('seeker/projects')
+            ->with('success', 'Project updated');
+    }
+
     public function seekerView(){
         return view('users/seeker');
     }
