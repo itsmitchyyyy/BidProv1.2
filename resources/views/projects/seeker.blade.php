@@ -9,6 +9,15 @@
 
 <div class="container-fluid m-t-10">
 
+  <ul class="nav customtab nav-tabs m-t-15 m-b-30" role="tablist">
+    <li class="nav-item" role="presentation">
+      <a href="#open" class="nav-link active" aria-controls="open" role="tab" data-toggle="tab" aria-expanded="true">Open Projects</a>
+    </li>
+    <li class="nav-item" role="presentation">
+      <a href="#closed" class="nav-link" aria-controls="closed" role="tab" data-toggle="tab" aria-expanded="false">Closed Projects</a>
+    </li>
+  </ul>
+
     @if(session()->has('success'))
     <div class="alert alert-success">
         {{ session()->get('success') }}
@@ -17,6 +26,9 @@
   <button type="button" class="m-b-30 btn btn-info text-uppercase waves-effect waves-light" style="background-color:#ee4b28;border:2px solid #ee4b28" data-toggle="modal" data-target="#myModal">
   POST
 </button>
+<div class="tab-content">
+<div class="tab-pane active" id="open">
+<!-- TABLE -->
 <table id="myProject" class="table table-bordered table-striped" width="100%" cellspacing="0">
   <thead>
     <tr>
@@ -45,9 +57,9 @@
     <td>{{ $project->title }}</td>
     <td>
       <button class="btn btn-link wew editBtn" title="Edit" data-tooltip="true" data-toggle="modal" data-target="#editModal{{ $project->id }}"><i class="fa fa-pencil-square-o"></i></button>
-      <button class="btn btn-link wew" data-tooltip="true" title="Delete" data-toggle="modal" data-target="#deleteModal{{ $project->id }}"><i class="text-danger fa fa-trash"></i></button>
+      <button class="btn btn-link wew deleteBtn" data-tooltip="true" title="Delete" data-toggle="modal" data-id="{{ $project->id }}"><i class="text-danger fa fa-trash"></i></button>
       <button class="btn btn-link wew" data-tooltip="true" title="Award"><i style="color:yellow" class="fa fa-trophy"></i></button>
-      <button class="btn btn-link wew" data-tooltip="true" title="Close" data-toggle="modal" data-id="{{ $project->id }}"><i class="fa fa-close"></i></button>
+      <button class="btn btn-link wew closeBtn" data-tooltip="true" title="Close" data-toggle="modal" data-id="{{ $project->id }}"><i class="fa fa-close"></i></button>
     </td>
   <!-- EditMODAL -->
     <div class="modal fade" id="editModal{{ $project->id }}" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
@@ -108,12 +120,64 @@
       </div>
     </div>
   <!-- END OF EDIT MODAL -->
+
+  <!-- DELETE MODAL -->
+  <div class="modal fade" tabindex="-1" role="dialog" id="deleteModal{{ $project->id }}">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+          <h3 class="modal-title">Delete Project</h3>
+        </div>
+        <div class="modal-body">
+          <h3><b>Are you sure you want to delete this project for <i class="fa fa-rouble"></i>200 PHP?</b></h3>
+          <p style="font-weight:bold;margin-top:5%">Deleting your project will permanently remove it from our site so that no one will be able to view it. 
+          All bids and attached files will be erased.
+          </p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary wew" data-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary wew" style="background-color:#ee4b28;border:1px solid #ee4b28">Yes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--END OF DELETE MODAL -->
+
+  <!-- CLOSE PROJECT -->
+  <div class="modal fade" tabindex="-1" role="dialog" id="closeModal{{ $project->id }}">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+          <h3 class="modal-title">Close Project</h3>
+        </div>
+        <div class="modal-body">
+          <h3><b>Are you sure you want to close this project?</b></h3>
+          <p style="font-weight:bold;margin-top:5%">
+          By closing your project you will not be able to receive bids.
+           Your project will then be archived and cannot be reopened.
+          </p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary wew" data-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary wew" style="background-color:#ee4b28;border:1px solid #ee4b28;">Yes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- END OF CLOSE PROJECT -->
   </tr>
   @endforeach
   </tbody>
 </table>
+<!-- END OF TABLE -->
+</div>
+<div class="tab-pane" id="closed">
+<h3>asdasd</h3>
 
-
+</div>
+</div>
 <!-- ADD PROject -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-md" role="document">
