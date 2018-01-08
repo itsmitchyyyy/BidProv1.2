@@ -5,12 +5,12 @@
         <div class="row">
           <div class="col-lg-10 mx-auto">
             <h1 class="text-uppercase">
-              <strong>IDEAL. MARKET. SOLUTION.  </strong>
+              <strong>IDEAL.MARKET.SOLUTION.  </strong>
             </h1>
             <hr>
           </div>
           <div class="col-lg-8 mx-auto">
-            <p class="text-faded mb-5">Together, we can make things happen.</p>
+            <p class="text-faded mb-5">For Software Development Projects.</p>
             <a class="btn btn-primary btn-xl js-scroll-trigger" href="#about">Find Out More</a>
           </div>
         </div>
