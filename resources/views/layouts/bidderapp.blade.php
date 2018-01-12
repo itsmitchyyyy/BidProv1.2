@@ -27,6 +27,7 @@
     @yield('content')
     
 </body>
+@yield('scripts')
 <script>
     $(".proposeBtn").on('click',function(e){
         var id = $(this).data('id');
