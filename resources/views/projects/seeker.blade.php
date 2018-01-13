@@ -17,12 +17,19 @@
       <a href="#closed" class="nav-link" aria-controls="closed" role="tab" data-toggle="tab" aria-expanded="false">Closed Projects</a>
     </li>
   </ul>
-
+    @if(session()->has('error'))
+    <div class="alert alert-danger alert-dismissable fade show">
+      <button type="button" data-dismiss="alert" class="close"><i class="fa fa-close"></i></button>
+        {{ session()->get('error') }}
+    </div>
+    <?php Session::forget('error'); ?>
+    @endif
     @if(session()->has('success'))
     <div class="alert alert-success alert-dismissable fade show">
       <button type="button" data-dismiss="alert" class="close"><i class="fa fa-close"></i></button>
         {{ session()->get('success') }}
     </div>
+    <?php Session::forget('success'); ?>
     @endif
   <button type="button" class="m-b-30 btn btn-info text-uppercase waves-effect waves-light" style="background-color:#ee4b28;border:2px solid #ee4b28" data-toggle="modal" data-target="#myModal">
   POST
@@ -138,9 +145,12 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary wew" data-dismiss="modal">Cancel</button>
-          <form action="{{ route('deleteproject', ['id' => $project->id]) }}" method="POST">
+          <form action="{{ route('deleteproject') }}" method="POST">
             {{ csrf_field() }}
-            <input type="hidden" name="_method" value="DELETE">
+            <?php Session::put('project_name', $project->title ); 
+              Session::put('project_id', $project->id);
+            ?>
+            <!-- <input type="hidden" name="_method" value="DELETE"> -->
             <button type="submit" class="btn btn-primary wew" style="background-color:#ee4b28;border:1px solid #ee4b28">Yes</button>
           </form>
         </div>
