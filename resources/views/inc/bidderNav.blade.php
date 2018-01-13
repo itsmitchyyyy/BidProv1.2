@@ -34,15 +34,11 @@
             <span class="mail-desc">ASDSAD</span>
           </div>
         </div>
-<<<<<<< HEAD
         </a> -->
-=======
-        </a> 
->>>>>>> seeker
-        <hr>
+        <!-- <hr>
         <div class="text-center">
         <a href="" class="text-dark"><strong>See all messages </strong><i class="fa fa-angle-right"></i></a>
-        </div>-->
+        </div> -->
       </div>
      
     </li>
@@ -73,9 +69,9 @@
       var element = toggle.find('i[data-count]');
       var counter = parseInt(element.data('count'));
       var notifications = wrapper.find('#menuItems');
-       if(counter <= 0){
-        wrapper.hide();
-      } 
+      //  if(counter <= 0){
+      //   wrapper.hide();
+      // } 
 
       var pusher = new Pusher('9ab3129dae2df45ee2fc',{
         cluster: 'ap1',
@@ -95,12 +91,13 @@
             <span class="mail-desc">ASDSAD</span>
           </div>
         </div>
-        </a>`;
-        notifications.html(newnotification + existing);
+        </a>
+        <hr>`;
+        notifications.html(existing + newnotification);
       counter += 1;
       element.attr('data-count', counter);
       wrapper.find('.notif-count').text(counter);
-      wrapper.show();
+      // wrapper.show();
       });
      
       //notifications.hide();
