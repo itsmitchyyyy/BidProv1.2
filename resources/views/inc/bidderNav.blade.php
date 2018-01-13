@@ -34,11 +34,15 @@
             <span class="mail-desc">ASDSAD</span>
           </div>
         </div>
+<<<<<<< HEAD
         </a> -->
+=======
+        </a> 
+>>>>>>> seeker
         <hr>
         <div class="text-center">
         <a href="" class="text-dark"><strong>See all messages </strong><i class="fa fa-angle-right"></i></a>
-        </div>
+        </div>-->
       </div>
      
     </li>
