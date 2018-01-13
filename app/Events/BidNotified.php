@@ -14,7 +14,6 @@ class BidNotified implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-
     public $username;
     public $message;
     /**
