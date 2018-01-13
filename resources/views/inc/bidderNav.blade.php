@@ -16,14 +16,14 @@
     </li>-->
     </ul>
     <ul class="navbar-nav">
-    <li class="nav-item dropdown">
-     <a href="" class="nav-link" data-toggle="dropdown" id="navbarDropdownMessage" href="#">
-        <i class="fa fa-envelope-o"></i>
-        <span class="text-danger">2</span>
+    <li class="nav-item dropdown notifications">
+     <a  class="nav-link" data-toggle="dropdown" id="navbarDropdownMessage" href="#">
+        <i class="fa fa-envelope-o" data-count="0"></i>
+        <span class="text-danger" class="notif-count">0</span>
       </a>
       <div class="dropdown-menu dropdown-menu-right" aria-labelledBy="navbarDropdownMessage">
-       <h6 class="dropdown-header">You have 2 new messages</h6>
-       <a href="http://">
+       <h6 class="dropdown-header">You have (<span class="notif-count">0</span>) new messages</h6>
+       <!-- <a href="http://">
         <div class="message-center">
           <div class="user-img ml-2">
             <img src="/uploads/blank.png" alt="" style="border-radius:50%;">
@@ -34,11 +34,11 @@
             <span class="mail-desc">ASDSAD</span>
           </div>
         </div>
-        </a>
+        </a> 
         <hr>
         <div class="text-center">
         <a href="" class="text-dark"><strong>See all messages </strong><i class="fa fa-angle-right"></i></a>
-        </div>
+        </div>-->
       </div>
      
     </li>

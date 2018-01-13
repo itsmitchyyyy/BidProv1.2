@@ -23,6 +23,8 @@
         "font-awesome": "^4.7.0",
         "material-design-icons": "^3.0.1",
         "popper.js": "^1.12.9",
+        "pusher": "^1.5.1",
+        "pusher-js": "^4.2.2",
         "simple-line-icons": "^2.4.1"
     }
 }
