@@ -34,6 +34,7 @@
     @yield('content')
     
 </body>
+@yield('scripts')
 <script src="{{ asset('js/bower_components/datatables/jquery.dataTables.min.js') }}"></script>
 <script>
     /*$('.modal-body form').each(function(){
