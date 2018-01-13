@@ -5,11 +5,37 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Input;
+use URL;
+use Session;
+use Redirect;
 use DB;
 use App\Project;
 use App\User;
+// Paypal
+use PayPal\Rest\ApiContext;
+use PayPal\Auth\OAuthTokenCredential;
+use PayPal\Api\Amount;
+use PayPal\Api\Details;
+use PayPal\Api\Item;
+use PayPal\Api\ItemList;
+use PayPal\Api\Payer;
+use PayPal\Api\Payment;
+use PayPal\Api\RedirectUrls;
+use PayPal\Api\ExecutePayment;
+use PayPal\Api\PaymentExecution;
+use PayPal\Api\Transaction;
 class ProjectController extends Controller
 {
+    private $_api_context;
+
+    public function __construct(){
+        $paypal_conf = \Config::get('paypal');
+        $this->_api_context = new ApiContext(new OAuthTokenCredential($paypal_conf['client_id'], $paypal_conf['secret']));
+        $this->_api_context->setConfig($paypal_conf['settings']);
+    }
+
+
     public function create(Request $request){
         $regex = '/^\d{0,8}(\.\d{1,2})?$/';
         $validator = Validator::make($request->all(), [
@@ -173,11 +199,79 @@ class ProjectController extends Controller
             return view('users/seeker')->with(array('closedprojects'=>$projects));
     }*/
 
-    public function deleteProject($id)
+    public function deleteProject()
     {
-        Project::find($id)->delete();
-        return redirect()->route('projects')
-            ->with('success', 'Project deleted');
+        $item_name = Session::get('project_name');
+        Session::forget('project_name');
+        $payer = new Payer();
+        $payer->setPaymentMethod('paypal');
+        $item_1 = new Item();
+        $item_1->setName($item_name)
+            ->setCurrency('USD')
+            ->setQuantity(1)
+            ->setPrice('4');
+        $item_list = new ItemList();
+        $item_list->setItems(array($item_1));
+        $amount = new Amount();
+        $amount->setCurrency('USD')
+            ->setTotal('4');
+        $transaction = new Transaction();
+        $transaction->setAmount($amount)
+            ->setItemList($item_list)
+            ->setDescription('Delete project');
+        $redirect_urls = new RedirectUrls();
+        $redirect_urls->setReturnUrl(URL::route('projects.status'))
+            ->setCancelUrl(URL::route('projects.status'));
+        $payment = new Payment();
+        $payment->setIntent('Sale')
+            ->setPayer($payer)
+            ->setRedirectUrls($redirect_urls)
+            ->setTransactions(array($transaction));
+        try{
+            $payment->create($this->_api_context);
+        }catch(\Paypal\Exception\PPConnectionException $e){
+            if(\Config::get('app.debug')){
+                \Session::put('error', 'Connection Timeout');
+                return Redirect::route('projects');
+            }else{
+                \Session::put('error', 'An error occured');
+                return Redirect::route('projects');
+            }
+        }
+        foreach($payment->getLinks() as $link){
+            if($link->getRel() == 'approval_url'){
+                $redirect_url = $link->getHref();
+                break;
+            }
+        }
+        Session::put('paypal_payment_id', $payment->getId());
+        if(isset($redirect_url)){
+            return Redirect::away($redirect_url);
+        }
+        \Session::put('error', 'Unknown error occured');
+        return Redirect::route('projects');
+    }
+
+    public function paymentStatus(){
+        $project_id = Session::get('project_id');
+        $payment_id = Session::get('paypal_payment_id');
+        Session::forget('paypal_payment_id');
+        Session::forget('project_id');
+        if(empty(Input::get('PayerID')) || empty(Input::get('token'))){
+            \Session::put('error', 'Payment faileded');
+            return Redirect::route('projects');
+        }
+        $payment = Payment::get($payment_id, $this->_api_context);
+        $execution = new PaymentExecution();
+        $execution->setPayerId(Input::get('PayerID'));
+        $result = $payment->execute($execution, $this->_api_context);
+        if($result->getState() == 'approved'){
+             Project::find($project_id)->delete();
+            \Session::put('success', 'Project deleted');
+            return Redirect::route('projects');
+        }
+        \Session::put('error', 'Payment failedwew');
+        return Redirect::route('projects');
     }
 
     public function seekerView(){
