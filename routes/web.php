@@ -46,10 +46,10 @@ Route::group(['middleware' => ['auth']], function(){
     Route::patch('seeker/projects/repost/{id}',['as' => 'repostproject', 'uses' => 'ProjectController@openProject']);
     Route::patch('seeker/projects/update/{id}', ['as' => 'closeproject', 'uses' => 'ProjectController@closeProject']);
     Route::patch('seeker/projects/{id}', ['as' => 'updateproject', 'uses' => 'ProjectController@updateProject']);
-    Route::delete('/seeker/projects/delete/{id}', ['as' => 'deleteproject', 'uses' => 'ProjectController@deleteProject']);
+    Route::post('/seeker/projects/paypal', ['as' => 'deleteproject', 'uses' => 'ProjectController@deleteProject']);
     Route::get('seeker', ['as' => 'seeker', 'uses' => 'ProjectController@recentProjects']);
     Route::post('seeker', ['uses' => 'ProjectController@create']);
-   
+    Route::get('/seeker/projects/paypal', ['as' => 'projects.status', 'uses' => 'ProjectController@paymentStatus']);
    /* Route::get('seeker/profile', function(){
         return view('userprofiles/seeker');
     });*/
