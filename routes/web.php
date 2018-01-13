@@ -12,7 +12,11 @@
 */
 Route::get('test', function(){
     event(new App\Events\BidNotified('Someone'));
+<<<<<<< HEAD
     return 'Notified';
+=======
+    return 'Test';
+>>>>>>> f0e6470d4064eabe57c71dc3f4086bef9d738f74
 });
 Route::get('/', function () {
     return view('home');
