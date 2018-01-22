@@ -59,9 +59,10 @@ Route::group(['middleware' => ['auth']], function(){
     Route::patch('seeker/avatar/{id}', ['as' => 'avatar', 'uses' => 'SeekerController@updateAvatar']);
 
     //bidder
-    Route::get('bidder', ['as' => 'bidder', 'uses' => 'ProjectCOntroller@getProjectsBidder']);
+    Route::get('bidder', ['as' => 'bidder', 'uses' => 'ProjectController@getProjectsBidder']);
     Route::get('bidder/profile/{id}', ['as' => 'bidderprofile', 'uses' => 'BidderController@bidderProfile']);
     Route::get('bidder/inbox', function(){
         return view('inbox/bidder');
     }); 
+    Route::get('project/{id}', ['as' => 'viewProject', 'uses' => 'ProjectController@viewProject']);
 });
