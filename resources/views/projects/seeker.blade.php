@@ -1,6 +1,5 @@
 @extends('layouts.seekerapp')
 @section('content')
- 
 <!--<div class="clearfix">
 <img src="/uploads/blank.png" alt="" class=" rounded-circle float-left gap-right" style="width:100px;height:100px;margin-left:50px;">
 <strong style="margin-left:15px;color:212834">Dr. Psych</strong>
@@ -255,16 +254,6 @@
                     <p>{{ $errors->first('details') }}</p>
                   @endif
                 </div>
-                <div class="form-group m-b-40 m-t-15">
-                  <input type="text" name="start" value="{{ $project->start }}" id="start" class="form-control" onfocus="(this.type='date')" onblur="(this.type='text')" required>
-                  <span class="highlight"></span><span class="bar"></span>
-                  <label for="start" class="text-dark">Date Start</label>
-                </div>
-                <div class="form-group m-b-40 m-t-15">
-                  <input type="text" name="end" value="{{ $project->end }}" id="end" class="form-control" onfocus="(this.type='date')" onblur="(this.type='text')" required>
-                  <span class="highlight"></span><span class="bar"></span>
-                  <label for="end" class="text-dark">Date End</label>
-                </div>
                 <div class="form-group{{ $errors->has('category') ? ' has-error' : ''}} m-b-40 m-t-15">
                   <select name="category" id="category" class="form-control">
                     <?php $category = array('--' => '--', 'Mobile Development' => 'Mobile', 'Web Development' => 'Web'); ?>
@@ -368,22 +357,6 @@
               <p class="text-danger help-block">{{ $errors->first('details') }}</p>
               @else
               <span class="help-block float-right"><small id="charLeft"></small></span>
-            @endif
-        </div>
-        <div class="form-group m-b-30 m-t-15{{ $errors->has('start') ? ' has-error' : ''}}">
-            <input  type="text" name="start" id="start" class="form-control" onfocus="(this.type='date')" onblur="(this.type='text')" required>
-            <span class="highlight"></span><span class="bar"></span>
-            <label for="start">Date Start</label>
-            @if($errors->has('start'))
-              <p class="help-block">{{ $errors->first('start') }}</p>
-            @endif
-        </div>
-        <div class="form-group m-b-30 m-t-15{{ $errors->has('end') ? ' has-error' : ''}}">
-          <input type="text" name="end" id="end" class="form-control" onfocus="(this.type='date')" onblur="(this.type='text')" required>
-          <span class="highlight"></span><span class="bar"></span>
-          <label for="end">Date End</label>
-          @if($errors->has('end'))
-              <p class="help-block">{{ $errors->first('end') }}</p>
             @endif
         </div>
         <div class="form-group m-b-30 m-t-15{{ $errors->has('category') ? ' has-error' : ''}}">
