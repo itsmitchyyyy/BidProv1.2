@@ -63,5 +63,5 @@ Route::group(['middleware' => ['auth']], function(){
     Route::get('bidder/profile/{id}', ['as' => 'bidderprofile', 'uses' => 'BidderController@bidderProfile']);
     Route::get('bidder/inbox', function(){
         return view('inbox/bidder');
-    });
+    }); 
 });
