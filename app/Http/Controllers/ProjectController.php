@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
+use Carbon\Carbon;
 use URL;
 use Session;
 use Redirect;
@@ -35,14 +36,14 @@ class ProjectController extends Controller
         $this->_api_context->setConfig($paypal_conf['settings']);
     }
 
-
+// SEEKER
     public function create(Request $request){
         $regex = '/^\d{0,8}(\.\d{1,2})?$/';
         $validator = Validator::make($request->all(), [
             'title' => 'required|string|max:255',
             'details' => 'required|string|max:255',
-            'start' => 'required|date',
-            'end' => 'required|date',
+           // 'start' => 'required|date',
+           // 'end' => 'required|date',
             'category' => 'required|not_in:0',
             'min' => 'required|regex:'.$regex,
             'max' => 'required|regex:'.$regex
@@ -53,16 +54,17 @@ class ProjectController extends Controller
                 ->with('adding_error',5)
                 ->withErrors($validator);
         }
-
+        $current = Carbon::now();
         $projects = new Project();
         $projects->user_id = Auth::id();
         $projects->title = $request->title;
         $projects->details = $request->details;
-        $projects->start = $request->start;
-        $projects->end = $request->end;
+       // $projects->start = $request->start;
+        //$projects->end = $request->end;
         $projects->category = $request->category;
         $projects->min = $request->min;
         $projects->max = $request->max;
+        $projects->duration = $current->addDays(7);
         $projects->save();
 
         return redirect()->route('projects')->with('success','Data added');
@@ -75,8 +77,8 @@ class ProjectController extends Controller
         $validator = Validator::make($request->all(), [
             'title' => 'required|string|max:255',
             'details' => 'required|string|max:255',
-            'start' => 'required|date',
-            'end' => 'required|date',
+           // 'start' => 'required|date',
+            //'end' => 'required|date',
             'category' => 'required|not_in:0',
             'min' => 'required|regex:'.$regex,
             'max' => 'required|regex:'.$regex
@@ -90,12 +92,12 @@ class ProjectController extends Controller
         $projects = Project::findOrFail($id);
         $projects->title = $request->title;
         $projects->details = $request->details;
-        $projects->start = $request->start;
-        $projects->end = $request->end;
+       // $projects->start = $request->start;
+        //$projects->end = $request->end;
         $projects->category = $request->category;
         $projects->min = $request->min;
         $projects->max = $request->max;
-        $projects->status = '1';
+        $projects->status = 'open';
         $projects->save();
 
         return redirect()->route('projects')->with('success','Data Reposted');
@@ -117,7 +119,7 @@ class ProjectController extends Controller
     {
         DB::table('projects')
             ->where('id', '=', $id)
-            ->update(array('status'=>0));
+            ->update(array('status'=>'closed'));
         
         return redirect()->route('projects')
             ->withInput(['tab'=>'closed'])
@@ -127,16 +129,15 @@ class ProjectController extends Controller
     public function myProjects(){
         $projects = DB::table('projects')
             ->where(['user_id' => Auth::user()->id,
-            'status' => '1'])
+            'status' => 'open'])
             ->orderByRaw('created_at DESC')
             ->get();
 
       $closedprojects = DB::table('projects')
             ->where(['user_id' => Auth::user()->id,
-            'status' => '0'])
+            'status' => 'closed'])
             ->orderByRaw('created_at DESC')
             ->get();
-
             return view('projects/seeker')
                 ->with(array('projects'=>$projects))->with(array('closedprojects'=>$closedprojects));
     }
@@ -149,17 +150,6 @@ class ProjectController extends Controller
         
             
         return view('projects/seeker')->with(array('projects'=>$projects));
-    }
-
-    public function getProjectsBidder()
-    {
-        $projects = DB::table('projects')
-            ->join('users', 'projects.user_id', '=', 'users.id')
-            ->orderBy('projects.id','desc')
-            ->select('*','projects.id as project_id')
-            ->get();
-
-            return view('users/bidder')->with(array('projects'=>$projects));
     }
 
     public function updateProject(Request $request, $id)
@@ -277,4 +267,17 @@ class ProjectController extends Controller
     public function seekerView(){
         return view('users/seeker');
     }
+
+    //END OF SEEKER
+
+    //BIDDER
+    public function getProjectsBidder()
+    {
+        $projects = DB::table('projects')
+            ->orderByRaw('created_at DESC')
+            ->get(); 
+            return view('users/bidder')->with(array('projects'=>$projects));
+    }
+
+    //END OF BIDDER
 }
