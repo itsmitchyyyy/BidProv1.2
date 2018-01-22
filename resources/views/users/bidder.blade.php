@@ -15,9 +15,9 @@
     @foreach($projects as $project)
       <tr>
         <td>
-        <h2><a href="#">{{ ucwords($project->title) }}</a></h2> <a href="#" style="text-decoration:none;color:black">{{ str_limit(ucfirst($project->details), $limit = 100, $end = '...') }}</a>
+        <h2><a href="{{ route('viewProject', ['id' => $project->id]) }}">{{ ucwords($project->title) }}</a></h2> <a href="#" style="text-decoration:none;color:black">{{ str_limit(ucfirst($project->details), $limit = 100, $end = '...') }}</a>
         </td>
-        <td><i class="fa fa-trophy"></i> 0 Entries</td>
+        <td><i class="fa fa-trophy"></i> @inject('proposal', 'App\Http\Controllers\ProjectController') {{ $proposal->countBid($project->id) }}</td>
         <td>
         <i class="fa fa-clock-o"></i>
         <?php
