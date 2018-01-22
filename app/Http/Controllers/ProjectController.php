@@ -13,6 +13,7 @@ use Redirect;
 use DB;
 use App\Project;
 use App\User;
+use App\Proposal;
 // Paypal
 use PayPal\Rest\ApiContext;
 use PayPal\Auth\OAuthTokenCredential;
@@ -273,11 +274,23 @@ class ProjectController extends Controller
     //BIDDER
     public function getProjectsBidder()
     {
-        $projects = DB::table('projects')
+         $projects = DB::table('projects')
+            ->where('duration', '>', Carbon::now())
             ->orderByRaw('created_at DESC')
-            ->get(); 
-            return view('users/bidder')->with(array('projects'=>$projects));
+            ->get();  
+            return view('users/bidder')->with(compact('projects'));
     }
 
+    public function countBid($id){
+        $proposal = Proposal::where('project_id', $id)->count();
+        return $proposal;
+       // return view('users/bidder')->with(compact('proposal'));
+    }
+
+    public function viewProject($id){
+    $avg = Proposal::where('project_id', $id)->avg('price');
+    $proposals = Project::where(['id' => $id, 'status' => 'open'])->with('proposals')->get();
+       return view('proposal/bidder')->with(compact('proposals','avg'));
+    }
     //END OF BIDDER
 }
