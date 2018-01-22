@@ -1,6 +1,8 @@
 @extends('layouts.bidderapp')
 @section('content')
-<div>
+<div class="container-fluid">
+<div class="card">
 
+</div>
 </div>
 @endsection
