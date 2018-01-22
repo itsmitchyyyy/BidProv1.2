@@ -19,12 +19,13 @@ class CreateProjectsTable extends Migration
             $table->foreign('user_id')->references('id')->on('users');
             $table->string('title');
             $table->string('details', 255);
-            $table->date('start');
-            $table->date('end');
+          //  $table->date('start');
+           // $table->date('end');
             $table->string('category');
             $table->decimal('min', 8,2);
             $table->decimal('max', 8,2);
-            $table->string('status')->default('1');
+            $table->string('status')->default('open');
+            $table->date('duration');
             $table->timestamps();
         });
     }
