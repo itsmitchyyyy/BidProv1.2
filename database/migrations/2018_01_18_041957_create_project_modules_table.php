@@ -18,7 +18,7 @@ class CreateProjectModulesTable extends Migration
             $table->integer('proposal_id')->unsigned();
             $table->foreign('proposal_id')->references('id')->on('proposals');
             $table->string('description', 255);
-            $table->date('daysTodo');
+            $table->string('daysTodo');
             $table->string('percentDone');
             $table->timestamps();
         });
