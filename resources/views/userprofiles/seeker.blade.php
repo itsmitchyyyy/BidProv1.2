@@ -76,15 +76,15 @@
                     <div class="col-md-8 col-xs-12">
                         <div class="white-box">
                             <ul class="nav customtab nav-tabs" id="tabMenu" role="tablist">
-                                <li role="presentation" class="nav-item"><a href="#home" class="nav-link active" aria-controls="home" role="tab" data-toggle="tab" aria-expanded="true"><span class="visible-xs"><i class="fa fa-home"></i></span><span class="hidden-xs"> Activity</span></a></li>
-                                <li role="presentation" class="nav-item"><a href="#profile" class="nav-link" aria-controls="profile" role="tab" data-toggle="tab" aria-expanded="false"><span class="visible-xs"><i class="fa fa-user"></i></span> <span class="hidden-xs">Profile</span></a></li>
+                                <!-- <li role="presentation" class="nav-item"><a href="#home" class="nav-link active" aria-controls="home" role="tab" data-toggle="tab" aria-expanded="true"><span class="visible-xs"><i class="fa fa-home"></i></span><span class="hidden-xs"> Activity</span></a></li> -->
+                                <li role="presentation" class="nav-item"><a href="#profile" class="nav-link active" aria-controls="profile" role="tab" data-toggle="tab" aria-expanded="false"><span class="visible-xs"><i class="fa fa-user"></i></span> <span class="hidden-xs">Profile</span></a></li>
                                <!-- <li role="presentation" class="nav-item"><a href="#messages" class="nav-link" aria-controls="messages" role="tab" data-toggle="tab" aria-expanded="false"><span class="visible-xs"><i class="fa fa-envelope-o"></i></span> <span class="hidden-xs">Message</span></a></li>-->
                                <li role="presentation" class="nav-item"><a href="#password" class="nav-link" aria-controls="password" role="tab" data-toggle="tab" aria-expanded="false"><span class="visible-xs"><i class="fa fa-key"></i></span> <span class="hidden-xs">Password</span></a></li>
                                 <li role="presentation" class="nav-item"><a href="#settings" class="nav-link" aria-controls="messages" role="tab" data-toggle="tab" aria-expanded="false"><span class="visible-xs"><i class="fa fa-cog"></i></span> <span class="hidden-xs">Setting</span></a></li>
                             </ul>
                             <div class="tab-content">
-                                <div class="tab-pane active" id="home">
-                                    <div class="steamline">
+                                <!-- <div class="tab-pane active" id="home">
+                                    <div class="steamline"> -->
                                          <!--  <div class="sl-item">
                                             <div class="sl-left"> <img src="/img/users/genu.jpg" alt="user" class="img-circle" /> </div>
                                             <div class="sl-right">
@@ -122,7 +122,7 @@
                                             </div>
                                         </div>-->
                                         
-                                        <div class="sl-item">
+                                       <!--  <div class="sl-item">
                                             <div class="sl-left">
                                             @if($data->avatar !== null)
                                              <img src="/{{ $data->avatar }}" alt="user" class="img-circle" />
@@ -138,8 +138,8 @@
                                         </div>
                                         <hr>
                                     </div>
-                                </div>
-                                <div class="tab-pane" id="profile">
+                                </div> -->
+                                <div class="tab-pane active" id="profile">
                                     <div class="row">
                                         <div class="col-md-3 col-xs-6 b-r"> <strong>Full Name</strong>
                                             <br>
@@ -162,7 +162,7 @@
                                     <p class="m-t-30">Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt.Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim.</p>
                                     <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries </p>
                                     <p>It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>-->
-                                    <h4 class="font-bold m-t-30">Skill Set</h4>
+                                    <!-- <h4 class="font-bold m-t-30">Skill Set</h4>
                                     <hr>
                                     <form action="" class="form-horizontal form-material">
                                     <div id="addInput" class="form-group">
@@ -187,7 +187,7 @@
                                     <h5>Photoshop <span class="pull-right">70%</span></h5>
                                     <div class="progress">
                                         <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:70%;"> <span class="sr-only">50% Complete</span> </div>
-                                    </div>
+                                    </div> -->
                                 </div>
                                <!-- <div class="tab-pane" id="messages">
                                     <div class="steamline">
@@ -430,4 +430,78 @@
             <footer class="footer text-center"> 2017 &copy;  brought to you by BidPro </footer>
         </div>
         <!-- /#page-wrapper -->
+@endsection
+@section('scripts')
+<script>
+        var loadImage = function(event){
+            var image = document.getElementById('previewImage');
+            image.src = URL.createObjectURL(event.target.files[0]);
+        }
+   </script>
+   <script>
+   $('#myUpload').change(function(){
+        if($(this).val()){
+            $('#uploadBtn').attr('disabled',false);
+        }else{
+            $('#uploadBtn').attr('disabled', 'disabled');
+        }
+   });
+   </script>
+   <script>
+    $(function(){
+        var addDiv = $('#addInput');
+        var i = $('#addInput p').length + 1;
+
+        $('#addNew').on('click', function(){
+            $('<p><input type="text" id="pNew" name="pNew[]" placeholder="New skill" class="form-control form-control-line"/><a href="#" id="remNew">Remove</a> </p>').appendTo(addDiv);
+            i++;
+            return false;
+        });
+
+        $('#addInput').on('click','#remNew', function(){
+            if( i > 2){
+                $(this).parents('p').remove();
+                i--;
+            }
+            return false;
+        });
+    });
+   </script>
+   
+   <script>
+        $('#newDP').on('click', function(){
+            $('#previewImage').attr('src', $('#imageSrc').attr('src'));
+            $('#profileImage').modal('show');
+        });
+   </script>
+    <script>
+    @if($errors->has('avatar'))
+        $('#profileImage').modal('show');
+        $('#profileImage').data('bs.modal').handleUpdate();
+    @endif
+    $('#profileImage').on('hidden.bs.modal', function(){
+        $(this).removeData();
+        $('#uploadBtn').attr('disabled','disabled');
+    });
+    </script>
+    <script>
+        $(document).ready(function(){
+            $('#updatePassword').attr('disabled',true);
+            $('form :input').not('#updatePassword').bind('keyup', function(){
+                if($(this).val().length != 0){
+                    $('#updatePassword').attr('disabled', false);
+                }else{
+                    $('#updatePassword').attr('disabled', true);
+                }
+            });
+        })
+    </script>
+    <script>
+        $('form').each(function(){
+            $(this).data('serialized', $(this).serialize())
+        }).on('change input', function(){
+            $(this).find('#updateProfile').prop('disabled', $(this).serialize() == $(this).data('serialized'));
+        }).find('#updateProfile').prop('disabled',true);
+    </script>
+   
 @endsection
