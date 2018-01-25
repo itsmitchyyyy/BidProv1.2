@@ -36,6 +36,7 @@
 <div class="tab-content">
 <div class="tab-pane active" id="open">
 <!-- TABLE -->
+
 <table id="myProject" class="table table-bordered table-striped" width="100%" cellspacing="0">
   <thead>
     <tr>
@@ -56,12 +57,14 @@
     </tr>
   </tfoot>
   <tbody>
-  @foreach($projects as $project)
+ 
+  @foreach($projects as $p => $project)
+ @inject('proposals', 'App\Http\Controllers\ProjectController') 
   <tr>
     <td><a href="{{ route('myProject', ['id' => $project->id]) }}"><b>{{ ucwords($project->title) }}</b></a></td>
-    <td>{{ $project->title }}</td>
-    <td>{{ $project->title }}</td>
-    <td>{{ $project->title }}</td>
+    <td>{{ $proposals->getProposal($project->id) }}</td>
+    <td><span>&#8369;</span> {{ number_format($proposals->getPrice($project->id),2) }}</td>
+    <td>{{ Carbon\Carbon::parse($project->duration)->diffForHumans() }}</td>
     <td>
       <button class="btn btn-link wew editBtn" title="Edit" data-tooltip="true" data-toggle="modal" data-target="#editModal{{ $project->id }}"><i class="fa fa-pencil-square-o"></i></button>
       <button class="btn btn-link wew deleteBtn" data-tooltip="true" title="Delete" data-toggle="modal" data-id="{{ $project->id }}"><i class="text-danger fa fa-trash"></i></button>
