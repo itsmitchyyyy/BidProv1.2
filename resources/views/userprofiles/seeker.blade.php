@@ -1,4 +1,16 @@
 @extends('layouts.seekerapp')
+@push('css')
+<style>
+.glyphicon-star:before {
+    content: "\f005";  /* this is your text. You can also use UTF-8 character codes as I do here */
+    font-family: FontAwesome;
+}
+.glyphicon-star-empty:before {
+    content: "\f005";  /* this is your text. You can also use UTF-8 character codes as I do here */
+    font-family: FontAwesome;
+}
+</style>
+@endpush
 @section('content')
 
 <div class="modal fade" id="profileImage" tabindex="-1" role="dialog" aria-labelledby="profileImage" aria-hidden="true">
@@ -57,7 +69,9 @@
                                     @endif
                                         <!--<h6><a href="#" id="newDP" class="text-white" data-toggle="tooltip" title="Set new profile picture">Edit Profile Picture</a></h6>-->
                                         <h4 class="text-white">{{$data->name}}</h4>
-                                        <h5 class="text-white">{{$data->email}}</h5> </div>
+                                        <h5 class="text-white">{{$data->email}}</h5> 
+                                        <input id="input-1" name="input-1" class="rating rating-loading" data-min="0" data-max="5" data-step="0.1" value="{{ $data->averageRating }}" data-size="s" disabled="">
+                                        </div>
                                 </div>
                             </div>
                            <div class="user-btm-box">
@@ -432,6 +446,11 @@
         <!-- /#page-wrapper -->
 @endsection
 @section('scripts')
+<script src="{{ asset('js/landing-page/jquery/jquery.min.js') }}"></script>
+<script src="{{ asset('js/star-rating.js') }}"></script>
+<script>
+    $('#input-id').rating();
+</script>
 <script>
         var loadImage = function(event){
             var image = document.getElementById('previewImage');
