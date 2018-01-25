@@ -39,6 +39,7 @@ class ProjectController extends Controller
 
 // SEEKER
     public function create(Request $request){
+        
         $regex = '/^\d{0,8}(\.\d{1,2})?$/';
         $validator = Validator::make($request->all(), [
             'title' => 'required|string|max:255',
@@ -125,6 +126,12 @@ class ProjectController extends Controller
         return redirect()->route('projects')
             ->withInput(['tab'=>'closed'])
             ->with('success','Project closed');
+    }
+
+    public function getMyProject($id){
+        $avg = Proposal::where('project_id', $id)->avg('price');
+        $proposals = Project::where(['id' => $id, 'status' => 'open'])->with('proposals')->get();
+           return view('projects/view')->with(compact('proposals','avg'));
     }
 
     public function myProjects(){
@@ -291,6 +298,60 @@ class ProjectController extends Controller
     $avg = Proposal::where('project_id', $id)->avg('price');
     $proposals = Project::where(['id' => $id, 'status' => 'open'])->with('proposals')->get();
        return view('proposal/bidder')->with(compact('proposals','avg'));
+    }
+
+    public function proposeProject(Request $request, $project_id, $user_id){
+        $regex = '/^\d{0,8}(\.\d{1,2})?$/';
+        $validator = Validator::make($request->all(),[
+            'price' => 'required|regex:'.$regex,
+            'description' => 'required',
+            'days' => 'required'
+        ]);
+        if($validator->fails()){
+            // dd($validator);
+            return redirect('proposals')
+                ->withInput()
+                ->withErrors($validator);
+        }
+        $check = Proposal::where('bidder_id', Auth::user()->id)->first();
+        $project = Project::where('id', $project_id)->first();
+        if($check != null){
+            return redirect()->route('proposal', $project_id)
+                ->with('error','Already bidded');
+        }else{
+        $proposal = new Proposal();
+        $proposal->bidder_id = Auth::user()->id;
+        $proposal->project_id = $project_id;
+        $proposal->price = $request->price;
+        $proposal->save();
+        $proposal_id = $proposal->id;
+       
+        $details = $request->description;
+        $daystoDo = $request->days;
+        $data = array_merge(['description' => $details],['daysTODO' => $daystoDo]);
+        foreach(array_combine($data['description'], $data['daysTODO']) as $description => $toDo){ 
+         DB::table('project_modules')
+            ->insert([
+                'proposal_id' => $proposal_id,
+                'description' => $description,
+                'daysTodo' => $toDo,
+                'percentDone' => 0
+            ]);
+        }   
+            
+       event(new \App\Events\BidNotified(Auth::user()->name,'placed a bid on '.$project->title ,Auth::user()->avatar, "route('projects')"));
+       $this->insertNotification(['user_id' => $user_id, 'name' => Auth::user()->name, 'message' => 'placed a bid on '.$project->title, 'avatar' => Auth::user()->avatar, 'link' => route('projects'), 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()]);
+       return redirect()->route('bidder');
+        }
+    }
+    public function insertNotification($data){
+        DB::table('notifications')->insert($data);
+    }
+
+    public function proposalDetails($id){
+        $avg = Proposal::where('project_id' , $id)->avg('price');
+        $proposals = Project::where(['id' => $id, 'status' => 'open'])->with('proposals')->get();
+        return view('proposal/details')->with(compact('proposals','avg'));
     }
     //END OF BIDDER
 }
