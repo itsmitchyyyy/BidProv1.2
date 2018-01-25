@@ -7,6 +7,7 @@
     <link rel="shortcut icon" href="/img/bidprologo.png" type="image/x-icon">
     <title>BidPro</title>
     <link rel="stylesheet" href="{{ asset('css/seeker/seeker.css') }}">
+    @stack('css')
     <script src="{{ asset('js/app.js') }}"></script>
     <style>
         .wew:hover{
