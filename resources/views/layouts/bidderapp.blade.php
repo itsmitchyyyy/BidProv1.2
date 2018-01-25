@@ -20,6 +20,9 @@
             text-decoration: inherit;
 
         }
+        .hidden{
+          display:none;
+        }
     </style>
 </head>
 <body>
