@@ -21,11 +21,13 @@ class BidNotified implements ShouldBroadcast
      *
      * @return void
      */
-    public function __construct($username)
+    public function __construct($username, $message, $avatar, $link)
     {
         //
         $this->username = $username;
-        $this->message = "{$username} bid to your project";
+        $this->message = "{$username} $message";
+        $this->avatar = $avatar;
+        $this->link = $link;
     }
 
     /**
