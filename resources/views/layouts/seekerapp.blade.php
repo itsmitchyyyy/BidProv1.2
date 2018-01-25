@@ -7,6 +7,10 @@
     <link rel="shortcut icon" href="/img/bidprologo.png" type="image/x-icon">
     <title>BidPro</title>
     <style>
+    .dropdown-menu{
+        max-height:400px;
+        overflow-y:auto;
+    }
      .gap-right{
          margin-right:10px;
      }
@@ -34,202 +38,66 @@
     @yield('content')
     
 </body>
-@yield('scripts')
 <script src="{{ asset('js/bower_components/datatables/jquery.dataTables.min.js') }}"></script>
+@yield('scripts')
 <script>
-    /*$('.modal-body form').each(function(){
-        $(this).data('serialized', $(this).serialize())
-    }).on('change input', function(){
-        $(this).find('#projectUpdate').prop('disabled', $(this).serialize() == $(this).data('serialized'));
-    }).find('#projectUpdate').prop('disabled',true);*/
-</script>
-<script>
-    $(document).ready(function(){
-        $('#myProject').DataTable();
-        $('#myProjectClose').DataTable();
-    });
+  var wrapper = $('.notifications');
+  var toggle = wrapper.find('a[data-toggle]');
+  var element = toggle.find('i[data-count]');
+  var counter = parseInt(element.data('count'));
+  var notifications = wrapper.find('div.dropdown-menu');
+  var notifier = wrapper.find('#counts');
+
+  //notifier.hide();
+
+  var pusher = new Pusher('9ab3129dae2df45ee2fc',{
+    cluster: 'ap1',
+    encrypted: true
+  });
+
+  var channel = pusher.subscribe('bid-notify');
+  channel.bind('App\\Events\\BidNotified', function(data){
+    var header = notifications.html();
+   // var footer = ``;
+    //alert(existing);
+    
+    var newnotifications = `
+        <a href="{{ `+data.link+` }}">
+          <div class="message-center">
+            <div class="user-img ml-2">
+              <img src="`+data.avatar+`" alt="avatar" style="border-radius:50%">
+            </div>
+            <div class="mail-content">
+              <h5><b>`+data.message+`</b></h5>
+              <span class="mail-desc"><small>View</small></span>
+            </div>
+          </div>
+        </a>
+        <hr>
+    `;
+    notifications.html(header + newnotifications);
+    counter += 1;
+    element.attr('data-count', counter);
+    wrapper.find('.notif-count').text(counter);
+    wrapper.find('#counts').text(counter);
+  });
+ // wrapper.hide();
 </script>
 <script>
     $(document).ready(function(){
         $('[data-tooltip="true"]').tooltip();
     });
 </script>
-<script>
-    $(".editBtn").on('click',function(e){
-        var id = $(this).data('id');
-        $('#editModal'+id).modal('show');
-        //$('#projectUpdate').prop('disabled',true);
-     
-    });
-</script>
-<script>
-    $(".closeBtn").on('click', function(){
-        var id = $(this).data('id');
-        $('#closeModal'+id).modal('show');
-    });
-</script>
-<script>
-    $(".deleteBtn").on('click', function(){
-        var id = $(this).data('id');
-        $('#deleteModal'+id).modal('show');
-    });
-</script>
-<script>
-    @if(!empty(Session::get('repost_error')))
-        $(document).ready(function(){
-            $('#repostModal'+{{ Session::get('repost_error')}}).modal('show');
-        });
-    @endif
-</script>
-<script>
-    //alert({{Session::get('error_code')}})
-    @if(!empty(Session::get('error_code')))
-    $(document).ready(function(){
-        $('#editModal'+{{Session::get('error_code')}}).modal('show');
-    });
-    @endif
-</script>
-<script>
-     @if(!empty(Session::get('adding_error')) && Session::get('adding_error') == 5)
-            $('#myModal').modal('show');
-            $('#myModal').data('bs.modal').handleUpdate();
-     @endif
-    </script>
-    <script>
-    @if($errors->has('avatar'))
-        $('#profileImage').modal('show');
-        $('#profileImage').data('bs.modal').handleUpdate();
-    @endif
-    $('#profileImage').on('hidden.bs.modal', function(){
-        $(this).removeData();
-        $('#uploadBtn').attr('disabled','disabled');
-    });
-    </script>
-    <script>
-        $(document).ready(function(){
-            $('#updatePassword').attr('disabled',true);
-            $('form :input').not('#updatePassword').bind('keyup', function(){
-                if($(this).val().length != 0){
-                    $('#updatePassword').attr('disabled', false);
-                }else{
-                    $('#updatePassword').attr('disabled', true);
-                }
-            });
-        })
-    </script>
-    <script>
-        $('form').each(function(){
-            $(this).data('serialized', $(this).serialize())
-        }).on('change input', function(){
-            $(this).find('#updateProfile').prop('disabled', $(this).serialize() == $(this).data('serialized'));
-        }).find('#updateProfile').prop('disabled',true);
-    </script>
-    <!--<script>
-        var button = $('#updateProject');
-        button.attr('disabled',true);
-        $('form :input').not(button).bind('keyup change', function(){
-            var changed = $('form :input').not(button).filter(function(){
-                if(this.type == 'radio' || this.type == 'checkbox'){
-                    return this.checked != $(this).data('default');
-                }else{
-                    return this.value != $(this).data('default');
-                }
-            });
-            $('#updateProject').prop('disabled', !changed.length);
-        });
-    </script>-->
-    <!--<script>
-        $(document).ready(function(){
-            $('#updateProfile').attr('disabled',true);
-            $('form :input').not('#updateProfile').bind('keyup change',function(){
-                $('#updateProfile').attr('disabled',false);
-            });
-        });
-    </script>-->
-    <script>
-        var maxChar = 255;
-        $('#charLeft').text(maxChar + ' characters left');
-        $('#details').keyup(function(){
-            var textLength = $(this).val().length;
-            if(textLength >= maxChar){
-                $('#charLeft').text('You have reached the limit of ' + maxChar + ' characters');
-            } else {
-                var count = maxChar - textLength;
-                $('#charLeft').text(count + ' characters left');
-            }
-        });
-    </script>
-    <script>
-        $('#min').change(function(){
-            this.value = parseFloat(this.value).toFixed(2);
-        });
-
-        $('#max').change(function(){
-            this.value = parseFloat(this.value).toFixed(2);
-        });
-    </script>
+   
     <script>
         $(document).ready(function(){
             $('[data-toggle="tooltip"]').tooltip();
         });
     </script>
    <script>
-        $('#newDP').on('click', function(){
-            $('#previewImage').attr('src', $('#imageSrc').attr('src'));
-            $('#profileImage').modal('show');
-        });
-   </script>
-   <script>
     $(document).ready(function(){
         $('#tabMenu a[href="#{{ old('tab') }}"]').tab('show');
     });
    </script>
-   <script>
-    $(function(){
-        var addDiv = $('#addInput');
-        var i = $('#addInput p').length + 1;
-
-        $('#addNew').on('click', function(){
-            $('<p><input type="text" id="pNew" name="pNew[]" placeholder="New skill" class="form-control form-control-line"/><a href="#" id="remNew">Remove</a> </p>').appendTo(addDiv);
-            i++;
-            return false;
-        });
-
-        $('#addInput').on('click','#remNew', function(){
-            if( i > 2){
-                $(this).parents('p').remove();
-                i--;
-            }
-            return false;
-        });
-    });
-   </script>
-   <script>
-        var loadImage = function(event){
-            var image = document.getElementById('previewImage');
-            image.src = URL.createObjectURL(event.target.files[0]);
-        }
-   </script>
-   <script>
-   $('#myUpload').change(function(){
-        if($(this).val()){
-            $('#uploadBtn').attr('disabled',false);
-        }else{
-            $('#uploadBtn').attr('disabled', 'disabled');
-        }
-   });
-   </script>
-  <!-- <script>
-    $('#title').focus(function(){
-        $(this).attr('value','ASDSAD');
-    });
-   </script>-->
- <!--  <script>
-    $('#max').focus(function(){
-        $(this).attr('placeholder', 'Max Price');
-    });
-    $('#max').focusout(function(){
-        $(this).attr('placeholder','');
-    });
-   </script>-->
+   `
 </html>
