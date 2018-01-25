@@ -21,12 +21,28 @@
     <ul class="navbar-nav">
     <li class="nav-item dropdown notifications">
       <a href="#" class="nav-link" data-toggle="dropdown" id="dropDownMessage">
-        <i class="fa fa-envelope-o" data-count="0"></i>
+        <i class="fa fa-bell" style="color:orange" data-count="0"></i>
         <span class="text-danger" id="counts" class="notify-count">0</span>
       </a>
       <div class="dropdown-menu dropdown-menu-right"  aria-labelledBy="dropdownMessage">
       <h6 class="dropdown-header">You have (<span class="notif-count">0</span>) notifications</h6>
       <div class="text-center" style="font-size:12px"><small><a href="#" class="text-dark">See all messages</a></small></div>
+       @inject('notifications', 'App\Http\Controllers\NotificationController')
+     
+      @foreach($notifications->navNotification() as $notify)
+      <a href="{{ $notify->link }}">
+          <div class="message-center">
+            <div class="user-img ml-2">
+              <img src="{{ $notify->avatar }}" alt="avatar" style="border-radius:50%">
+            </div>
+            <div class="mail-content">
+              <h5><b>{{ ucfirst($notify->message) }}</b></h5>
+              <span class="mail-desc"><small>View</small></span>
+            </div>
+          </div>
+        </a>
+        <hr>
+    @endforeach
         <!-- <h6 class="dropdown-header">You have (<span class="notif-count">0</span>) notifications</h6>
         <a href="#">
           <div class="message-center">
@@ -54,7 +70,7 @@
         @endif
         {{ ucwords(Auth::user()->name) }}
       </a>
-      <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+      <div  class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
         <a class="dropdown-item" href="{{ route('profile',['id' => Auth::user()->id]) }}"><i class="ti-user"></i> Profile</a>
         <a class="dropdown-item" href="{{ route('logout') }}"><i class="fa fa-power-off"></i> Logout</a>
       </div>
@@ -62,48 +78,3 @@
     </ul>
   </div>
 </nav>
-
-@section('scripts')
-<script>
-  var wrapper = $('.notifications');
-  var toggle = wrapper.find('a[data-toggle]');
-  var element = toggle.find('i[data-count]');
-  var counter = parseInt(element.data('count'));
-  var notifications = wrapper.find('div.dropdown-menu');
-  var notifier = wrapper.find('#counts');
-
-  //notifier.hide();
-
-  var pusher = new Pusher('9ab3129dae2df45ee2fc',{
-    cluster: 'ap1',
-    encrypted: true
-  });
-
-  var channel = pusher.subscribe('bid-notify');
-  channel.bind('App\\Events\\BidNotified', function(data){
-    var header = notifications.html();
-   // var footer = ``;
-    //alert(existing);
-    var newnotifications = `
-        <a href="#">
-          <div class="message-center">
-            <div class="user-img ml-2">
-              <img src="{{ Auth::user()->avatar }}" alt="avatar" style="border-radius:50%">
-            </div>
-            <div class="mail-content">
-              <h5><b></b>`+data.message+`</h5>
-              <span class="mail-desc"></span>
-            </div>
-          </div>
-        </a>
-        <hr>
-    `;
-    notifications.html(header + newnotifications);
-    counter += 1;
-    element.attr('data-count', counter);
-    wrapper.find('.notif-count').text(counter);
-    wrapper.find('#counts').text(counter);
-  });
- // wrapper.hide();
-</script>
-@endsection
