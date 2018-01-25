@@ -1,4 +1,16 @@
 @extends('layouts.bidderapp')
+@push('css')
+<style>
+.glyphicon-star:before {
+    content: "\f005";  /* this is your text. You can also use UTF-8 character codes as I do here */
+    font-family: FontAwesome;
+}
+.glyphicon-star-empty:before {
+    content: "\f005";  /* this is your text. You can also use UTF-8 character codes as I do here */
+    font-family: FontAwesome;
+}
+</style>
+@endpush
 @section('content')
 <div class="container-fluid m-t-15">
 
@@ -19,12 +31,8 @@
         <h4 class="card-title"><b>Project description</b></h4>
         <p class="card-text" style="max-width:40em;word-wrap:break-word">{{ $proposal->details }}</p>
         <p class="card-text">
-        <h4><b>About the seeker</b></h4>
-        <i class="fa fa-star" style="color:orange"></i>
-        <i class="fa fa-star" style="color:orange"></i>
-        <i class="fa fa-star" style="color:orange"></i>
-        <i class="fa fa-star-half-full" style="color:orange"></i>
-        <i class="fa fa-star-o" style="color:orange"></i>
+        <h4><b>Seeker Review</b></h4>
+        <input id="input-1" name="input-1" class="rating rating-loading" data-min="0" data-max="5" data-step="0.1" value="2" data-size="s" disabled="">
         </p>
         <div class="pull-right">
         @if($proposal->duration < Carbon\Carbon::now())
@@ -51,4 +59,11 @@
 <?php } ?>
 </table>
 </div>
+@endsection
+@section('scripts')
+<script src="{{ asset('js/landing-page/jquery/jquery.min.js') }}"></script>
+<script src="{{ asset('js/star-rating.js') }}"></script>
+<script>
+    $('#input-id').rating();
+</script>
 @endsection
