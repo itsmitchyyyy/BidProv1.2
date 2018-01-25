@@ -30,7 +30,7 @@
         @if($proposal->duration < Carbon\Carbon::now())
         <button disabled class="btn btn-info wew">Bid</button>
         @else
-        <button  class="btn btn-info wew">Bid</button>
+        <a href="{{ route('proposal', ['project_id' => $proposal->id]) }}"><button  class="btn btn-info wew">Bid</button></a>
         @endif
         </div>
     </div>
