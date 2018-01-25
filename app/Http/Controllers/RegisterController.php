@@ -32,6 +32,7 @@ class RegisterController extends Controller
         $user->email = $request->email;
         $user->username = $request->username;
         $user->password = bcrypt($request->password);
+        $user->avatar = 'uploads/blank.png';
         $type = Input::get('type');
         $user->save();
         $user->roles()->attach(Role::where('name', $type)->first());
