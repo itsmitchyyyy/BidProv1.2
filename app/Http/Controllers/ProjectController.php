@@ -134,12 +134,22 @@ class ProjectController extends Controller
            return view('projects/view')->with(compact('proposals','avg'));
     }
 
+    public function getProposal($id){
+        $proposal = Proposal::where('project_id', $id)->count();
+        return $proposal;
+    }
+    public function getPrice($id){
+        $highest = Proposal::where('project_id', $id)->max('price');
+        return $highest;
+    }
     public function myProjects(){
         $projects = DB::table('projects')
             ->where(['user_id' => Auth::user()->id,
             'status' => 'open'])
             ->orderByRaw('created_at DESC')
-            ->get();
+            ->get(); 
+            
+            
 
       $closedprojects = DB::table('projects')
             ->where(['user_id' => Auth::user()->id,
