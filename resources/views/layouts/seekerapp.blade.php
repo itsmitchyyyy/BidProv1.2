@@ -31,6 +31,7 @@
         }
     </style>
     <link rel="stylesheet" href="{{ asset('css/seeker/seeker.css') }}">
+    @stack('css')
     <script src="{{ asset('js/app.js') }}"></script>
 </head>
 <body>
