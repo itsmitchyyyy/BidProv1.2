@@ -58,7 +58,7 @@
   <tbody>
   @foreach($projects as $project)
   <tr>
-    <td><a href="#"><b>{{ ucwords($project->title) }}</b></a></td>
+    <td><a href="{{ route('myProject', ['id' => $project->id]) }}"><b>{{ ucwords($project->title) }}</b></a></td>
     <td>{{ $project->title }}</td>
     <td>{{ $project->title }}</td>
     <td>{{ $project->title }}</td>
@@ -215,7 +215,7 @@
   <tbody>
   @foreach($closedprojects as $project)
   <tr>
-    <td><a href="#"><b>{{ ucwords($project->title) }}</b></a></td>
+    <td><a href="{{ route('myProject', ['id' => $project->id]) }}"><b>{{ ucwords($project->title) }}</b></a></td>
     <td>{{ $project->title }}</td>
     <td>{{ $project->title }}</td>
     <td>{{ $project->title }}</td>
@@ -402,5 +402,76 @@
 
  
 </div>
+
+@endsection
+@section('scripts')
+<script>
+    $(document).ready(function(){
+        $('#myProject').DataTable();
+        $('#myProjectClose').DataTable();
+    });
+</script>
+<script>
+        $('#min').change(function(){
+            this.value = parseFloat(this.value).toFixed(2);
+        });
+
+        $('#max').change(function(){
+            this.value = parseFloat(this.value).toFixed(2);
+        });
+    </script>
+<script>
+        var maxChar = 255;
+        $('#charLeft').text(maxChar + ' characters left');
+        $('#details').keyup(function(){
+            var textLength = $(this).val().length;
+            if(textLength >= maxChar){
+                $('#charLeft').text('You have reached the limit of ' + maxChar + ' characters');
+            } else {
+                var count = maxChar - textLength;
+                $('#charLeft').text(count + ' characters left');
+            }
+        });
+    </script>
+<script>
+     @if(!empty(Session::get('adding_error')) && Session::get('adding_error') == 5)
+            $('#myModal').modal('show');
+            $('#myModal').data('bs.modal').handleUpdate();
+     @endif
+</script>
+<script>
+    @if(!empty(Session::get('repost_error')))
+        $(document).ready(function(){
+            $('#repostModal'+{{ Session::get('repost_error')}}).modal('show');
+        });
+    @endif
+</script>
+<script>
+    $(".editBtn").on('click',function(e){
+        var id = $(this).data('id');
+        $('#editModal'+id).modal('show');
+        //$('#projectUpdate').prop('disabled',true);
+     
+    });
+</script>
+<script>
+    $(".closeBtn").on('click', function(){
+        var id = $(this).data('id');
+        $('#closeModal'+id).modal('show');
+    });
+</script>
+<script>
+    $(".deleteBtn").on('click', function(){
+        var id = $(this).data('id');
+        $('#deleteModal'+id).modal('show');
+    });
+</script>
+<script>
+    @if(!empty(Session::get('error_code')))
+    $(document).ready(function(){
+        $('#editModal'+{{Session::get('error_code')}}).modal('show');
+    });
+    @endif
+</script>
 
 @endsection
