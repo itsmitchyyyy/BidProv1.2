@@ -67,6 +67,9 @@ Route::group(['middleware' => ['auth']], function(){
     Route::get('bidder/inbox', function(){
         return view('inbox/bidder');
     }); 
+    Route::get('bidder/inbox-detail', function(){
+        return view('inbox/inbox-detail');
+    });
     Route::get('project/{id}', ['as' => 'viewProject', 'uses' => 'ProjectController@viewProject']);
     Route::get('project/proposal/{id}', ['as' => 'proposal', 'uses' => 'ProjectController@proposalDetails']);
     Route::post('propose/{project_id}/{user_id}', ['as' => 'proposetome', 'uses' => 'ProjectController@proposeProject']);
