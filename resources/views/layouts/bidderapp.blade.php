@@ -27,42 +27,47 @@
     @yield('content')
     
 </body>
+<script src="{{ asset('js/bower_components/datatables/jquery.dataTables.min.js') }}"></script>
 @yield('scripts')
+<!-- NOTIFICATION SCRIPT -->
 <script>
-    $(".proposeBtn").on('click',function(e){
-        var id = $(this).data('id');
-        e.preventDefault();
-        $('.viewModal')
-            .modal('hide')
-            .on('hidden.bs.modal',function(e){
-                $('#proposeModal'+id).modal('show');
-                $(this).off('hidden.bs.modal');
-            });
-    });
-</script>
-<script>
-    $('#price').change(function(){
-        this.value = parseFloat(this.value).toFixed(2);
-    })
-</script>
-<script>
-$(function(){
-    var divModule = $("#divModule");
-    var i = $("#divModule p").length + 1;
+      var wrapper = $('.notifications');
+      var toggle = wrapper.find('a[data-toggle]');
+      var element = toggle.find('i[data-count]');
+      var counter = parseInt(element.data('count'));
+      var notifications = wrapper.find('#menuItems');
+        /* if(counter = 0){
+         wrapper.hide();
+       }  */
 
-    $('#addModule').on('click', function(){
-        $('<p><input type="text" id="newModule" name="module[]" class="form-control" placeholder="New Module"><span class="bar"></span><a href="#" id="remModule">Remove Module</a></p>').appendTo(divModule);
-        i++;
-        return false;
-    });
+      var pusher = new Pusher('9ab3129dae2df45ee2fc',{
+        cluster: 'ap1',
+        encrypted: true,
+      })
 
-    $('#divModule').on('click', '#remModule', function(){
-        if(i > 2){
-            $(this).parents('p').remove();
-            i--;
-        }
-        return false;
-    });
-});
-</script>
+      var channel = pusher.subscribe('bid-notify');
+      channel.bind('App\\Events\\BidNotified', function(data){
+        var existing = notifications.html();
+        var newnotification = `<a href="http://">
+        <div class="message-center">
+          <div class="user-img ml-2">
+            <img src="/uploads/blank.png" alt="avatar" style="border-radius:50%;">
+          </div>
+          <div class="mail-content">
+            <h5><b>`+data.message+`</b></h5>
+            <span class="mail-desc">View</span>
+          </div>
+        </div>
+        </a>
+        <hr>`;
+        notifications.html(existing + newnotification);
+      counter += 1;
+      element.attr('data-count', counter);
+      wrapper.find('.notif-count').text(counter);
+      // wrapper.show();
+      });
+     
+      //notifications.hide();
+     // wrapper.hide();
+  </script>
 </html>
