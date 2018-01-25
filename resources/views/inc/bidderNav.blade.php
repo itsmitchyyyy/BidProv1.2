@@ -8,6 +8,12 @@
     <li class="nav-item{{ Request::is('bidder') ? ' active' : ''}}">
       <a class="nav-link" href="{{ route('bidder') }}">Home <span class="sr-only">(current)</span></a>
     </li>
+    <li class="nav-item">
+      <a href="#" class="nav-link">My Works</a>
+    </li>
+    <li class="nav-item{{ Request::is('proposals') ? ' active' : ''}}">
+      <a href="{{ route('bids') }}" class="nav-link">My Bids</a>
+    </li>
    <!--<li class="nav-item">
       <a class="nav-link" href="#">Features</a>
     </li>
@@ -16,13 +22,39 @@
     </li>-->
     </ul>
     <ul class="navbar-nav">
+    <!-- <li class="nav-item dropdown">
+    <a href="#" class="nav-link" data-toggle="dropdown" id="navbarDropdownInbox">
+      <i class="ti-email"></i>
+      <span class="text-danger">0</span>
+    </a>
+
+    <div id="inboxItems" class="dropdown-menu dropdown-menu-right" aria-laballedBy="navbarDropdownInbox">
+      <h6 class="dropdown-header">You have <span>(0)</span> new messages</h6>
+      <a href="http://">
+        <div class="message-center">
+          <div class="user-img ml-2">
+            <img src="/uploads/blank.png" alt="" style="border-radius:50%;">
+          </div>
+          <div class="mail-content">
+         
+            <h5><b>Asd</b></h5>
+            <span class="mail-desc">ASDSAD</span>
+          </div>
+        </div>
+        </a>
+        <hr>
+        <div class="text-center">
+        <a href="" class="text-dark"><strong>See all messages </strong><i class="fa fa-angle-right"></i></a>
+        </div>
+    </div>
+    </li> -->
     <li class="nav-item dropdown notifications">
      <a href="" class="nav-link" data-toggle="dropdown" id="navbarDropdownMessage" href="#">
-        <i class="fa fa-envelope-o" data-count="0"></i>
+        <i class="fa fa-bell" style="color:orange" data-count="0"></i>
         <span class="text-danger notif-count">0</span>
       </a>
       <div id="menuItems" class="dropdown-menu dropdown-menu-right" aria-labelledBy="navbarDropdownMessage">
-       <h6 class="dropdown-header">You have (<span class="notif-count">0</span>) new messages</h6>
+       <h6 class="dropdown-header">You have (<span class="notif-count">0</span>) new notifications</h6>
        <!-- <a href="http://">
         <div class="message-center">
           <div class="user-img ml-2">
@@ -52,7 +84,7 @@
         {{ ucwords(Auth::user()->name) }}
       </a>
       <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-        <a class="dropdown-item" href=""><i class="ti-email"></i> Inbox</a>
+        <!-- <a class="dropdown-item" href=""><i class="ti-email"></i> Inbox</a> -->
         <a class="dropdown-item" href="{{ route('bidderprofile',['id' => Auth::user()->id]) }}"><i class="ti-user"></i> Profile</a>
         <a class="dropdown-item" href="{{ route('logout') }}"><i class="fa fa-power-off"></i> Logout</a>
       </div>
@@ -60,47 +92,3 @@
     </ul>
   </div>
 </nav>
-
-@section('scripts')
-<script src="https://js.pusher.com/3.1/pusher.min.js"></script>
-  <script>
-      var wrapper = $('.notifications');
-      var toggle = wrapper.find('a[data-toggle]');
-      var element = toggle.find('i[data-count]');
-      var counter = parseInt(element.data('count'));
-      var notifications = wrapper.find('#menuItems');
-      //  if(counter <= 0){
-      //   wrapper.hide();
-      // } 
-
-      var pusher = new Pusher('9ab3129dae2df45ee2fc',{
-        cluster: 'ap1',
-        encrypted: true,
-      })
-
-      var channel = pusher.subscribe('bid-notify');
-      channel.bind('App\\Events\\BidNotified', function(data){
-        var existing = notifications.html();
-        var newnotification = `<a href="http://">
-        <div class="message-center">
-          <div class="user-img ml-2">
-            <img src="/uploads/blank.png" alt="" style="border-radius:50%;">
-          </div>
-          <div class="mail-content">
-            <h5><b>`+data.message+`</b></h5>
-            <span class="mail-desc">ASDSAD</span>
-          </div>
-        </div>
-        </a>
-        <hr>`;
-        notifications.html(existing + newnotification);
-      counter += 1;
-      element.attr('data-count', counter);
-      wrapper.find('.notif-count').text(counter);
-      // wrapper.show();
-      });
-     
-      //notifications.hide();
-     // wrapper.hide();
-  </script>
-@endsection
