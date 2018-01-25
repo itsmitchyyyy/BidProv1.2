@@ -18,6 +18,13 @@
 Route::get('/', function () {
     return view('home');
 });
+Route::get('ratings', function(){
+    return view('ratings/seeker');
+});
+
+Route::get('ratings', 'RatingController@viewUser')->name('rate');
+
+
 Route::get('login', 'LoginController@loginForm')->name('login');
 Route::post('login', 'LoginController@login');
 Route::get('email', 'ResetController@showReset')->name('password.email');
@@ -76,4 +83,8 @@ Route::group(['middleware' => ['auth']], function(){
     
     Route::get('proposals', ['as' => 'bids', 'uses' => 'ProposalController@viewProposals']);
     Route::delete('proposals', ['uses' => 'ProposalController@cancelProposal']);
+
+    //ratings
+    Route::post('ratings', 'RatingController@postReview')->name('rate.post');
+    Route::get('ratings/{id}', 'RatingController@reviewUser')->name('rate.show');
 });
