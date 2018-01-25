@@ -36,7 +36,7 @@
  </div>
 @endsection
 @section('scripts')
-<script src="{{ asset('js/bower_components/datatables/jquery.dataTables.min.js') }}"></script>
+  <script src="{{ asset('js/bower_components/datatables/jquery.dataTables.min.js') }}"></script>
   <script>
     $(document).ready(function(){
       $('#myTable').DataTable();
