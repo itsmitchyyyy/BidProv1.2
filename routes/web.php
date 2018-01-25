@@ -10,10 +10,11 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::get('test', function(){
-    event(new App\Events\BidNotified('Someone'));
+/* Route::get('test', function(){
+    event(new App\Events\BidNotified('Someone','test','test','test'));
     return 'Notified';
-});
+}); */
+
 Route::get('/', function () {
     return view('home');
 });
@@ -57,12 +58,19 @@ Route::group(['middleware' => ['auth']], function(){
     Route::post('seeker/profile/{id}', ['uses' => 'SeekerController@updatePassword']);
     Route::patch('seeker/profile/{id}', [ 'uses' => 'SeekerController@updateProfile']);
     Route::patch('seeker/avatar/{id}', ['as' => 'avatar', 'uses' => 'SeekerController@updateAvatar']);
+    Route::get('notifications', ['as' => 'viewNotification', 'uses' => 'NotificationController@viewNotification']);
+    Route::get('view/{id}', ['as' => 'myProject', 'uses' => 'ProjectController@getMyProject']);
 
     //bidder
     Route::get('bidder', ['as' => 'bidder', 'uses' => 'ProjectController@getProjectsBidder']);
-    Route::get('bidder/profile/{id}', ['as' => 'bidderprofile', 'uses' => 'BidderController@bidderProfile']);
+    Route::get('bidder/profile/{project_id}', ['as' => 'bidderprofile', 'uses' => 'BidderController@bidderProfile']);
     Route::get('bidder/inbox', function(){
         return view('inbox/bidder');
     }); 
     Route::get('project/{id}', ['as' => 'viewProject', 'uses' => 'ProjectController@viewProject']);
+    Route::get('project/proposal/{id}', ['as' => 'proposal', 'uses' => 'ProjectController@proposalDetails']);
+    Route::post('propose/{project_id}/{user_id}', ['as' => 'proposetome', 'uses' => 'ProjectController@proposeProject']);
+    
+    Route::get('proposals', ['as' => 'bids', 'uses' => 'ProposalController@viewProposals']);
+    Route::delete('proposals', ['uses' => 'ProposalController@cancelProposal']);
 });
