@@ -19,15 +19,16 @@
     </li>-->
     </ul>
     <ul class="navbar-nav">
+    @inject('notifications', 'App\Http\Controllers\NotificationController')
     <li class="nav-item dropdown notifications">
       <a href="#" class="nav-link" data-toggle="dropdown" id="dropDownMessage">
         <i class="fa fa-bell" style="color:orange" data-count="0"></i>
-        <span class="text-danger" id="counts" class="notify-count">0</span>
+        <span class="text-danger" id="counts" class="notify-count">{{ $notifications->countNotification() }}</span>
       </a>
       <div class="dropdown-menu dropdown-menu-right"  aria-labelledBy="dropdownMessage">
-      <h6 class="dropdown-header">You have (<span class="notif-count">0</span>) notifications</h6>
+      <h6 class="dropdown-header">You have (<span class="notif-count">{{ $notifications->countNotification() }}</span>) unread notifications</h6>
       <div class="text-center" style="font-size:12px"><small><a href="#" class="text-dark">See all messages</a></small></div>
-       @inject('notifications', 'App\Http\Controllers\NotificationController')
+     
      
       @foreach($notifications->navNotification() as $notify)
       <a href="{{ $notify->link }}">
