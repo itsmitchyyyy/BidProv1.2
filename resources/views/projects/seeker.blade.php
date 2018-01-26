@@ -1,4 +1,11 @@
 @extends('layouts.seekerapp')
+@push('css')
+<style>
+.hidden{
+  display:none;
+}
+</style>
+@endpush
 @section('content')
 <!--<div class="clearfix">
 <img src="/uploads/blank.png" alt="" class=" rounded-circle float-left gap-right" style="width:100px;height:100px;margin-left:50px;">
@@ -363,17 +370,44 @@
             @endif
         </div>
         <div class="form-group m-b-30 m-t-15{{ $errors->has('category') ? ' has-error' : ''}}">
-          <select name="category" id="category" class="form-control" required>
+          <select name="category" id="dcategory" class="form-control" required>
             <option disabled selected></option>
             <option value="Mobile">Mobile Development</option>
             <option value="Web">Web Development</option>
+            <option value="MobileWeb">Mobile and Web Development</option>
+            <option value="Desktop">Desktop Application</option>
           </select>
           <span class="highlight"></span><span class="bar"></span>
-          <label for="category">Category</label>
+          <label for="dcategory">Category</label>
           @if($errors->has('category'))
               <p class="help-block">{{ $errors->first('category') }}</p>
             @endif
         </div>
+        <!--  -->
+        <div id="mw">
+        <div class="form-group m-b-30 m-t-15">
+        <select name="type" id="type" class="form-control">
+            <option disabled selected></option>
+            <option value="IOS">IOS</option>
+            <option value="Android">Android</option>
+          </select>
+          <span class="highlight"></span><span class="bar"></span>
+          <label for="type">Mobile Type</label>
+        </div>
+        </div>
+        <div id="os">
+        <div class="form-group m-b-30 m-t-15">
+        <select name="os" id="ostype" class="form-control">
+            <option disabled selected></option>
+            <option value="Linux">Linux</option>
+            <option value="Windows">Windows</option>
+            <option value="Mac">Mac</option>
+          </select>
+          <span class="highlight"></span><span class="bar"></span>
+          <label for="type">Os Type</label>
+        </div>
+        </div>
+        <!--  -->
         <div class="form-group m-b-30 m-t-15{{ $errors->has('min') ? ' has-error' : ''}}">
             <input type="number" step="any"  name="min" id="min" class="form-control" required>
             <span class="highlight"></span><span class="bar"></span>
@@ -476,5 +510,33 @@
     });
     @endif
 </script>
-
+<script>
+  $(function(){
+   $('#mw').addClass('hidden'); 
+   $('#os').addClass('hidden'); 
+  $('#dcategory').change(function(){
+    var data = $(this).val();
+    if(data == 'MobileWeb'){
+      $('#type').attr("required", true);
+      $('#ostype').attr("required", true);
+      $('#mw').removeClass('hidden').addClass('show');
+      $('#os').removeClass('hidden').addClass('show');
+    }else if(data == 'Web'){
+      $('#os').removeClass('hidden').addClass('show');
+      $('#mw').removeClass('show').addClass('hidden');
+      $('#ostype').attr("required", true);
+    } else if(data == 'Mobile'){
+      $('#mw').removeClass('hidden').addClass('show');
+      $('#os').removeClass('show').addClass('hidden');
+      $('#type').attr("required", true);
+    }
+    else{
+      $('#mw').removeClass('show').addClass('hidden'); 
+      $('#os').removeClass('show').addClass('hidden'); 
+      $('#type').attr("required", false);
+      $('#ostype').attr("required", false);
+    }
+  }).change();
+  });
+</script>
 @endsection
