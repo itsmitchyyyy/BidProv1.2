@@ -44,8 +44,8 @@ class ProjectController extends Controller
         $validator = Validator::make($request->all(), [
             'title' => 'required|string|max:255',
             'details' => 'required|string|max:255',
-           // 'start' => 'required|date',
-           // 'end' => 'required|date',
+            'type' => 'not_in:0',
+            'os' => 'not_in:0',
             'category' => 'required|not_in:0',
             'min' => 'required|regex:'.$regex,
             'max' => 'required|regex:'.$regex
@@ -61,8 +61,8 @@ class ProjectController extends Controller
         $projects->user_id = Auth::id();
         $projects->title = $request->title;
         $projects->details = $request->details;
-       // $projects->start = $request->start;
-        //$projects->end = $request->end;
+        $projects->type = $request->type; 
+        $projects->os = $request->os;
         $projects->category = $request->category;
         $projects->min = $request->min;
         $projects->max = $request->max;
@@ -131,7 +131,28 @@ class ProjectController extends Controller
     public function getMyProject($id){
         $avg = Proposal::where('project_id', $id)->avg('price');
         $proposals = Project::where(['id' => $id, 'status' => 'open'])->with('proposals')->get();
-           return view('projects/view')->with(compact('proposals','avg'));
+        $biddings = DB::table('proposals')
+            ->join('users', 'users.id', '=', 'proposals.bidder_id')
+            ->select('*', 'proposals.id as proposal_id')
+            ->orderByRaw('proposals.created_at DESC')
+            ->get();
+           return view('projects/view')->with(compact('proposals','avg','biddings'));
+    }
+    public function getBidder($id){
+        $user = User::find($id);
+        return $user;
+    }
+
+    public function getProjectModules($id){
+        $modules = DB::table('project_modules')
+            ->where('proposal_id', $id)
+            ->pluck('daysTodo');
+        return $modules;
+    }
+    public function getCreatedAt($id){
+        $created_at = DB::table('proposals')
+            ->where('id', $id)->get(['created_at']);
+        return $created_at;
     }
 
     public function getProposal($id){
@@ -196,16 +217,7 @@ class ProjectController extends Controller
 
     }
 
-    /*public function closedProjects()
-    {
-        $projects = DB::table('projects')
-            ->where(['user_id' => Auth::user()->id,
-            'status' => '0'])
-            ->orderByRaw('created_at DESC')
-            ->get();
-
-            return view('users/seeker')->with(array('closedprojects'=>$projects));
-    }*/
+    
 
     public function deleteProject()
     {
@@ -350,7 +362,7 @@ class ProjectController extends Controller
         }   
             
        event(new \App\Events\BidNotified(Auth::user()->name,'placed a bid on '.$project->title ,Auth::user()->avatar, "route('projects')"));
-       $this->insertNotification(['user_id' => $user_id, 'name' => Auth::user()->name, 'message' => 'placed a bid on '.$project->title, 'avatar' => Auth::user()->avatar, 'link' => route('projects'), 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()]);
+       $this->insertNotification(['user_id' => $user_id, 'name' => Auth::user()->firstname.' '.Auth::user()->lastname, 'message' => 'placed a bid on '.$project->title, 'avatar' => Auth::user()->avatar, 'link' => route('projects'), 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()]);
        return redirect()->route('bidder');
         }
     }
