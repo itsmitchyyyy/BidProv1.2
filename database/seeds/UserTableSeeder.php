@@ -17,7 +17,8 @@ class UserTableSeeder extends Seeder
         $role_seeker = Role::where('name','seeker')->first();
 
         $admin = new User();
-        $admin->name = 'admin';
+        $admin->firstname = 'admin';
+        $admin->lastname = 'admin';
         $admin->email = 'admin@bidpro.com';
         $admin->username = 'admin';
         $admin->password = bcrypt('admin!@#');
@@ -26,7 +27,8 @@ class UserTableSeeder extends Seeder
         $admin->roles()->attach($role_admin);
 
         $bidder = new User();
-        $bidder->name = 'bidder';
+        $bidder->firstname = 'bidder';
+        $bidder->lastname = 'bidder';
         $bidder->email = 'bidder@bidpro.com';
         $bidder->username = 'bidder';
         $bidder->password = bcrypt('bidder!@#');
@@ -35,7 +37,8 @@ class UserTableSeeder extends Seeder
         $bidder->roles()->attach($role_bidder);
     
         $seeker = new User();
-        $seeker->name = 'seeker';
+        $seeker->firstname = 'seeker';
+        $seeker->lastname = 'seeker';
         $seeker->email = 'seeker@bidpro.com';
         $seeker->username = 'seeker';
         $seeker->password = bcrypt('seeker!@#');
