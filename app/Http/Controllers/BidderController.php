@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\User;
 use App\Role;
@@ -58,8 +58,14 @@ class BidderController extends Controller
     {
         $validator = Validator::make($request->all(),[
             'email' => 'required|string|email',
-            'name' => 'required|max:255',
-            'contact' => 'sometimes|nullable|digits:11',
+        'firstname' => 'required|max:255',
+        'lastname' => 'required|max:255',
+        'mobile_no' => 'sometimes|nullable|phone:PH,mobile',
+        'landline' => 'sometimes|nullable|phone:PH',
+        'street_no' => 'sometimes|nullable|max:255',
+        'city' => 'sometimes|nullable|max:255',
+        'province' => 'sometimes|nullable|max:255',
+        'zip_code' => 'sometimes|nullable|regex:/\b\d{4}\b/'
         ]);
         if($validator->fails()){
             return redirect('/bidder/profile/'.$id)
@@ -67,10 +73,15 @@ class BidderController extends Controller
             ->withErrors($validator);
         }else{
          $user = User::find($id);
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->contact = $request->contact;
-        $user->address = $request->address;
+         $user->firstname = $request->firstname;
+         $user->lastname = $request->lastname;
+         $user->email = $request->email;
+         $user->mobile_no = $request->mobile_no;
+         $user->landline = $request->landline;
+         $user->street_no = $request->street_no;
+         $user->city = $request->city;
+         $user->province = $request->province;
+         $user->zip_code = $request->zip_code;
         $user->save(); 
        return redirect('/bidder/profile/'.$id)
             ->withInput(['tab' => 'settings'])
