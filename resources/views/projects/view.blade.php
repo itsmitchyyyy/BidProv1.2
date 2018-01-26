@@ -1,4 +1,19 @@
 @extends('layouts.seekerapp')
+@push('css')
+<style>
+.gap-right{
+    margin-right:10px;
+}
+.glyphicon-star:before {
+    content: "\f005";  /* this is your text. You can also use UTF-8 character codes as I do here */
+    font-family: FontAwesome;
+}
+.glyphicon-star-empty:before {
+    content: "\f005";  /* this is your text. You can also use UTF-8 character codes as I do here */
+    font-family: FontAwesome;
+}
+</style>
+@endpush
 @section('content')
 <div class="container-fluid m-t-15">
 @foreach($proposals as $proposal)
@@ -19,19 +34,41 @@
     </div>
 </div>
 @endforeach
+{{ $biddings }}
+@inject('controller', 'App\Http\Controllers\ProjectController')
 <table class="table table-bordered m-t-15">
 <tr class="bg-success">
-<th class="text-white w-50">BIDDING(50)</th>
+<th class="text-white w-75">BIDDING(50)</th>
 <th class="text-white">REPUTATION</th>
 <th class="text-white">BID (PHP)</th>
 </tr>
-<?php for($i = 1; $i < 51; $i++){?>
+@foreach($biddings as $bidding)
 <tr>
-<td><?php echo $i; ?></td>
-<td>test</td>
-<td>test</td>
+<td>
+<div class="clearfix">
+<a href=""><img src="/{{ $bidding->avatar }}" alt="" style="height:150px;width:150px" class="pull-left gap-right"></a>
+<p class="text-muted">
+<a href="">{{ $bidding->firstname }} {{ $bidding->lastname }}</a>
+<br><small>@foreach($controller->getCreatedAt($bidding->proposal_id) as $date)  {{ Carbon\Carbon::parse($date->created_at)->diffForHumans() }} @endforeach</small>
+</p>
+</div>
+</td>
+<td class="">
+<input id="input-1" name="input-1" class="rating rating-loading" data-min="0" data-max="5" data-step="0.1" value="{{ $controller->getBidder($bidding->bidder_id)->userAverageRating }}" data-size="s" disabled="">
+<p class="text-muted">User Reviews: {{ $controller->getBidder($bidding->bidder_id)->userSumRating }} Reviews</p>
+</td>
+<td class="">
+<span>&#8369;</span> {{ $bidding->price }}
+<p class="text-muted">in @foreach($controller->getProjectModules($bidding->proposal_id) as $module) {{ $module }} days @endforeach</p>
+</td>
 </tr>
-<?php } ?>
+@endforeach
 </table>
 </div>
+@endsection
+@section('scripts')
+<script src="{{ asset('js/star-rating.js') }}"></script>
+<script type="text/javascript">
+    $("#input-id").rating();
+</script>
 @endsection
