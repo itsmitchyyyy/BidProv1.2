@@ -164,7 +164,7 @@ return [
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
         willvincent\Rateable\RateableServiceProvider::class,
-
+        Propaganistas\LaravelPhone\PhoneServiceProvider::class,
         /*
          * Package Service Providers...
          */
