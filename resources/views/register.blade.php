@@ -8,12 +8,22 @@
                     
                     <h3 class="box-title m-b-20">Sign Up</h3>
                     <div class="floating-labels">
-                  <div class="form-group{{ $errors->has('name') ? ' has-error' : ''}} ">
-                    <input type="text" name="name" id="name" value="{{ old('name') }}" class="form-control" required>
+                  <div class="form-group{{ $errors->has('firstname') ? ' has-error' : ''}} ">
+                    <input type="text" name="firstname" id="firstname" value="{{ old('firstname') }}" class="form-control" required>
                     <span class="highlight"></span><span class="bar"></span>
-                    <label for="name">Name</label>
-                    @if($errors->has('name'))
-                            <p class="help-block">{{ $errors->first('name') }}</p>
+                    <label for="firstname">First Name</label>
+                    @if($errors->has('firstname'))
+                            <p class="help-block">{{ $errors->first('firstname') }}</p>
+                        @endif
+                  </div>
+                  </div>
+                  <div class="floating-labels">
+                  <div class="form-group{{ $errors->has('lastname') ? ' has-error' : ''}} ">
+                    <input type="text" name="lastname" id="lastname" value="{{ old('lastname') }}" class="form-control" required>
+                    <span class="highlight"></span><span class="bar"></span>
+                    <label for="firstname">Last Name</label>
+                    @if($errors->has('lastname'))
+                            <p class="help-block">{{ $errors->first('lastname') }}</p>
                         @endif
                   </div>
                   </div>
@@ -68,69 +78,6 @@
                         @endif
                     </div>
                 </div>
-                   <!-- <div class="form-group{{ $errors->has('name') ? ' has-error' : ''}} ">
-                        <div class="col-xs-12">
-                            <input class="form-control" type="text" name="name" required="" placeholder="Full Name">
-                        </div>
-                        @if($errors->has('name'))
-                            <p class="help-block">{{ $errors->first('name') }}</p>
-                        @endif
-                    </div>
-                    <div class="form-group{{ $errors->has('email') ? ' has-error' : ''}} ">
-                        <div class="col-xs-12">
-                            <input class="form-control" type="text" name="email" required="" placeholder="Email">
-                        </div>
-                        @if($errors->has('email'))
-                        <p class="help-block">{{ $errors->first('email') }}</p>
-                        @endif
-                    </div>
-                    <div class="form-group{{ $errors->has('username') ? ' has-error' : ''}} ">
-                        <div class="col-xs-12">
-                            <input class="form-control" type="text" name="username" required="" placeholder="Username">
-                        </div>
-                        @if($errors->has('username'))
-                        <p class="help-block">{{ $errors->first('username') }}</p>
-                        @endif
-                    </div>
-                    <div class="form-group{{ $errors->has('password') ? ' has-error' : ''}} ">
-                        <div class="col-xs-12">
-                            <input class="form-control" type="password" name="password" required="" placeholder="Password">
-                        </div>
-                        @if($errors->has('password'))
-                            <p class="help-block">{{ $errors->first('password' )}}</p>
-                        @endif
-                    </div>
-                    <div class="form-group">
-                        <div class="col-xs-12">
-                            <input class="form-control" type="password" name="password_confirmation" required="" placeholder="Confirm Password">
-                        </div>
-                    </div>-->
-                  
-                   <!-- <div class=" text-center form-group{{ $errors->has('type') ? ' has-error' : ''}} ">
-                        <div class="form-check form-check-inline">
-                            <label  class="form-check-label">
-                                <input class="form-check-input" require type="radio" name="type" id="" value="biddeR"> Bidder
-                            </label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <label  class="form-check-label">
-                                <input class="form-check-input" require type="radio" name="type" id="" value="seeker"> Seeker
-                            </label>
-                        </div>
-                        @if($errors->has('type'))
-                            <p class="help-block">{{ $errors->first('type' )}}</p>
-                        @endif
-                    </div>-->
-                    <!--
-                    <div class="form-group">
-                        <div class="col-md-12">
-                            <div class="checkbox checkbox-primary p-t-0">
-                                <input id="checkbox-signup" type="checkbox">
-                                <label for="checkbox-signup"> I agree to all <a href="#">Terms</a></label>
-                            </div>
-                        </div>
-                    </div>
-                -->
                     <div class="form-group text-center m-t-20">
                         <div class="col-xs-12">
                             <button class="btn btn-info btn-lg btn-block text-uppercase waves-effect waves-light" type="submit" style="background-color:#ee4b28;border:2px solid #ee4b28">Sign Up</button>
@@ -145,4 +92,14 @@
             </div>
         </div>
     </section>
+    @endsection
+    @section('scripts')
+    <script src="{{ asset('js/bootstrap/dist/js/tether.min.js') }}"></script>
+    <script src="{{ asset('js/bower_components/bootstrap-extension/js/bootstrap-extension.min.js') }}"></script>
+    <script src="{{ asset('js/bower_components/sidebar-nav/dist/sidebar-nav.min.js') }}"></script>
+    <script src="{{ asset('js/jquery.slimscroll.js') }}"></script>
+    <script src="{{ asset('js/waves.js') }}"></script>
+    <script src="{{ asset('js/custom.min.js') }}"></script>
+    <script src="{{ asset('js/bower_components/styleswitcher/jQuery.style.switcher.js') }}"></script>
+    
     @endsection
