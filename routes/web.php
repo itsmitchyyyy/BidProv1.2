@@ -70,7 +70,10 @@ Route::group(['middleware' => ['auth']], function(){
 
     //bidder
     Route::get('bidder', ['as' => 'bidder', 'uses' => 'ProjectController@getProjectsBidder']);
-    Route::get('bidder/profile/{project_id}', ['as' => 'bidderprofile', 'uses' => 'BidderController@bidderProfile']);
+    Route::get('bidder/profile/{id}', ['as' => 'bidderprofile', 'uses' => 'BidderController@bidderProfile']);
+    Route::post('bidder/profile/{id}', ['uses' => 'BidderController@updatePassword']);
+    Route::patch('bidder/profile/{id}', [ 'uses' => 'BidderController@updateProfile']);
+    Route::patch('bidder/avatar/{id}', ['as' => 'avatar', 'uses' => 'BidderController@updateAvatar']);
     Route::get('bidder/inbox', function(){
         return view('inbox/bidder');
     }); 
