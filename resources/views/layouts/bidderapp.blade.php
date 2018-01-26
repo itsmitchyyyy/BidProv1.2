@@ -24,6 +24,11 @@
         .hidden{
           display:none;
         }
+        .img{
+            height:150px;
+            width:200px;
+            -o-object-fit:contain;
+        }
     </style>
 </head>
 <body>
@@ -74,4 +79,16 @@
       //notifications.hide();
      // wrapper.hide();
   </script>
+  <script>
+    $(document).ready(function(){
+        $('[data-tooltip="true"]').tooltip();
+    });
+</script>
+   
+    <script>
+        $(document).ready(function(){
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
+  
 </html>
