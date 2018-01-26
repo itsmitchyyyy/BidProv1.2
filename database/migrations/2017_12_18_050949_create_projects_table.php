@@ -19,8 +19,8 @@ class CreateProjectsTable extends Migration
             $table->foreign('user_id')->references('id')->on('users');
             $table->string('title');
             $table->string('details', 255);
-          //  $table->date('start');
-           // $table->date('end');
+            $table->string('type')->nullable();
+            $table->string('os')->nullable();
             $table->string('category');
             $table->decimal('min', 8,2);
             $table->decimal('max', 8,2);
