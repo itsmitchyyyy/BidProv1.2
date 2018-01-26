@@ -39,8 +39,9 @@
     @yield('content')
     
 </body>
-<script src="{{ asset('js/bower_components/datatables/jquery.dataTables.min.js') }}"></script>
 @yield('scripts')
+<script src="{{ asset('js/bower_components/datatables/jquery.dataTables.min.js') }}"></script>
+
 <script>
   var wrapper = $('.notifications');
   var toggle = wrapper.find('a[data-toggle]');
@@ -95,10 +96,6 @@
             $('[data-toggle="tooltip"]').tooltip();
         });
     </script>
-   <script>
-    $(document).ready(function(){
-        $('#tabMenu a[href="#{{ old('tab') }}"]').tab('show');
-    });
-   </script>
-   `
+  
+  
 </html>
