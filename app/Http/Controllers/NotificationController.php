@@ -17,4 +17,8 @@ class NotificationController extends Controller
         $notifications = Notification::where('user_id', Auth::user()->id)->orderBy('created_at', 'desc')->get();
         return $notifications;
     }
+    public function countNotification(){
+        $notifications = Notification::where(['user_id' => Auth::user()->id, 'statuss' => 'unread'])->count();
+        return $notifications;
+    }
 }
