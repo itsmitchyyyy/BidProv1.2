@@ -25,7 +25,7 @@
         <label for="myUpload">
             <img src="" id="previewImage"  alt="profile picture" class="img wew" data-tooltip="true" title="Select Image">
             </label>
-            <form method="POST" enctype="multipart/form-data" action="{{ route('avatar', ['id' => Auth::user()->id]) }}">
+            <form method="POST" enctype="multipart/form-data" action="{{ route('seekavatar', ['id' => Auth::user()->id]) }}">
             <input type="hidden" name="_method" value="PATCH">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
             <input type="file" name="avatar" id="myUpload" style="display:none"  onchange="loadImage(event)">
@@ -68,7 +68,7 @@
                                         <a href="javascript:void(0)" id="newDP" data-tooltip="true" title="Update profile picture"><img src="/{{$data->avatar}}" id="imageSrc" class="thumb-lg img-circle" alt="img"></a>
                                     @endif
                                         <!--<h6><a href="#" id="newDP" class="text-white" data-toggle="tooltip" title="Set new profile picture">Edit Profile Picture</a></h6>-->
-                                        <h4 class="text-white">{{$data->name}}</h4>
+                                        <h4 class="text-white">{{$data->firstname}} {{ $data->lastname }}</h4>
                                         <h5 class="text-white">{{$data->email}}</h5> 
                                         <input id="input-1" name="input-1" class="rating rating-loading" data-min="0" data-max="5" data-step="0.1" value="{{ $data->averageRating }}" data-size="s" disabled="">
                                         </div>
@@ -219,7 +219,7 @@
                                         <div class="form-group{{ $errors->has('landline') ? ' has-error' : ''}}">
                                             <label class="col-md-12">Landline No</label>
                                             <div class="col-md-12">
-                                                <input type="text" placeholder="Landline No" name="landline" value="@if( $data->landline == null) 0(32)  @else {{ $data->landline }} @endif"  class="form-control form-control-line"> </div>
+                                                <input type="text" placeholder="Landline No" id="landline" name="landline" value="{{ $data->landline }}"  class="form-control form-control-line"> </div>
                                                 @if($errors->has('landline'))
                                                     <p class="help-block">{{ $errors->first('landline') }}</p>
                                                 @endif
@@ -284,6 +284,22 @@
     $('#input-id').rating();
 </script>
 <script>
+    $('#landline').on('focus', function(){
+        var value = $('#landline').val();
+        if(value == ''){
+            $('#landline').val('0 (32) ');
+        }
+    });
+    $('#landline').on('blur', function(){
+        var value = $('#landline').val();
+        if(value === "0 (32)" || value =="0 (32) "){
+            $('#landline').val('');
+        }else{
+            $('#landline').val(value);
+        }
+    });
+</script>
+<script>
         var loadImage = function(event){
             var image = document.getElementById('previewImage');
             image.src = URL.createObjectURL(event.target.files[0]);
@@ -298,7 +314,7 @@
         }
    });
    </script>
-   <script>
+   <!-- <script>
     $(function(){
         var addDiv = $('#addInput');
         var i = $('#addInput p').length + 1;
@@ -317,7 +333,7 @@
             return false;
         });
     });
-   </script>
+   </script> -->
    
    <script>
         $('#newDP').on('click', function(){

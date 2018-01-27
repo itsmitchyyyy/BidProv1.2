@@ -67,7 +67,7 @@
                                         <a href="javascript:void(0)" id="newDP" data-toggle="tooltip" title="Update profile picture"><img src="/{{$data->avatar}}" id="imageSrc" class="thumb-lg img-circle" alt="img"></a>
                                     @endif
                                         <!--<h6><a href="#" id="newDP" class="text-white" data-toggle="tooltip" title="Set new profile picture">Edit Profile Picture</a></h6>-->
-                                        <h4 class="text-white">{{$data->name}}</h4>
+                                        <h4 class="text-white">{{$data->firstname}} {{ $data->lastname }}</h4>
                                         <h5 class="text-white">{{$data->email}}</h5>
                                         <input id="input-1" name="input-1" class="rating rating-loading" data-min="0" data-max="5" data-step="0.1" value="{{ $data->averageRating }}" data-size="s" disabled="">
                                          </div>
@@ -91,6 +91,12 @@
                             <div class="tab-content">
                              
                                 <div class="tab-pane active" id="profile">
+                                @if(session()->get('success'))
+                                            <div class="alert alert-success alert-dismissable fade show">
+                                                <button type="button" class="close" data-dismiss="alert"><i class="fa fa-close"></i></button>
+                                                {{ session()->get('success') }}
+                                            </div>
+                                        @endif
                                     <div class="row">
                                     <div class="col-md-3 col-xs-6 b-r"> <strong>Full Name</strong>
                                     <br>
@@ -130,23 +136,28 @@
                                    
                                     <h4 class="font-bold m-t-30">Skill Set</h4>
                                     <hr>
-                                    
-                                    <h5>Wordpress <span class="pull-right">80%</span></h5>
-                                    <div class="progress">
-                                        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width:80%;"> <span class="sr-only">50% Complete</span> </div>
+                                    {{ $errors->first('skills')}}
+                                    <a href="#" id="addSkills">Add Skills</a>
+                                    <form action="{{ route('skills', ['id' => Auth::user()->id]) }}" method="POST">
+                                    <input type="hidden" name="_method" value="PATCH">
+                                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                    <div class="form-group" id="skillDiv">
+                                        <p>
+                                            <input type="text" name="skills[]" id="skills1" class="form-control-line form-control" placeholder="Skills">
+                                            <input type="text" name="proficiency[]" id="proficiency1"  class="form-control-line form-control proficiency" placeholder="Proficiency">
+                                        </p>
+                                        <a href="#" id="addMoreSkill">Add more skills</a>
                                     </div>
-                                    <h5>HTML 5 <span class="pull-right">90%</span></h5>
+                                    <input type="submit" value="Submit" class="btn btn-info wew" id="skillBtn">
+                                    </form>
+                            
+                                    @foreach(array_combine($skill,$proficiency) as $skills => $proficiencys)
+                                    <?php $percent = explode("%",$proficiencys); ?>
+                                    <h5>{{ $skills }}<span class="pull-right">{{ $proficiencys }}</span></h5>
                                     <div class="progress">
-                                        <div class="progress-bar progress-bar-custom" role="progressbar" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100" style="width:90%;"> <span class="sr-only">50% Complete</span> </div>
+                                        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{ $percent[0] }}" aria-valuemin="0" aria-valuemax="100" style="width:{{ $proficiencys}};"> <span class="sr-only">50% Complete</span> </div>
                                     </div>
-                                    <h5>jQuery <span class="pull-right">50%</span></h5>
-                                    <div class="progress">
-                                        <div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:50%;"> <span class="sr-only">50% Complete</span> </div>
-                                    </div>
-                                    <h5>Photoshop <span class="pull-right">70%</span></h5>
-                                    <div class="progress">
-                                        <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:70%;"> <span class="sr-only">50% Complete</span> </div>
-                                    </div>
+                                    @endforeach
                                 </div>
                                
                                 <div class="tab-pane" id="password">
@@ -240,7 +251,7 @@
                                         <div class="form-group{{ $errors->has('landline') ? ' has-error' : ''}}">
                                             <label class="col-md-12">Landline No</label>
                                             <div class="col-md-12">
-                                                <input type="text" placeholder="Landline No" name="landline" value="@if( $data->landline == null) 0(32)  @else {{ $data->landline }} @endif"  class="form-control form-control-line"> </div>
+                                                <input type="text" placeholder="Landline No" name="landline" value="{{ $data->landline }}" id="landline"  class="form-control form-control-line"> </div>
                                                 @if($errors->has('landline'))
                                                     <p class="help-block">{{ $errors->first('landline') }}</p>
                                                 @endif
@@ -305,6 +316,70 @@
 <script>
     $('#input-id').rating();
 </script>
+<script>
+    $('#skillDiv').hide();
+    $('#skillBtn').hide();
+    $('#addSkills').on('click', function(e){
+        e.preventDefault();
+        $('#skillDiv').show();
+        $('#skillBtn').show();
+        $('#addSkills').hide();
+    });
+</script>
+<script>
+   $(function(){
+    var addSkills = $('#skillDiv');
+    var i = $('#skillDiv p ').length + 1;
+
+    $('#addMoreSkill').on('click', function(){
+        $('<p><input type="text" name="skills[]" id="skills" placeholder="Skills" class="form-control-line form-control"><input type="text" id="proficiency'+i+'" name="proficiency[]" placeholder="Proficiency" class="form-control form-control-line proficiency"><a href="#" id="removeSkill">Remove Skill</a></p>').appendTo(addSkills);
+        i++;
+        return false;
+    });
+
+    $(addSkills).on('click', '#removeSkill', function(){
+        if(i > 2){
+            $(this).parents('p').remove();
+            i--;
+        }
+        return false;
+    });
+   });
+</script>
+<script>
+
+
+ $('#skillDiv').on('focus', '.proficiency', function(){
+    if(this.value == this.defaultValue){
+        this.value = "%";
+        var t = this;
+        window.setTimeout(function(){
+            t.setSelectionRange(0,0);
+        },0);
+    }
+ }).on('blur', '.proficiency', function(){
+     if(!this.value.length){
+         this.value = defaultValue;
+     }
+ });
+</script>
+<script>
+    $('#landline').on('focus', function(){
+        var value = $('#landline').val();
+        if(value == ''){
+        $('#landline').val('0 (32) ');
+        }
+    });
+    $('#landline').on('blur', function(){
+         var value = $('#landline').val();
+         if(value === "0 (32)"){
+            $('#landline').val('')
+        }
+        else{
+            $('#landline').val(value);    
+        }
+    });
+</script>
  <script>
      $(document).ready(function(){
          $('#tabMenu a[href="#{{ old('tab') }}"]').tab('show');
@@ -325,7 +400,7 @@
         }
    });
    </script>
-   <script>
+   <!-- <script>
     $(function(){
         var addDiv = $('#addInput');
         var i = $('#addInput p').length + 1;
@@ -344,7 +419,7 @@
             return false;
         });
     });
-   </script>
+   </script> -->
    
    <script>
         $('#newDP').on('click', function(){

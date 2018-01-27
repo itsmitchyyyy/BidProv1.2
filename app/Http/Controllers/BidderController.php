@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\User;
 use App\Role;
 class BidderController extends Controller
@@ -18,9 +19,28 @@ class BidderController extends Controller
        return view('admin/developers');
    }
    public function bidderProfile($id){
-       $users = User::findOrFail($id);
-
-       return view('userprofiles/bidder')->with(array('data'=>$users));
+       $skill = array();
+       $proficiency = array();
+        $users = User::findOrFail($id);
+        $skills = User::find($id)->pluck('skills');
+        foreach($skills as $index => $value){
+            if(strpos($value,":") !== false){
+                $data = explode(",",$value);
+                foreach($data as $val){
+                    if(strpos($val,"skills") !== false){
+                        $check = explode(":",$val);
+                        $skill[] = $check[1];
+                    }
+                    if(strpos($val,"proficiency") !== false){
+                        $get = explode(":",$val);
+                        $proficiency[] =  $get[1];
+                    }
+                }
+            }
+        }
+        return view('userprofiles/bidder')
+         ->with(array('data'=>$users))
+         ->with(compact('skill','proficiency'));
    }
 
    public function updatePassword(Request $request, $id){
@@ -84,11 +104,38 @@ class BidderController extends Controller
          $user->zip_code = $request->zip_code;
         $user->save(); 
        return redirect('/bidder/profile/'.$id)
-            ->withInput(['tab' => 'settings'])
+            ->withInput(['tab' => 'profile'])
             ->with('success','Profile updated');
         }
     }
-   
+
+    public function addSkills(Request $request,$id){
+        $validator = Validator::make($request->all(),[
+            'skills' => 'required|max:255',
+            'proficiency' => 'required_with:skills',    
+        ]);
+        if($validator->fails()){
+            return redirect('/bidder/profile/'.$id)
+            ->withInput(['tab' => 'profile'])
+            ->withErrors($validator);
+        }
+        $user = User::find($id);
+        $skills = $request->skills;
+        $proficiency = $request->proficiency;
+        $data = array_merge(['skills' => $skills],['proficiency' => $proficiency]);
+        $datas = '';
+        foreach(array_combine($data['skills'], $data['proficiency']) as $skill => $prof){
+            $datas .= 'skills:'.$skill.", proficiency:".$prof.", ";
+
+        }
+        $value = $user->skills;
+        $val = $value.$datas;
+        $user->skills = $val;
+        $user->save();
+        return redirect('/bidder/profile/'.$id)
+            ->withInput(['tab' => 'profile'])
+            ->with('success', 'Profile updated');
+    }
     public function updateAvatar(Request $request, $id)
     {
         $validator = Validator::make($request->all(),[
@@ -114,5 +161,9 @@ class BidderController extends Controller
             }
         }
         
+    }
+
+    public function getSkills(){
+       
     }
 }

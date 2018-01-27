@@ -9,13 +9,16 @@
     content: "\f005";  /* this is your text. You can also use UTF-8 character codes as I do here */
     font-family: FontAwesome;
 }
+.gap-right{
+    margin-right:10px;
+}
 </style>
 @endpush
 @section('content')
 <div class="container-fluid m-t-15">
-
+@inject('users', 'App\Http\Controllers\RatingController')
+@inject('controller', 'App\Http\Controllers\ProjectController')
 @foreach($proposals as $proposal)
-
 <h3><b>{{ ucfirst($proposal->title) }}</b></h3>
 <div class="card">
     <div class="card-block">
@@ -32,7 +35,8 @@
         <p class="card-text" style="max-width:40em;word-wrap:break-word">{{ $proposal->details }}</p>
         <p class="card-text">
         <h4><b>Seeker Review</b></h4>
-        <input id="input-1" name="input-1" class="rating rating-loading" data-min="0" data-max="5" data-step="0.1" value="2" data-size="s" disabled="">
+        <?php $user = $users->usersReview($proposal->user_id) ?>
+        <input id="input-1" name="input-1" class="rating rating-loading" data-min="0" data-max="5" data-step="0.1" value="{{ $user->userAverageRating }}" data-size="s" disabled="">
         </p>
         <div class="pull-right">
         @if($proposal->duration < Carbon\Carbon::now())
@@ -43,27 +47,51 @@
         </div>
     </div>
 </div>
+<?php $totalbid = $controller->countBid($proposal->id) ?>
 @endforeach
-<table class="table table-bordered m-t-15">
+<table class="table table-bordered m-t-15" id="myBidding">
+<thead>
 <tr class="bg-success">
-<th class="text-white w-50">BIDDING(50)</th>
+<th class="text-white" style="width:70%">BIDDING({{ $totalbid }})</th>
 <th class="text-white">REPUTATION</th>
 <th class="text-white">BID (PHP)</th>
 </tr>
-<?php for($i = 1; $i < 51; $i++){?>
+</thead>
+<tbody>
+@foreach($biddings as $bidding)
 <tr>
-<td><?php echo $i; ?></td>
-<td>test</td>
-<td>test</td>
+<td>
+<div class="clearfix">
+<a href=""><img src="/{{ $bidding->avatar }}" alt="" style="height:150px;width:150px" class="pull-left gap-right"></a>
+<p class="text-muted">
+<a href="">{{ $bidding->firstname }} {{ $bidding->lastname }}</a>
+<br><small>@foreach($controller->getCreatedAt($bidding->proposal_id) as $date)  {{ Carbon\Carbon::parse($date->created_at)->diffForHumans() }} @endforeach</small>
+</p>
+</div>
+</td>
+<td >
+<input id="input-1" name="input-1" class="rating rating-loading" data-min="0" data-max="5" data-step="0.1" value="{{ $controller->getBidder($bidding->bidder_id)->userAverageRating }}" data-size="s" disabled="">
+<p class="text-muted">User Reviews: {{ $controller->getBidder($bidding->bidder_id)->userSumRating }} Reviews</p>
+</td>
+<td >
+<span>&#8369;</span> {{ $bidding->price }}
+<p class="text-muted">in @foreach($controller->getProjectModules($bidding->proposal_id) as $module) {{ $module }} days @endforeach</p>
+</td>
 </tr>
-<?php } ?>
+@endforeach
+</tbody>
 </table>
 </div>
 @endsection
 @section('scripts')
-<script src="{{ asset('js/landing-page/jquery/jquery.min.js') }}"></script>
+<!-- <script src="{{ asset('js/landing-page/jquery/jquery.min.js') }}"></script> -->
 <script src="{{ asset('js/star-rating.js') }}"></script>
 <script>
     $('#input-id').rating();
+</script>
+<script>
+    $(function(){
+        $('#myBidding').DataTable();
+    });
 </script>
 @endsection

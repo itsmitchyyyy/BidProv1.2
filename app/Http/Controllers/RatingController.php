@@ -8,9 +8,9 @@ use App\User;
 class RatingController extends Controller
 {
 
-    public function viewUser(){
-        $users = User::all();
-        return view('ratings/users', compact('users'));
+    public function usersReview($id){
+        $users = User::find($id);
+        return $users;
     }
     public function reviewUser($id){
         $user = User::find($id);

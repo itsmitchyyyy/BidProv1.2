@@ -27,14 +27,14 @@
       </a>
       <div class="dropdown-menu dropdown-menu-right"  aria-labelledBy="dropdownMessage">
       <h6 class="dropdown-header">You have (<span class="notif-count">{{ $notifications->countNotification() }}</span>) unread notifications</h6>
-      <div class="text-center" style="font-size:12px"><small><a href="#" class="text-dark">See all messages</a></small></div>
+      <div class="text-center" style="font-size:12px"><small><a href="{{ route('viewNotification') }}" class="text-dark">See all messages</a></small></div>
      
      
       @foreach($notifications->navNotification() as $notify)
       <a href="{{ $notify->link }}">
           <div class="message-center">
             <div class="user-img ml-2">
-              <img src="{{ $notify->avatar }}" alt="avatar" style="border-radius:50%">
+              <img src="/{{ $notify->avatar }}" alt="avatar" style="border-radius:50%">
             </div>
             <div class="mail-content">
               <h5><b>{{ ucfirst($notify->message) }}</b></h5>

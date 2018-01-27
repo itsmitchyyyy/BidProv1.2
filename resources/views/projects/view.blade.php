@@ -34,14 +34,17 @@
     </div>
 </div>
 @endforeach
-{{ $biddings }}
 @inject('controller', 'App\Http\Controllers\ProjectController')
-<table class="table table-bordered m-t-15">
+<table class="table table-bordered m-t-15" id="myBidding">
+<thead>
 <tr class="bg-success">
-<th class="text-white w-75">BIDDING(50)</th>
+<th class="text-white" style="width:60%">BIDDING(50)</th>
 <th class="text-white">REPUTATION</th>
 <th class="text-white">BID (PHP)</th>
+<th class="text-white">AWARD</th>
 </tr>
+</thead>
+<tbody>
 @foreach($biddings as $bidding)
 <tr>
 <td>
@@ -53,16 +56,20 @@
 </p>
 </div>
 </td>
-<td class="">
+<td>
 <input id="input-1" name="input-1" class="rating rating-loading" data-min="0" data-max="5" data-step="0.1" value="{{ $controller->getBidder($bidding->bidder_id)->userAverageRating }}" data-size="s" disabled="">
 <p class="text-muted">User Reviews: {{ $controller->getBidder($bidding->bidder_id)->userSumRating }} Reviews</p>
 </td>
-<td class="">
+<td>
 <span>&#8369;</span> {{ $bidding->price }}
 <p class="text-muted">in @foreach($controller->getProjectModules($bidding->proposal_id) as $module) {{ $module }} days @endforeach</p>
 </td>
+<td>
+<a href="#" data-toggle="tooltip" title="Award"><i class="fa fa-trophy" style="font-size:24px"></i></a>
+</td>
 </tr>
 @endforeach
+</tbody>
 </table>
 </div>
 @endsection
@@ -70,5 +77,10 @@
 <script src="{{ asset('js/star-rating.js') }}"></script>
 <script type="text/javascript">
     $("#input-id").rating();
+</script>
+<script>
+    $(function(){
+        $('#myBidding').DataTable();
+    });
 </script>
 @endsection

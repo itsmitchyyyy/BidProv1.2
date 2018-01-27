@@ -39,9 +39,8 @@
     @yield('content')
     
 </body>
-@yield('scripts')
 <script src="{{ asset('js/bower_components/datatables/jquery.dataTables.min.js') }}"></script>
-
+@yield('scripts')
 <script>
   var wrapper = $('.notifications');
   var toggle = wrapper.find('a[data-toggle]');

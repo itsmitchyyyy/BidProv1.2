@@ -319,7 +319,12 @@ class ProjectController extends Controller
     public function viewProject($id){
     $avg = Proposal::where('project_id', $id)->avg('price');
     $proposals = Project::where(['id' => $id, 'status' => 'open'])->with('proposals')->get();
-       return view('proposal/bidder')->with(compact('proposals','avg'));
+    $biddings = DB::table('proposals')
+    ->join('users', 'users.id', '=', 'proposals.bidder_id')
+    ->select('*', 'proposals.id as proposal_id')
+    ->orderByRaw('proposals.created_at DESC')
+    ->get();
+       return view('proposal/bidder')->with(compact('proposals','avg','biddings'));
     }
 
     public function proposeProject(Request $request, $project_id, $user_id){
@@ -373,6 +378,11 @@ class ProjectController extends Controller
     public function proposalDetails($id){
         $avg = Proposal::where('project_id' , $id)->avg('price');
         $proposals = Project::where(['id' => $id, 'status' => 'open'])->with('proposals')->get();
+        $biddings = DB::table('proposals')
+            ->join('users', 'users.id', '=', 'proposals.bidder_id')
+            ->select('*', 'proposals.id as proposal_id')
+            ->orderByRaw('proposals.created_at DESC')
+            ->get();
         return view('proposal/details')->with(compact('proposals','avg'));
     }
     //END OF BIDDER
