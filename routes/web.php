@@ -21,7 +21,9 @@ Route::get('/', function () {
 Route::get('ratings', function(){
     return view('ratings/seeker');
 });
-
+Route::get('seeker/proposal/details', function(){
+    return view('proposaldetails/details');
+});
 Route::get('ratings', 'RatingController@viewUser')->name('rate');
 
 
@@ -64,8 +66,8 @@ Route::group(['middleware' => ['auth']], function(){
     Route::get('seeker/profile/{id}', ['as' => 'profile', 'uses' => 'SeekerController@seekerProfile']);
     Route::post('seeker/profile/{id}', ['uses' => 'SeekerController@updatePassword']);
     Route::patch('seeker/profile/{id}', [ 'uses' => 'SeekerController@updateProfile']);
-    Route::patch('seeker/avatar/{id}', ['as' => 'avatar', 'uses' => 'SeekerController@updateAvatar']);
-    Route::get('notifications', ['as' => 'viewNotification', 'uses' => 'NotificationController@viewNotification']);
+    Route::patch('seeker/avatar/{id}', ['as' => 'seekavatar', 'uses' => 'SeekerController@updateAvatar']);
+    Route::get('seeker/notifications', ['as' => 'viewNotification', 'uses' => 'NotificationController@viewNotification']);
     Route::get('view/{id}', ['as' => 'myProject', 'uses' => 'ProjectController@getMyProject']);
 
     //bidder
@@ -74,6 +76,8 @@ Route::group(['middleware' => ['auth']], function(){
     Route::post('bidder/profile/{id}', ['uses' => 'BidderController@updatePassword']);
     Route::patch('bidder/profile/{id}', [ 'uses' => 'BidderController@updateProfile']);
     Route::patch('bidder/avatar/{id}', ['as' => 'avatar', 'uses' => 'BidderController@updateAvatar']);
+    Route::patch('bidder/skills/{id}', ['as' => 'skills', 'uses' => 'BidderController@addSkills']);
+    // Route::get('skills',  ['uses' => 'BidderController@getSkills']);
     Route::get('bidder/inbox', function(){
         return view('inbox/bidder');
     }); 
