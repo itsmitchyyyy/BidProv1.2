@@ -16,6 +16,7 @@
 @endpush
 @section('content')
 <div class="container-fluid m-t-15">
+@inject('controller', 'App\Http\Controllers\ProjectController')
 @foreach($proposals as $proposal)
 <h3><b>{{ ucfirst($proposal->title) }}</b></h3>
 <div class="card m-t-15">
@@ -25,7 +26,7 @@
         <p class="card-text" style="max-width:40em;word-wrap:break-word">{{ $proposal->details }}</p>
     </div>
 </div>
-<div class="card">
+<div class="card m-b-40">
     <div class="card-block">
         <div style="border-right:1px solid black; width:4em;" class="pull-left "><p><b>BIDS</b><br>@if($proposals->isEmpty()) 0 @else {{ count($proposal->proposals) }} @endif</p></div>
         <div style="border-right:1px solid black;width:10em;" class="pull-left m-l-10 "><p><b>Avg Bid (PHP)</b><br><span>&#8369;</span>@if($proposal->proposals->isEmpty()) 0 @else {{ number_format($avg,2) }} @endif</p></div>
@@ -33,12 +34,13 @@
         <div class="pull-right m-r-15"><p><b>{{ Carbon\Carbon::parse($proposal->duration)->diffForHumans() }}</b><h3 class="text-center">@if($proposal->duration > Carbon\Carbon::now()) OPEN @else CLOSED @endif </h3></p></div>
     </div>
 </div>
+<?php $totalbid = $controller->countBid($proposal->id) ?>
 @endforeach
-@inject('controller', 'App\Http\Controllers\ProjectController')
+<div class="b-all p-5">
 <table class="table table-bordered m-t-15" id="myBidding">
 <thead>
 <tr class="bg-success">
-<th class="text-white" style="width:60%">BIDDING(50)</th>
+<th class="text-white" style="width:60%">BIDDING({{ $totalbid }})</th>
 <th class="text-white">REPUTATION</th>
 <th class="text-white">BID (PHP)</th>
 <th class="text-white">AWARD</th>
@@ -71,6 +73,7 @@
 @endforeach
 </tbody>
 </table>
+</div>
 </div>
 @endsection
 @section('scripts')
