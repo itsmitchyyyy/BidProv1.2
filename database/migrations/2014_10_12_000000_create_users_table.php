@@ -28,6 +28,7 @@ class CreateUsersTable extends Migration
             $table->string('zip_code')->nullable();
             $table->string('avatar')->nullable();
             $table->string('skills')->nullable();
+            $table->string('paypal')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
