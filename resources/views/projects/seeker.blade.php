@@ -111,7 +111,7 @@
                 </div>
                 <div class="form-group{{ $errors->has('categorys') ? ' has-error' : ''}} m-b-40 m-t-15">
                   <select name="categorys" id="category" class="form-control">
-                    <?php $category = array('--' => '--', 'Mobile Development' => 'Mobile', 'Web Development' => 'Web'); ?>
+                    <?php $category = array('Mobile Development' => 'Mobile', 'Web Development' => 'Web', 'Mobile and Web Development' => 'MobileWeb', 'Desktop Application' => 'Desktop'); ?>
                     @foreach($category as $categor => $val)
                       @if($val == $project->category)
                         <option value="{{ $val }}" selected>{{ $categor }}</option>
@@ -126,6 +126,40 @@
                     <p>{{ $errors->first('categorys') }}</p>
                  @endif
                 </div>
+        <div id="emw">
+        <div class="form-group m-b-30 m-t-15">
+        <select name="type" id="type" class="form-control">
+        <?php $category = array('IOS' => 'IOS', 'Android' => 'Android'); ?>
+        <option value="" disabled selected></option>
+                    @foreach($category as $categor => $val)
+                      @if($val == $project->type)
+                        <option value="{{ $val }}" selected>{{ $categor }}</option>
+                      @else
+                      <option value="{{ $val }}">{{ $categor }}</option>
+                      @endif
+                    @endforeach
+          </select>
+          <span class="highlight"></span><span class="bar"></span>
+          <label for="type" class="text-dark">Mobile Type</label>
+        </div>
+        </div>
+        <div id="eos">
+        <div class="form-group m-b-30 m-t-15">
+        <select name="os" id="ostype" class="form-control">
+        <?php $category = array('Linux' => 'Linux', 'Windows' => 'Windows', 'Mac' => 'Mac'); ?>
+                  <option value="" disabled selected></option>
+                    @foreach($category as $categor => $val)
+                      @if($val == $project->os)
+                        <option value="{{ $val }}" selected>{{ $categor }}</option>
+                      @else
+                      <option value="{{ $val }}">{{ $categor }}</option>
+                      @endif
+                    @endforeach
+          </select>
+          <span class="highlight"></span><span class="bar"></span>
+          <label class="text-dark" for="type">Os Type</label>
+        </div>
+        </div>
               </div>
           </div>
           <div class="modal-footer">
@@ -533,6 +567,39 @@
     else{
       $('#mw').removeClass('show').addClass('hidden'); 
       $('#os').removeClass('show').addClass('hidden'); 
+      $('#type').attr("required", false);
+      $('#ostype').attr("required", false);
+    }
+  }).change();
+  });
+</script>
+<script>
+$(function(){
+  $('#emw').addClass('hidden'); 
+   $('#eos').addClass('hidden'); 
+  $('#category').change(function(){
+    var data = $(this).val();
+    if(data == 'MobileWeb'){
+      $('#type').attr("required", true);
+      $('#ostype').attr("required", true);
+      $('#emw').removeClass('hidden').addClass('show');
+      $('#eos').removeClass('hidden').addClass('show');
+    }else if(data == 'Web'){
+      $('#eos').removeClass('hidden').addClass('show');
+      $('#emw').removeClass('show').addClass('hidden');
+      $('#type').val('');
+      $('#type').attr("required", false);
+      $('#ostype').attr("required", true);
+    } else if(data == 'Mobile'){
+      $('#emw').removeClass('hidden').addClass('show');
+      $('#eos').removeClass('show').addClass('hidden');
+      $('#type').attr("required", true);
+      $('#ostype').attr("required", false);
+      $('#ostype').val('');
+    }
+    else{
+      $('#emw').removeClass('show').addClass('hidden'); 
+      $('#eos').removeClass('show').addClass('hidden'); 
       $('#type').attr("required", false);
       $('#ostype').attr("required", false);
     }
