@@ -28,7 +28,7 @@
         <div class="pull-right m-r-15"><p><b>{{ Carbon\Carbon::parse($proposal->duration)->diffForHumans() }}</b><h3 class="text-center">@if($proposal->duration < Carbon\Carbon::now()) CLOSED @else OPEN @endif</h3></p></div>
     </div>
 </div>
-<div class="card m-t-15">
+<div class="card m-t-15 mb-5">
     <div class="card-block">
         <small><b>Project ID: {{ $proposal->id }} </b></small>
         <h4 class="card-title"><b>Project description</b></h4>
@@ -75,7 +75,14 @@
 </td>
 <td >
 <span>&#8369;</span> {{ $bidding->price }}
-<p class="text-muted">in @foreach($controller->getProjectModules($bidding->proposal_id) as $module) {{ $module }} days @endforeach</p>
+<p class="text-muted">
+        <?php $max = $controller->getProjectModules($bidding->proposal_id); ?>
+                    @if($max == 1)
+                    maximum of {{ $max }} day
+                    @else
+                    maximum of {{ $max }} days
+                    @endif
+    </p>
 </td>
 </tr>
 @endforeach
