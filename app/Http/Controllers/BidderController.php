@@ -19,10 +19,12 @@ class BidderController extends Controller
        return view('admin/developers');
    }
    public function bidderProfile($id){
-       $skill = array();
+       $skills = array();
        $proficiency = array();
         $users = User::findOrFail($id);
-        $skills = User::find($id)->pluck('skills');
+        $skiller  = User::find($id);
+        $skills[] = $skiller->skills;
+        // dd($skills);
         foreach($skills as $index => $value){
             if(strpos($value,":") !== false){
                 $data = explode(",",$value);
@@ -38,6 +40,7 @@ class BidderController extends Controller
                 }
             }
         }
+       
         return view('userprofiles/bidder')
          ->with(array('data'=>$users))
          ->with(compact('skill','proficiency'));
@@ -161,9 +164,5 @@ class BidderController extends Controller
             }
         }
         
-    }
-
-    public function getSkills(){
-       
     }
 }
