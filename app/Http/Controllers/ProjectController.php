@@ -146,7 +146,8 @@ class ProjectController extends Controller
     public function getProjectModules($id){
         $modules = DB::table('project_modules')
             ->where('proposal_id', $id)
-            ->pluck('daysTodo');
+            ->pluck('daysTodo')
+            ->sum();
         return $modules;
     }
     public function getCreatedAt($id){
@@ -210,6 +211,8 @@ class ProjectController extends Controller
         $project->title = $request->titles;
         $project->details = $request->detailss;
         $project->category = $request->categorys;
+        $project->type = $request->type; 
+        $project->os = $request->os;
         $project->save();
 
         return redirect('seeker/projects')
@@ -235,6 +238,7 @@ class ProjectController extends Controller
         $amount = new Amount();
         $amount->setCurrency('USD')
             ->setTotal('4');
+            
         $transaction = new Transaction();
         $transaction->setAmount($amount)
             ->setItemList($item_list)
@@ -321,6 +325,7 @@ class ProjectController extends Controller
     $proposals = Project::where(['id' => $id, 'status' => 'open'])->with('proposals')->get();
     $biddings = DB::table('proposals')
     ->join('users', 'users.id', '=', 'proposals.bidder_id')
+    ->where('proposals.project_id','=', $id)
     ->select('*', 'proposals.id as proposal_id')
     ->orderByRaw('proposals.created_at DESC')
     ->get();
@@ -384,6 +389,38 @@ class ProjectController extends Controller
             ->orderByRaw('proposals.created_at DESC')
             ->get();
         return view('proposal/details')->with(compact('proposals','avg'));
+    }
+
+    public function proposalModules($project_id,$user_id,$proposal_id) {
+        $skill = array();
+        $avg = Proposal::where('project_id', $project_id)->avg('price');
+        $projects = Project::where(['id' => $project_id, 'status' => 'open'])->with('proposals')->first();
+        $proposals = Proposal::where(['bidder_id' => $user_id, 'project_id' => $project_id])->first();
+        $modules = DB::table('project_modules')
+                ->join('proposals','project_modules.proposal_id','=','proposals.id')
+                ->where('project_modules.proposal_id','=', $proposal_id)
+                ->get();
+        $biddings = DB::table('proposals')
+            ->join('users', 'users.id','=', 'proposals.bidder_id')
+            ->where('proposals.project_id','=',$project_id)
+            ->select('*', 'proposals.id as proposal_id', 'proposals.created_at as proposal_created_at')
+            ->orderByRaw('proposals.created_at DESC')
+            ->get();
+        $user = User::find($user_id);
+        $skills[] = $user->skills;
+        foreach($skills as $index => $value){
+            if(strpos($value,":") !== false){
+                $data = explode(",",$value);
+                foreach($data as $val){
+                    if(strpos($val,"skills") !== false){
+                        $check = explode(":",$val);
+                        $skill[] = $check[1];
+                    }
+                }
+            }
+        }   
+        return view('proposaldetails/details')
+            ->with(compact('avg','projects','proposals','biddings','modules','user','skill'));
     }
     //END OF BIDDER
 }
