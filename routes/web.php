@@ -18,12 +18,10 @@
 Route::get('/', function () {
     return view('home');
 });
-Route::get('ratings', function(){
-    return view('ratings/seeker');
-});
-Route::get('seeker/proposal/details', function(){
-    return view('proposaldetails/details');
-});
+// Route::get('test/{project_id}/{user_id}/{proposal_id}', 'ProjectController@proposalModules');
+// Route::get('ratings', function(){
+//     return view('ratings/seeker');
+// });
 Route::get('ratings', 'RatingController@viewUser')->name('rate');
 
 
@@ -69,6 +67,7 @@ Route::group(['middleware' => ['auth']], function(){
     Route::patch('seeker/avatar/{id}', ['as' => 'seekavatar', 'uses' => 'SeekerController@updateAvatar']);
     Route::get('seeker/notifications', ['as' => 'viewNotification', 'uses' => 'NotificationController@viewNotification']);
     Route::get('view/{id}', ['as' => 'myProject', 'uses' => 'ProjectController@getMyProject']);
+    Route::get('seeker/proposal/details/{project_id}/{user_id}/{proposal_id}', ['as' => 'viewBids', 'uses' => 'ProjectController@ProposalModules']);
 
     //bidder
     Route::get('bidder', ['as' => 'bidder', 'uses' => 'ProjectController@getProjectsBidder']);
