@@ -40,7 +40,7 @@
 <table class="table table-bordered m-t-15" id="myBidding">
 <thead>
 <tr class="bg-success">
-<th class="text-white" style="width:60%">BIDDING({{ $totalbid }})</th>
+<th class="text-white" style="width:50%">BIDDING({{ $totalbid }})</th>
 <th class="text-white">REPUTATION</th>
 <th class="text-white">BID (PHP)</th>
 <th class="text-white">AWARD</th>
@@ -64,10 +64,17 @@
 </td>
 <td>
 <span>&#8369;</span> {{ $bidding->price }}
-<p class="text-muted">in @foreach($controller->getProjectModules($bidding->proposal_id) as $module) {{ $module }} days @endforeach</p>
+<p class="text-muted">
+<?php $max = $controller->getProjectModules($bidding->proposal_id); ?>
+@if($max == 1)
+in just {{ $max }} day
+@else
+in a span of {{ $max }} days
+@endif
+</p>
 </td>
 <td>
-<a href="#" data-toggle="tooltip" title="Award"><i class="fa fa-trophy" style="font-size:24px"></i></a>
+<a href="{{ route('viewBids', ['project_id' => $bidding->project_id, 'user_id' => $bidding->bidder_id, 'proposal_id' => $bidding->proposal_id]) }}" data-toggle="tooltip" title="Award" class="gap-right"><i class="fa fa-trophy" style="font-size:24px"></i></a>
 </td>
 </tr>
 @endforeach
