@@ -29,13 +29,13 @@
                                       @if($user->avatar == null)
                                       <img src="uploads/blank.png" style="width:500px;height:500px"/>
                                       @else
-                                      <img src="{{ $user->avatar }}" style="width:500px;height:500px"/>
+                                      <img src="/{{ $user->avatar }}" style="width:500px;height:500px"/>
                                       @endif
                                       </div>
                                     </div>
                                 </div>
                                 <div class="details col-md-6">
-                                    <h3 class="mt-5">Name: {{ $user->name }}</h3>
+                                    <h3 class="mt-5">Name: {{ $user->firstname }} {{ $user->lastname }}</h3>
                                     <h3>Email: {{ $user->email }}</h3>
                                     <h3>Contact: @if($user->contact == null) NONE @else {{ $user->contact }}@endif</h3>
                                     <h3>Address: @if($user->address == null) NONE @else {{ $user->address }} @endif</h3>
