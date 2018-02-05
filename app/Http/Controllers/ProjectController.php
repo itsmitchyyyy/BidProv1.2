@@ -133,6 +133,7 @@ class ProjectController extends Controller
         $proposals = Project::where(['id' => $id, 'status' => 'open'])->with('proposals')->get();
         $biddings = DB::table('proposals')
             ->join('users', 'users.id', '=', 'proposals.bidder_id')
+            ->where('proposals.project_id','=', $id)
             ->select('*', 'proposals.id as proposal_id')
             ->orderByRaw('proposals.created_at DESC')
             ->get();
@@ -345,8 +346,9 @@ class ProjectController extends Controller
                 ->withInput()
                 ->withErrors($validator);
         }
-        $check = Proposal::where('bidder_id', Auth::user()->id)->first();
-        $project = Project::where('id', $project_id)->first();
+        $check = Proposal::where(['bidder_id' => Auth::user()->id, 'project_id' => $project_id])->first();
+        // dd($check);
+        $project = Project::where('id', $project_id)->first();  
         if($check != null){
             return redirect()->route('proposal', $project_id)
                 ->with('error','Already bidded');
@@ -371,9 +373,9 @@ class ProjectController extends Controller
             ]);
         }   
             
-       event(new \App\Events\BidNotified(Auth::user()->name,'placed a bid on '.$project->title ,Auth::user()->avatar, "route('projects')"));
+       event(new \App\Events\BidNotified(Auth::user()->firstname.' '.Auth::user()->lastname,'placed a bid on '.$project->title , Auth::user()->avatar, "route('projects')"));
        $this->insertNotification(['user_id' => $user_id, 'name' => Auth::user()->firstname.' '.Auth::user()->lastname, 'message' => 'placed a bid on '.$project->title, 'avatar' => Auth::user()->avatar, 'link' => route('projects'), 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()]);
-       return redirect()->route('bidder');
+       return redirect()->route('bidder')->with('success','Successfully bidded');
         }
     }
     public function insertNotification($data){
