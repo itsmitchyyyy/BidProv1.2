@@ -19,7 +19,7 @@ class CreateBidsTable extends Migration
             $table->integer('bidder_id')->unsigned();
             $table->foreign('seeker_id')->references('id')->on('users');
             $table->foreign('bidder_id')->references('id')->on('users');
-            $table->string('proposal_id')->unsigned();
+            $table->integer('proposal_id')->unsigned();
             $table->foreign('proposal_id')->references('id')->on('proposals');
             $table->string('status');
             $table->timestamps();
