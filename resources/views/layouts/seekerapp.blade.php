@@ -61,12 +61,12 @@
     var header = notifications.html();
    // var footer = ``;
     //alert(existing);
-    
+    console.log(data.avatar);
     var newnotifications = `
         <a href="{{ `+data.link+` }}">
           <div class="message-center">
             <div class="user-img ml-2">
-              <img src="`+data.avatar+`" alt="avatar" style="border-radius:50%">
+              <img src="{{ asset('`+data.avatar+`') }}" alt="avatar" style="border-radius:50%">
             </div>
             <div class="mail-content">
               <h5><b>`+data.message+`</b></h5>
