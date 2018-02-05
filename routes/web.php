@@ -10,10 +10,11 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-/* Route::get('test', function(){
-    event(new App\Events\BidNotified('Someone','test','test','test'));
-    return 'Notified';
-}); */
+// Route::get('test', function(){
+//     event(new \App\Events\BidNotified('aw','placed a bid on aw' ,"/uploads/blank.png", "route('projects')"));
+      
+//     return 'Notified';
+// });
 
 Route::get('/', function () {
     return view('home');
