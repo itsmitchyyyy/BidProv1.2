@@ -9,6 +9,12 @@
     content: "\f005";  /* this is your text. You can also use UTF-8 character codes as I do here */
     font-family: FontAwesome;
 }
+.input-border{
+    border:1px solid rgba(0,0,0,.25);
+}
+.disable-button{
+    cursor:pointer;
+}
 </style>
 @endpush
 @section('content')
@@ -205,99 +211,112 @@
                                 </div>
                                 <!-- SETTINGS TAB -->
                                 <div class="tab-pane" id="settings">
-                                    <form class="form-horizontal form-material" method="post" action="{{ route('bidderprofile', ['id' => Auth::user()->id]) }}">
-                                     
                                         @if(session()->get('success'))
                                             <div class="alert alert-success alert-dismissable fade show">
                                                 <button type="button" class="close" data-dismiss="alert"><i class="fa fa-close"></i></button>
                                                 {{ session()->get('success') }}
                                             </div>
                                         @endif
-                                        <input type="hidden" name="_method" value="PATCH">
+                                         <form class="form-horizontal" method="post" action="{{ route('profile', ['id' => Auth::user()->id]) }}">
+                                         <input type="hidden" name="_method" value="PATCH">
                                          <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                         <div class="form-group{{ $errors->has('firstname') ? ' has-error' : ''}}">
-                                         <label class="col-md-12">Firstname</label>
-                                         <div class="col-md-12">
-                                             <input type="text" placeholder="First Name" name="firstname" value="{{ $data->firstname }}" class="form-control form-control-line"> </div>
-                                             @if($errors->has('firstname'))
-                                                 <p class="help-block">{{ $errors->first('firstname') }}</p>
-                                             @endif
-                                     </div>
-                                     <div class="form-group{{ $errors->has('lastname') ? ' has-error' : ''}}">
-                                         <label class="col-md-12">Lastname</label>
-                                         <div class="col-md-12">
-                                             <input type="text" placeholder="Last Name" name="lastname" value="{{ $data->lastname }}" class="form-control form-control-line"> </div>
-                                             @if($errors->has('lastname'))
-                                                 <p class="help-block">{{ $errors->first('lastname') }}</p>
-                                             @endif
-                                     </div>
-                                        <div class="form-group{{ $errors->has('email') ? ' has-error' : ''}}">
-                                            <label for="example-email" class="col-md-12">Email</label>
-                                            <div class="col-md-12">
-                                                <input type="email" placeholder="Email" name="email" value="{{ $data->email }}" class="form-control -line"  id="example-email"> </div>
-                                                @if($errors->has('name'))
-                                                    <p class="help-block">{{ $errors->first('email') }}</p>
-                                                @endif
-                                        </div>
-                                     
-                                        <div class="form-group{{ $errors->has('mobile_no') ? ' has-error' : ''}}">
-                                            <label class="col-md-12">Mobile No</label>
-                                            <div class="col-md-12">
-                                                <input type="text" placeholder="Mobile No" name="mobile_no" value="{{ $data->mobile_no }}"  class="form-control form-control-line"> </div>
-                                                @if($errors->has('mobile_no'))
-                                                    <p class="help-block">{{ $errors->first('mobile_no') }}</p>
-                                                @endif
-                                        </div>
-                                        <div class="form-group{{ $errors->has('landline') ? ' has-error' : ''}}">
-                                            <label class="col-md-12">Landline No</label>
-                                            <div class="col-md-12">
-                                                <input type="text" placeholder="Landline No" name="landline" value="{{ $data->landline }}" id="landline"  class="form-control form-control-line"> </div>
-                                                @if($errors->has('landline'))
-                                                    <p class="help-block">{{ $errors->first('landline') }}</p>
-                                                @endif
-                                        </div>
-                                        <div class="form-group{{ $errors->has('street_no') ? ' has-error' : ''}}">
-                                            <label class="col-sm-12">Street No</label>
-                                            <div class="col-sm-12">
-                                            <input type="text" name="street_no" id="street_no" name="street_no" placeholder="Street No" value="{{ $data->street_no }}" class="form-control form-control-line">
-                                                @if($errors->has('street_no'))
-                                                    <p class="help-block">{{ $errors->first('street_no') }}</p>
-                                                @endif
-                                            </div>
-                                        </div>
-                                        <div class="form-group{{ $errors->has('city') ? ' has-error' : ''}}">
-                                            <label class="col-sm-12">City</label>
-                                            <div class="col-sm-12">
-                                            <input type="text" name="city" id="city" name="city" placeholder="City" value="{{ $data->city }}" class="form-control form-control-line">
-                                                @if($errors->has('city'))
-                                                    <p class="help-block">{{ $errors->first('city') }}</p>
-                                                @endif
-                                            </div>
-                                        </div>
-                                        <div class="form-group{{ $errors->has('province') ? ' has-error' : ''}}">
-                                            <label class="col-sm-12">Province</label>
-                                            <div class="col-sm-12">
-                                            <input type="text" name="province" id="province" name="province" placeholder="Province" value="{{ $data->province }}" class="form-control form-control-line">
-                                                @if($errors->has('province'))
-                                                    <p class="help-block">{{ $errors->first('province') }}</p>
-                                                @endif
-                                            </div>
-                                        </div>
-                                        <div class="form-group{{ $errors->has('zip_code') ? ' has-error' : ''}}">
-                                            <label class="col-sm-12">Zip Code</label>
-                                            <div class="col-sm-12">
-                                            <input type="text" name="zip_code" id="zip_code" name="zip_code" placeholder="Zip Code" value="{{ $data->zip_code }}" class="form-control form-control-line">
-                                                @if($errors->has('zip_code'))
-                                                    <p class="help-block">{{ $errors->first('zip_code') }}</p>
-                                                @endif
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="col-sm-12">
-                                                <button class="btn btn-primary wew" id="updateProfile"  style="background-color:#ee4b28;border:1px solid #ee4b28">Update Profile</button>
-                                            </div>
-                                        </div>
-                                    </form>
+                                           <div class="form-group row{{ $errors->has('firstname') ? ' has-error' : ''}}">
+                                                <label for="firstname" class="col-2 col-form-label">First Name</label>
+                                                <div class="col-10">
+                                                    <input type="text" name="firstname" id="firstname" value="{{ $data->firstname }}" class="form-control input-border">
+                                                    @if($errors->has('firstname'))
+                                                        <p class="help-block text-danger">{{ $errors->first('firstname') }}</p>
+                                                    @endif
+                                                </div>
+                                           </div>
+                                           <div class="form-group row{{ $errors->has('lastname') ? ' has-error' : ''}}">
+                                                <label for="lastname" class="col-2 col-form-label">Last Name</label>
+                                                <div class="col-10">
+                                                    <input type="text" name="lastname" id="lastname" value="{{ $data->lastname }}" class="form-control input-border">
+                                                    @if($errors->has('lastname'))
+                                                        <p class="help-block text-danger">{{ $errors->first('lastname') }}</p>
+                                                    @endif
+                                                </div>
+                                           </div>
+                                           <div class="form-group row{{ $errors->has('email') ? ' has-error' : ''}}">
+                                                <label for="email" class="col-2 col-form-label">Email</label>
+                                                <div class="col-10">
+                                                    <input type="text" name="email" id="email" value="{{ $data->email }}" class="form-control input-border">
+                                                    @if($errors->has('email'))
+                                                        <p class="help-block text-danger">{{ $errors->first('email') }}</p>
+                                                    @endif
+                                                </div>
+                                           </div>
+                                           <div class="form-group row{{ $errors->has('mobile_no') ? ' has-error' : ''}}">
+                                                <label for="mobile_no" class="col-2 col-form-label">Mobile No.</label>
+                                                <div class="col-10">
+                                                    <input type="text" name="mobile_no" id="mobile_no" value="{{ $data->mobile_no }}" class="form-control input-border">
+                                                    @if($errors->has('mobile_no'))
+                                                        <p class="help-block text-danger">{{ $errors->first('mobile_no') }}</p>
+                                                    @endif
+                                                </div>
+                                           </div>
+                                           <div class="form-group row{{ $errors->has('landline') ? ' has-error' : ''}}">
+                                                <label for="landline" class="col-2 col-form-label">Landline</label>
+                                                <div class="col-10">
+                                                    <input type="text" name="landline" id="landline" value="{{ $data->landline }}" class="form-control input-border">
+                                                    @if($errors->has('landline'))
+                                                        <p class="help-block text-danger">{{ $errors->first('landline') }}</p>
+                                                    @endif
+                                                </div>
+                                           </div>
+                                           <div class="form-group row{{ $errors->has('street_no') ? ' has-error' : ''}}">
+                                                <label for="street_no" class="col-2 col-form-label">Street No.</label>
+                                                <div class="col-10">
+                                                    <input type="text" name="street_no" id="street_no" value="{{ $data->street_no }}" class="form-control input-border">
+                                                    @if($errors->has('street_no'))
+                                                        <p class="help-block text-danger">{{ $errors->first('street_no') }}</p>
+                                                    @endif
+                                                </div>
+                                           </div>
+                                           <div class="form-group row{{ $errors->has('city') ? ' has-error' : ''}}">
+                                                <label for="city" class="col-2 col-form-label">City</label>
+                                                <div class="col-10">
+                                                    <input type="text" name="city" id="city" value="{{ $data->city }}" class="form-control input-border">
+                                                    @if($errors->has('city'))
+                                                        <p class="help-block text-danger">{{ $errors->first('city') }}</p>
+                                                    @endif
+                                                </div>
+                                           </div>
+                                           <div class="form-group row{{ $errors->has('province') ? ' has-error' : ''}}">
+                                                <label for="province" class="col-2 col-form-label">Province</label>
+                                                <div class="col-10">
+                                                    <input type="text" name="province" id="province" value="{{ $data->province }}" class="form-control input-border">
+                                                    @if($errors->has('province'))
+                                                        <p class="help-block text-danger">{{ $errors->first('province') }}</p>
+                                                    @endif
+                                                </div>
+                                           </div>
+                                           <div class="form-group row{{ $errors->has('zip_code') ? ' has-error' : ''}}">
+                                                <label for="zip_code" class="col-2 col-form-label">Zip Code</label>
+                                                <div class="col-10">
+                                                    <input type="text" name="zip_code" id="zip_code" value="{{ $data->zip_code }}"  class="form-control input-border">
+                                                    @if($errors->has('zip_code'))
+                                                        <p class="help-block text-danger">{{ $errors->first('zip_code') }}</p>
+                                                    @endif
+                                                </div>
+                                           </div>
+                                           <div class="form-group row{{ $errors->has('paypal') ? ' has-error' : ''}}">
+                                                <label for="zip_code" class="col-2 col-form-label">Paypal Email</label>
+                                                <div class="col-10">
+                                                    <input type="text" name="paypal" id="paypal" value="{{ $data->paypal }}"  class="form-control input-border">
+                                                    @if($errors->has('paypal'))
+                                                        <p class="help-block text-danger">{{ $errors->first('paypal') }}</p>
+                                                    @endif
+                                                </div>
+                                           </div>
+                                           <div class="form-group">
+                                                <div class="col-sm-12">
+                                                    <button class="btn btn-primary wew" id="updateProfile" style="background-color:#ee4b28;border:1px solid #ee4b28">Update Profile</button>
+                                                </div>
+                                           </div>
+                                         </form>
+                                   
                                 </div>
                             </div>
                         </div>
@@ -372,7 +391,7 @@
     });
     $('#landline').on('blur', function(){
          var value = $('#landline').val();
-         if(value === "0 (32)"){
+         if(value === "0 (32)" || value == "0 (32) "){
             $('#landline').val('')
         }
         else{
