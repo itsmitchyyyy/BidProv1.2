@@ -15,6 +15,8 @@ class BidNotified implements ShouldBroadcast
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $username;
+    public $avatar;
+    public $link;
     public $message;
     /**
      * Create a new event instance.
@@ -28,6 +30,7 @@ class BidNotified implements ShouldBroadcast
         $this->message = "{$username} $message";
         $this->avatar = $avatar;
         $this->link = $link;
+        //dd($avatar);
     }
 
     /**
