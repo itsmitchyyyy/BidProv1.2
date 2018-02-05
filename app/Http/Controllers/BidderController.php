@@ -19,7 +19,7 @@ class BidderController extends Controller
        return view('admin/developers');
    }
    public function bidderProfile($id){
-       $skills = array();
+       $skill = array();
        $proficiency = array();
         $users = User::findOrFail($id);
         $skiller  = User::find($id);
@@ -88,7 +88,8 @@ class BidderController extends Controller
         'street_no' => 'sometimes|nullable|max:255',
         'city' => 'sometimes|nullable|max:255',
         'province' => 'sometimes|nullable|max:255',
-        'zip_code' => 'sometimes|nullable|regex:/\b\d{4}\b/'
+        'zip_code' => 'sometimes|nullable|regex:/\b\d{4}\b/',
+        'paypal' => 'sometimes|nullable|email|string'
         ]);
         if($validator->fails()){
             return redirect('/bidder/profile/'.$id)
@@ -105,6 +106,7 @@ class BidderController extends Controller
          $user->city = $request->city;
          $user->province = $request->province;
          $user->zip_code = $request->zip_code;
+         $user->paypal = $request->paypal;
         $user->save(); 
        return redirect('/bidder/profile/'.$id)
             ->withInput(['tab' => 'profile'])
