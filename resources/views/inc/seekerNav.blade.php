@@ -22,7 +22,7 @@
     @inject('notifications', 'App\Http\Controllers\NotificationController')
     <li class="nav-item dropdown notifications">
       <a href="#" class="nav-link" data-toggle="dropdown" id="dropDownMessage">
-        <i class="fa fa-bell" style="color:orange" data-count="0"></i>
+        <i class="fa fa-bell" style="color:orange" data-count="{{ $notifications>countNotification() }}"></i>
         <span class="text-danger" id="counts" class="notify-count">{{ $notifications->countNotification() }}</span>
       </a>
       <div class="dropdown-menu dropdown-menu-right"  aria-labelledBy="dropdownMessage">
@@ -37,7 +37,7 @@
               <img src="/{{ $notify->avatar }}" alt="avatar" style="border-radius:50%">
             </div>
             <div class="mail-content">
-              <h5><b>{{ ucfirst($notify->message) }}</b></h5>
+              <h5><b>{{ ucwords($notify->name) }} {{ $notify->message }}</b></h5>
               <span class="mail-desc"><small>View</small></span>
             </div>
           </div>
