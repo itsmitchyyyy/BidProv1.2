@@ -21,6 +21,7 @@ class CreateProposalsTable extends Migration
             $table->foreign('project_id')->references('id')->on('projects');
             $table->string('status')->default('1');
             $table->decimal('price', 8,2);
+            $table->string('daysTodo');
             $table->timestamps();
         });
     }
