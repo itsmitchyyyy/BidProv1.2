@@ -318,6 +318,11 @@
         }
    });
    </script>
+   <script>
+    $(document).ready(function(){
+        $('#tabMenu a[href="#{{ old('tab') }}"]').tab('show');
+    });
+   </script>
    <!-- <script>
     $(function(){
         var addDiv = $('#addInput');
@@ -374,9 +379,9 @@
             $(this).find('#updateProfile').prop('disabled', $(this).serialize() == $(this).data('serialized'));
         }).find('#updateProfile').prop('disabled',true);
     </script>
-   <script>
+   <!-- <script>
      $(document).ready(function(){
          $('#tabMenu a[href="#{{ old('tab') }}"]').tab('show');
      });
-    </script>
+    </script> -->
 @endsection
