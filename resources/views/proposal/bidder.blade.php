@@ -36,6 +36,14 @@
         <p class="card-text">
         <h4><b>Seeker Review</b></h4>
         <?php $user = $users->usersReview($proposal->user_id) ?>
+        <div class="clearfix mb-2">
+        <img src="/{{ $user->avatar }}" alt="avatar" class="img-thumbnail m-b-15 pull-left gap-right" style="width:100px;height:100px">
+        <p>
+        <a href="#">{{ ucfirst($user->firstname) }} {{ ucfirst($user->lastname) }}</a>
+        <br>
+        <small>{{ $user->email }}</small>
+        </p>
+        </div>
         <input id="input-1" name="input-1" class="rating rating-loading" data-min="0" data-max="5" data-step="0.1" value="{{ $user->userAverageRating }}" data-size="s" disabled="">
         </p>
         <div class="pull-right">
@@ -62,7 +70,7 @@
 <tr>
 <td>
 <div class="clearfix">
-<a href=""><img src="/{{ $bidding->avatar }}" alt="" style="height:150px;width:150px" class="pull-left gap-right"></a>
+<a href=""><img src="/{{ $bidding->avatar }}" alt="" style="width:100px;height:100px" class="img-thumbnail pull-left gap-right"></a>
 <p class="text-muted">
 <a href="">{{ $bidding->firstname }} {{ $bidding->lastname }}</a>
 <br><small>@foreach($controller->getCreatedAt($bidding->proposal_id) as $date)  {{ Carbon\Carbon::parse($date->created_at)->diffForHumans() }} @endforeach</small>
@@ -74,14 +82,9 @@
 <p class="text-muted">User Reviews: {{ $controller->getBidder($bidding->bidder_id)->userSumRating }} Reviews</p>
 </td>
 <td >
-<span>&#8369;</span> {{ $bidding->price }}
+<span>&#8369;</span> {{ $bidding->price }} <br> in {{ $bidding->daysTodo }} days
 <p class="text-muted">
-        <?php $max = $controller->getProjectModules($bidding->proposal_id); ?>
-                    @if($max == 1)
-                    maximum of {{ $max }} day
-                    @else
-                    maximum of {{ $max }} days
-                    @endif
+       
     </p>
 </td>
 </tr>
