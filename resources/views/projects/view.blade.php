@@ -51,7 +51,7 @@
 <tr>
 <td>
 <div class="clearfix">
-<a href=""><img src="/{{ $bidding->avatar }}" alt="" style="height:150px;width:150px" class="pull-left gap-right"></a>
+<a href=""><img src="/{{ $bidding->avatar }}" alt="" class="img-thumbnail m-b-15 pull-left gap-right" style="width:100px;height:100px"></a>
 <p class="text-muted">
 <a href="">{{ $bidding->firstname }} {{ $bidding->lastname }}</a>
 <br><small>@foreach($controller->getCreatedAt($bidding->proposal_id) as $date)  {{ Carbon\Carbon::parse($date->created_at)->diffForHumans() }} @endforeach</small>
@@ -65,12 +65,7 @@
 <td>
 <span>&#8369;</span> {{ $bidding->price }}
 <p class="text-muted">
-<?php $max = $controller->getProjectModules($bidding->proposal_id); ?>
-@if($max == 1)
-in just {{ $max }} day
-@else
-in a span of {{ $max }} days
-@endif
+    in {{ $bidding->daysTodo }} days
 </p>
 </td>
 <td>
