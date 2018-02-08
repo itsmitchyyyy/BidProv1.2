@@ -49,16 +49,20 @@
             <small><b>Proposal ID: {{ $modules[0]->proposal_id }}</b></small>
             <h4 class="card-title"><b>Proposal Details</b></h4>
             <p class="card-text wrap-content">
+           
             @foreach($modules as $key => $module)
-                Module {{ $key + 1}}<br>Description:  {{ ucfirst($module->description) }} <br> Days to do: {{ $module->daysTodo }}<br>
+            Module name: {{ ucfirst($module->module_name) }}<br>
+            <a href="" data-toggle="collapse" data-target="#dataCollapse{{$key}}"><small>View Details</small></a>
+            <div class="collapse" id="dataCollapse{{$key}}">
+                Details:<br>
+                @foreach($controller->getProjectModules($module->id) as $proposal_modules)
+                    {{ $proposal_modules }}<br>
+                @endforeach
+                </div>
             @endforeach
-            <?php $max = $controller->getProjectModules($modules[0]->proposal_id); ?>
-            @if($max == 1)
-            Maximum of {{ $max }} day<br>
-            @else
-            Maximum of {{ $max }} days<br
-            @endif
-            Price: <span>&#8369;</span>{{ $modules[0]->price }}
+                <br>
+            Price: <span>&#8369;</span>{{ $proposals->price }}<br>
+            in {{ $proposals->daysTodo }} days
             </p>
             <p class="card-text">
             <h4><b>Bidders Profile</b></h4>
@@ -99,7 +103,7 @@
             <tr>
                 <td>
                     <div class="clearfix">
-                        <img src="/{{ $bidding->avatar }}" alt="avatar" style="height:150px;width:150px" class="pull-left gap-right">
+                        <img src="/{{ $bidding->avatar }}" alt="avatar" class="img-thumbnail m-b-15 pull-left gap-right" style="width:100px;height:100px">
                         <p class="text-muted">
                         <a href="">{{ $bidding->firstname }} {{ $bidding->lastname }}</a>
                         <br><small>{{ Carbon\Carbon::parse($bidding->proposal_created_at)->diffForHumans() }}</small>
@@ -115,12 +119,7 @@
                 <td>
                     <span>&#8369;</span> {{ $bidding->price }}
                     <p class="text-muted">
-                    <?php $max = $controller->getProjectModules($bidding->proposal_id); ?>
-                    @if($max == 1)
-                    in just {{ $max }} day
-                    @else
-                    in a span of {{ $max }} days
-                    @endif
+                            in {{ $bidding->daysTodo    }} days
                     </p>
                 </td>
                 <td>
