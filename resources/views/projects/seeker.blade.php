@@ -424,6 +424,7 @@
             <option disabled selected></option>
             <option value="IOS">IOS</option>
             <option value="Android">Android</option>
+            <option value="IAA">IOS and Android</option>
           </select>
           <span class="highlight"></span><span class="bar"></span>
           <label for="type">Mobile Type</label>
