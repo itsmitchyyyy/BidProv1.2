@@ -145,10 +145,10 @@ class ProjectController extends Controller
     }
 
     public function getProjectModules($id){
-        $modules = DB::table('project_modules')
-            ->where('proposal_id', $id)
-            ->pluck('daysTodo')
-            ->sum();
+        $modules = DB::table('proposal_modules')
+            ->where('module_id', $id)
+            ->pluck('description');
+            
         return $modules;
     }
     public function getCreatedAt($id){
@@ -386,51 +386,7 @@ class ProjectController extends Controller
             return redirect()->route('bidder')->with('success','Successfully bidded');
         }
     }
-    // public function proposeProject(Request $request, $project_id, $user_id){
-    //     $regex = '/^\d{0,8}(\.\d{1,2})?$/';
-    //     $validator = Validator::make($request->all(),[
-    //         'price' => 'required|regex:'.$regex,
-    //         'description' => 'required',
-    //         'days' => 'required'
-    //     ]);
-    //     if($validator->fails()){
-    //         // dd($validator);
-    //         return redirect('proposals')
-    //             ->withInput()
-    //             ->withErrors($validator);
-    //     }
-    //     $check = Proposal::where(['bidder_id' => Auth::user()->id, 'project_id' => $project_id])->first();
-    //     // dd($check);
-    //     $project = Project::where('id', $project_id)->first();  
-    //     if($check != null){
-    //         return redirect()->route('proposal', $project_id)
-    //             ->with('error','Already bidded');
-    //     }else{
-    //     $proposal = new Proposal();
-    //     $proposal->bidder_id = Auth::user()->id;
-    //     $proposal->project_id = $project_id;
-    //     $proposal->price = $request->price;
-    //     $proposal->save();
-    //     $proposal_id = $proposal->id;
-       
-    //     $details = $request->description;
-    //     $daystoDo = $request->days;
-    //     $data = array_merge(['description' => $details],['daysTODO' => $daystoDo]);
-    //     foreach(array_combine($data['description'], $data['daysTODO']) as $description => $toDo){ 
-    //      DB::table('project_modules')
-    //         ->insert([
-    //             'proposal_id' => $proposal_id,
-    //             'description' => $description,
-    //             'daysTodo' => $toDo,
-    //             'percentDone' => 0
-    //         ]);
-    //     }   
-            
-    //    event(new \App\Events\BidNotified(Auth::user()->firstname.' '.Auth::user()->lastname,'placed a bid on '.$project->title , Auth::user()->avatar, "route('projects')"));
-    //    $this->insertNotification(['user_id' => $user_id, 'name' => Auth::user()->firstname.' '.Auth::user()->lastname, 'message' => 'placed a bid on '.$project->title, 'avatar' => Auth::user()->avatar, 'link' => route('projects'), 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()]);
-    //    return redirect()->route('bidder')->with('success','Successfully bidded');
-    //     }
-    // }
+  
     public function insertNotification($data){
         DB::table('notifications')->insert($data);
     }
@@ -451,10 +407,14 @@ class ProjectController extends Controller
         $avg = Proposal::where('project_id', $project_id)->avg('price');
         $projects = Project::where(['id' => $project_id, 'status' => 'open'])->with('proposals')->first();
         $proposals = Proposal::where(['bidder_id' => $user_id, 'project_id' => $project_id])->first();
-        $modules = DB::table('project_modules')
+        /* $modules = DB::table('project_modules')
                 ->join('proposals','project_modules.proposal_id','=','proposals.id')
                 ->where('project_modules.proposal_id','=', $proposal_id)
-                ->get();
+                ->get(); */
+        $modules = DB::table('modules')
+             //->join('proposal_modules','modules.id','=','proposal_modules.module_id')
+            ->where('modules.proposal_id','=', $proposal_id)
+            ->get();
         $biddings = DB::table('proposals')
             ->join('users', 'users.id','=', 'proposals.bidder_id')
             ->where('proposals.project_id','=',$project_id)
