@@ -19,6 +19,9 @@
 Route::get('/', function () {
     return view('home');
 });
+// Route::get('testing', function(){
+//     return view('proposal/modules');
+// });
 // Route::get('test/{project_id}/{user_id}/{proposal_id}', 'ProjectController@proposalModules');
 // Route::get('ratings', function(){
 //     return view('ratings/seeker');
