@@ -48,13 +48,15 @@
         </div>
     </div>
     </li> -->
+    @inject('notifications', 'App\Http\Controllers\NotificationController')
     <li class="nav-item dropdown notifications">
      <a href="" class="nav-link" data-toggle="dropdown" id="navbarDropdownMessage" href="#">
-        <i class="fa fa-bell" style="color:orange" data-count="0"></i>
-        <span class="text-danger notif-count">0</span>
+        <i class="fa fa-bell" style="color:orange" data-count="{{ $notifications->countNotification() }}"></i>
+        <span class="text-danger notif-count">{{ $notifications->countNotification() }}</span>
       </a>
       <div id="menuItems" class="dropdown-menu dropdown-menu-right" aria-labelledBy="navbarDropdownMessage">
-       <h6 class="dropdown-header">You have (<span class="notif-count">0</span>) new notifications</h6>
+       <h6 class="dropdown-header">You have (<span class="notif-count">{{ $notifications->countNotification() }}</span>) new notifications</h6>
+       <div class="text-center" style="font-size:12px"><small><a href="{{ route('viewNotification') }}" class="text-dark">See all messages</a></small></div>
        <!-- <a href="http://">
         <div class="message-center">
           <div class="user-img ml-2">
