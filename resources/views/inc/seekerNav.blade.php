@@ -22,7 +22,7 @@
     @inject('notifications', 'App\Http\Controllers\NotificationController')
     <li class="nav-item dropdown notifications">
       <a href="#" class="nav-link" data-toggle="dropdown" id="dropDownMessage">
-        <i class="fa fa-bell" style="color:orange" data-count="{{ $notifications>countNotification() }}"></i>
+        <i class="fa fa-bell" style="color:orange" data-count="{{ $notifications->countNotification() }}"></i>
         <span class="text-danger" id="counts" class="notify-count">{{ $notifications->countNotification() }}</span>
       </a>
       <div class="dropdown-menu dropdown-menu-right"  aria-labelledBy="dropdownMessage">
