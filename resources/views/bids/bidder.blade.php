@@ -1,5 +1,6 @@
 @extends('layouts.bidderapp')
 @section('content')
+@inject('bids', 'App\Http\Controllers\ProjectController')
 <div class="container-fluid m-t-15">
     <h3>My Bids</h3>
     <table id="myTable" class="table table-striped table-bordered" width="100%">
@@ -16,7 +17,7 @@
         @foreach($proposal as $propose)
         <tr>
             <td><a href="{{ route('viewProject', ['id' => $propose->projects->id]) }}">{{ ucfirst($propose->projects->title) }}</a></td>
-            <td><i class="fa fa-trophy"></i> {{ count($propose->projects) }}</td>
+            <td><i class="fa fa-trophy"></i> {{ $bids->countBid($propose->projects->id) }}</td>
             <td><i class="fa fa-clock-o"></i> {{ Carbon\Carbon::parse($propose->projects->duration)->diffForHumans() }}</td>
             <td><span>&#8369;</span> {{ $propose->projects->min }} - <span>&#8369;</span> {{ $propose->projects->max }}</td>
             <td>
