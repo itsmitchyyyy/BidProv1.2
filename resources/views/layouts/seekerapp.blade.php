@@ -39,6 +39,7 @@
     @yield('content')
     
 </body>
+@stack('scripts')
 <script src="{{ asset('js/bower_components/datatables/jquery.dataTables.min.js') }}"></script>
 @yield('scripts')
 <script>
