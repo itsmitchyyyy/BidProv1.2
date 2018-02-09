@@ -217,7 +217,7 @@
                                                 {{ session()->get('success') }}
                                             </div>
                                         @endif
-                                         <form class="form-horizontal" method="post" action="{{ route('profile', ['id' => Auth::user()->id]) }}">
+                                         <form class="form-horizontal" method="post" action="{{ route('bidderprofile', ['id' => Auth::user()->id]) }}">
                                          <input type="hidden" name="_method" value="PATCH">
                                          <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                            <div class="form-group row{{ $errors->has('firstname') ? ' has-error' : ''}}">
