@@ -85,10 +85,31 @@
             <input id="input-1" class="rating rating-loading" data-min="0" data-max="5" data-step="0.1" value="{{ $user->userAverageRating }}" data-size="s" disabled>
             </p>
             <div class="pull-right">
-                <a href="#"><button class="btn btn-info wew">Award</button></a>
+                <a href="#" data-toggle="modal" data-target="#acceptBid"><button class="btn btn-info wew">Award</button></a>
             </div>
         </div>
     </div>
+    <!-- MODAL -->
+        <div class="modal fade" id="acceptBid">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button class="close" data-dismiss="modal"><span>&times;</span></button>
+                        <h3>Award Project</h3>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container-fluid">
+                            <h2>Are you sure?</h2>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary wew" data-dismiss="modal">Cancel</button>
+                        <a href="{{ route('acceptBid',['seeker_id' => Auth::user()->id, 'bidder_id' => $user->id, 'proposal_id' => $modules[0]->proposal_id, 'project_id' => $projects->id]) }}"><button class="btn btn-info wew">Submit</button></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <!-- END MODAL -->
     <table class="table table-bordered m-t-15" id="myBidding">
         <thead>
         <tr class="bg-success">
@@ -123,7 +144,7 @@
                     </p>
                 </td>
                 <td>
-<a href="{{ route('viewBids', ['project_id' => $bidding->project_id, 'user_id' => $bidding->bidder_id, 'proposal_id' => $bidding->proposal_id]) }}" data-toggle="tooltip" title="Award" class="gap-right"><i class="fa fa-trophy" style="font-size:24px"></i></a>
+        <a href="{{ route('viewBids', ['project_id' => $bidding->project_id, 'user_id' => $bidding->bidder_id, 'proposal_id' => $bidding->proposal_id]) }}" data-toggle="tooltip" title="Award" class="gap-right"><i class="fa fa-trophy" style="font-size:24px"></i></a>
 </td>
 
             </tr>
