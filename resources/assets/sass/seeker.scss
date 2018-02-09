@@ -6,8 +6,8 @@
 @import "variables";
 
 // Bootstrap
-//@import "~bootstrap-sass/assets/stylesheets/bootstrap";
-//@import "node_modules/bootstrap/scss/bootstrap";
+// @import "~bootstrap-sass/assets/stylesheets/bootstrap";
+// @import "node_modules/bootstrap/scss/bootstrap";
 @import "login/alpha-6";
 @import "ratings/star-rating";
 @import "node_modules/font-awesome/scss/font-awesome";
@@ -21,4 +21,5 @@
 @import "login/style";
 @import "login/default";
 @import "seeker/datatable";
+// @import "kanban";
 //@import "ratings/preview";
