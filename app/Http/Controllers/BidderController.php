@@ -107,7 +107,7 @@ class BidderController extends Controller
          $user->province = $request->province;
          $user->zip_code = $request->zip_code;
          $user->paypal = $request->paypal;
-        $user->save(); 
+         $user->save(); 
        return redirect('/bidder/profile/'.$id)
             ->withInput(['tab' => 'profile'])
             ->with('success','Profile updated');
