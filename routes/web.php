@@ -19,9 +19,9 @@
 Route::get('/', function () {
     return view('home');
 });
-// Route::get('testing', function(){
-//     return view('proposal/modules');
-// });
+Route::get('testing', function(){
+    return view('ongoing/seeker');
+});
 // Route::get('test/{project_id}/{user_id}/{proposal_id}', 'ProjectController@proposalModules');
 // Route::get('ratings', function(){
 //     return view('ratings/seeker');
@@ -52,16 +52,17 @@ Route::group(['middleware' => ['auth']], function(){
     Route::get('list/post', ['as' => 'postAdmin', function(){
         return view('admin/post');
     }]);
+    // end admin
     //seeker
     Route::get('seeker/projects', ['as' => 'projects', 'uses' => 'ProjectController@myProjects']);
     //Route::get('seeker/projects', ['uses' => 'ProjectController@closedProjects']);
-    Route::patch('seeker/projects/repost/{id}',['as' => 'repostproject', 'uses' => 'ProjectController@openProject']);
+    Route::post('seeker/projects/repost/{id}',['as' => 'repostproject', 'uses' => 'ProjectController@openProject']);
     Route::patch('seeker/projects/update/{id}', ['as' => 'closeproject', 'uses' => 'ProjectController@closeProject']);
     Route::patch('seeker/projects/{id}', ['as' => 'updateproject', 'uses' => 'ProjectController@updateProject']);
-    Route::post('/seeker/projects/paypal', ['as' => 'deleteproject', 'uses' => 'ProjectController@deleteProject']);
+    // Route::post('/seeker/projects/paypal', ['as' => 'deleteproject', 'uses' => 'ProjectController@deleteProject']);
     Route::get('seeker', ['as' => 'seeker', 'uses' => 'ProjectController@recentProjects']);
     Route::post('seeker', ['uses' => 'ProjectController@create']);
-    Route::get('/seeker/projects/paypal', ['as' => 'projects.status', 'uses' => 'ProjectController@paymentStatus']);
+    // Route::get('/seeker/projects/paypal', ['as' => 'projects.status', 'uses' => 'ProjectController@paymentStatus']);
    /* Route::get('seeker/profile', function(){
         return view('userprofiles/seeker');
     });*/
@@ -72,29 +73,39 @@ Route::group(['middleware' => ['auth']], function(){
     Route::get('seeker/notifications', ['as' => 'viewNotification', 'uses' => 'NotificationController@viewNotification']);
     Route::get('view/{id}', ['as' => 'myProject', 'uses' => 'ProjectController@getMyProject']);
     Route::get('seeker/proposal/details/{project_id}/{user_id}/{proposal_id}', ['as' => 'viewBids', 'uses' => 'ProjectController@ProposalModules']);
-
+    Route::get('seeker/proposal/accept/{seeker_id}/{bidder_id}/{proposal_id}/{project_id}', ['as' => 'acceptBid', 'uses' => 'ProjectController@acceptBid']);
+    Route::patch('/seeker/projects/cancel/paypal/{id}/{bid_id}/{project_name}/{user_paypal}', ['as' => 'cancelProject', 'uses' => 'BidController@cancelProject']);
+    Route::get('/seeker/projects/paypal', ['as' => 'cancelprojects.status', 'uses' => 'BidController@paymentStatus']);
+    // end seeker
     //bidder
+    // MAIN PAGE BIDDER
     Route::get('bidder', ['as' => 'bidder', 'uses' => 'ProjectController@getProjectsBidder']);
+    // END
+    // PROFILE
     Route::get('bidder/profile/{id}', ['as' => 'bidderprofile', 'uses' => 'BidderController@bidderProfile']);
     Route::post('bidder/profile/{id}', ['uses' => 'BidderController@updatePassword']);
     Route::patch('bidder/profile/{id}', [ 'uses' => 'BidderController@updateProfile']);
     Route::patch('bidder/avatar/{id}', ['as' => 'avatar', 'uses' => 'BidderController@updateAvatar']);
     Route::patch('bidder/skills/{id}', ['as' => 'skills', 'uses' => 'BidderController@addSkills']);
+    // END
     // Route::get('skills',  ['uses' => 'BidderController@getSkills']);
-    Route::get('bidder/inbox', function(){
-        return view('inbox/bidder');
-    }); 
-    Route::get('bidder/inbox-detail', function(){
-        return view('inbox/inbox-detail');
-    });
+    // Route::get('bidder/inbox', function(){
+    //     return view('inbox/bidder');
+    // }); 
+    // Route::get('bidder/inbox-detail', function(){
+    //     return view('inbox/inbox-detail');
+    // });
+    // VIEW PROject
     Route::get('project/{id}', ['as' => 'viewProject', 'uses' => 'ProjectController@viewProject']);
     Route::get('project/proposal/{id}', ['as' => 'proposal', 'uses' => 'ProjectController@proposalDetails']);
     Route::post('propose/{project_id}/{user_id}', ['as' => 'proposetome', 'uses' => 'ProjectController@proposeProject']);
-    
+    // END
+    // PROPOSAL
     Route::get('proposals', ['as' => 'bids', 'uses' => 'ProposalController@viewProposals']);
     Route::delete('proposals', ['uses' => 'ProposalController@cancelProposal']);
-
+    // END
     //ratings
     Route::post('ratings', 'RatingController@postReview')->name('rate.post');
     Route::get('ratings/{id}', 'RatingController@reviewUser')->name('rate.show');
+    // end ratings
 });
