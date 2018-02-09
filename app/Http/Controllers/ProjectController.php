@@ -392,7 +392,7 @@ class ProjectController extends Controller
                     ->insert([
                         'module_id' => $id,
                         'description' => $description,
-                        'percentDone' => 0 ,
+                        'status' => 'todo' ,
                         'created_at' => Carbon::now(),
                         'updated_at' => Carbon::now()
                     ]);
