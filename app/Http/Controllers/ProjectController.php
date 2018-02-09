@@ -14,6 +14,7 @@ use DB;
 use App\Project;
 use App\User;
 use App\Proposal;
+use App\Bid;
 // Paypal
 use PayPal\Rest\ApiContext;
 use PayPal\Auth\OAuthTokenCredential;
@@ -74,13 +75,13 @@ class ProjectController extends Controller
     }
     
 
-    public function openProject(Request $request, $id){
+    public function openProject(Request $request,$id){
         $regex = '/^\d{0,8}(\.\d{1,2})?$/';
         $validator = Validator::make($request->all(), [
             'title' => 'required|string|max:255',
             'details' => 'required|string|max:255',
-           // 'start' => 'required|date',
-            //'end' => 'required|date',
+            'type' => 'not_in:0',
+            'os' => 'not_in:0',
             'category' => 'required|not_in:0',
             'min' => 'required|regex:'.$regex,
             'max' => 'required|regex:'.$regex
@@ -91,15 +92,18 @@ class ProjectController extends Controller
             ->with('repost_error',$id)
             ->withErrors($validator);
         }
-        $projects = Project::findOrFail($id);
+        $closed = Project::find($id)->delete();
+        $current = Carbon::now();
+        $projects = new Project();
+        $projects->user_id = Auth::id();
         $projects->title = $request->title;
         $projects->details = $request->details;
-       // $projects->start = $request->start;
-        //$projects->end = $request->end;
+        $projects->type = $request->type; 
+        $projects->os = $request->os;
         $projects->category = $request->category;
         $projects->min = $request->min;
         $projects->max = $request->max;
-        $projects->status = 'open';
+        $projects->duration = $current->addDays(7);
         $projects->save();
 
         return redirect()->route('projects')->with('success','Data Reposted');
@@ -130,7 +134,7 @@ class ProjectController extends Controller
 
     public function getMyProject($id){
         $avg = Proposal::where('project_id', $id)->avg('price');
-        $proposals = Project::where(['id' => $id, 'status' => 'open'])->with('proposals')->get();
+        $proposals = Project::where(['id' => $id])->with('proposals')->get();
         $biddings = DB::table('proposals')
             ->join('users', 'users.id', '=', 'proposals.bidder_id')
             ->where('proposals.project_id','=', $id)
@@ -179,8 +183,20 @@ class ProjectController extends Controller
             'status' => 'closed'])
             ->orderByRaw('created_at DESC')
             ->get();
+
+     $ongoingprojects = DB::table('projects')
+            ->join('proposals','proposals.project_id', '=', 'projects.id')
+            ->join('bids','bids.proposal_id','=','proposals.id')
+            ->join('users','users.id','=','bids.bidder_id')
+            ->where(['projects.user_id' => Auth::user()->id,
+            'projects.status' => 'ongoing', 'bids.status' => 'ongoing'])
+            ->select('*', 'bids.id as bid_id')
+            ->orderByRaw('projects.created_at DESC')
+            ->get();
             return view('projects/seeker')
-                ->with(array('projects'=>$projects))->with(array('closedprojects'=>$closedprojects));
+                ->with(compact('projects','closedprojects','ongoingprojects'));
+                // ->with(array('projects'=>$projects))
+                // ->with(array('closedprojects'=>$closedprojects));
     }
     public function getProjects(){
         $projects = DB::table('projects')
@@ -223,7 +239,7 @@ class ProjectController extends Controller
 
     
 
-    public function deleteProject()
+    /* public function deleteProject()
     {
         $item_name = Session::get('project_name');
         Session::forget('project_name');
@@ -297,7 +313,7 @@ class ProjectController extends Controller
         }
         \Session::put('error', 'Payment failedwew');
         return Redirect::route('projects');
-    }
+    } */
 
     public function seekerView(){
         return view('users/seeker');
@@ -310,6 +326,7 @@ class ProjectController extends Controller
     {
          $projects = DB::table('projects')
             ->where('duration', '>', Carbon::now())
+            ->where('status', '=', 'open')
             ->orderByRaw('created_at DESC')
             ->get();  
             return view('users/bidder')->with(compact('projects'));
@@ -436,6 +453,24 @@ class ProjectController extends Controller
         }   
         return view('proposaldetails/details')
             ->with(compact('avg','projects','proposals','biddings','modules','user','skill'));
+    }
+
+    public function acceptBid($seeker_id,$bidder_id,$proposal_id,$project_id){
+        $bids = new Bid();
+        $projects = Project::find($project_id);
+        $bids->seeker_id = $seeker_id;
+        $bids->bidder_id = $bidder_id;
+        $bids->proposal_id = $proposal_id;
+        $bids->status = 'ongoing';
+        $bids->created_at = Carbon::now();
+        $bids->updated_at = Carbon::now();
+        $bids->save();
+        $projects->status = 'ongoing';
+        $projects->updated_at = Carbon::now();
+        $projects->save();
+        return redirect()
+            ->route('myProject',$project_id);
+
     }
     //END OF BIDDER
 }
