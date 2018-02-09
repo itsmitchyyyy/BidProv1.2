@@ -4,6 +4,14 @@
 .hidden{
   display:none;
 }
+.glyphicon-star:before{
+    content: "\f005";
+    font-family: FontAwesome;
+}
+.glyphicon-star-empty:before{
+    content: "\f005";
+    font-family: FontAwesome;
+}
 </style>
 @endpush
 @section('content')
@@ -21,6 +29,9 @@
     </li>
     <li class="nav-item" role="presentation">
       <a href="#closed" class="nav-link" aria-controls="closed" role="tab" data-toggle="tab" aria-expanded="false">Closed Projects</a>
+    </li>
+    <li class="nav-item" role="presentation">
+      <a href="#ongoing" class="nav-link" aria-controls="ongoing" role="tab" data-toggle="tab">Ongoing Projects</a>
     </li>
   </ul>
     @if(session()->has('error'))
@@ -74,8 +85,7 @@
     <td>{{ Carbon\Carbon::parse($project->duration)->diffForHumans() }}</td>
     <td>
       <button class="btn btn-link wew editBtn" title="Edit" data-tooltip="true" data-toggle="modal" data-target="#editModal{{ $project->id }}"><i class="fa fa-pencil-square-o"></i></button>
-      <button class="btn btn-link wew deleteBtn" data-tooltip="true" title="Delete" data-toggle="modal" data-id="{{ $project->id }}"><i class="text-danger fa fa-trash"></i></button>
-      <button class="btn btn-link wew" data-tooltip="true" title="Award"><i style="color:yellow" class="fa fa-trophy"></i></button>
+      <a href="{{ route('myProject', ['id' => $project->id]) }}"><button class="btn btn-link wew" data-tooltip="true" title="Award"><i style="color:yellow" class="fa fa-trophy"></i></button></a>
       <button class="btn btn-link wew closeBtn" data-tooltip="true" title="Close" data-toggle="modal" data-id="{{ $project->id }}"><i class="fa fa-close"></i></button>
     </td>
   <!-- EditMODAL -->
@@ -172,35 +182,7 @@
     </div>
   <!-- END OF EDIT MODAL -->
 
-  <!-- DELETE MODAL -->
-  <div class="modal fade" tabindex="-1" role="dialog" id="deleteModal{{ $project->id }}">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
-          <h3 class="modal-title">Delete Project</h3>
-        </div>
-        <div class="modal-body">
-          <h3><b>Are you sure you want to delete this project for <i class="fa fa-rouble"></i>200 PHP?</b></h3>
-          <p style="font-weight:bold;margin-top:5%">Deleting your project will permanently remove it from our site so that no one will be able to view it. 
-          All bids and attached files will be erased.
-          </p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary wew" data-dismiss="modal">Cancel</button>
-          <form action="{{ route('deleteproject') }}" method="POST">
-            {{ csrf_field() }}
-            <?php Session::put('project_name', $project->title ); 
-              Session::put('project_id', $project->id);
-            ?>
-            <!-- <input type="hidden" name="_method" value="DELETE"> -->
-            <button type="submit" class="btn btn-primary wew" style="background-color:#ee4b28;border:1px solid #ee4b28">Yes</button>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!--END OF DELETE MODAL -->
+
 
   <!-- CLOSE PROJECT -->
   <div class="modal fade" tabindex="-1" role="dialog" id="closeModal{{ $project->id }}">
@@ -258,14 +240,14 @@
   </tfoot>
   <tbody>
   @foreach($closedprojects as $project)
+  @inject('proposals', 'App\Http\Controllers\ProjectController') 
   <tr>
     <td><a href="{{ route('myProject', ['id' => $project->id]) }}"><b>{{ ucwords($project->title) }}</b></a></td>
-    <td>{{ $project->title }}</td>
-    <td>{{ $project->title }}</td>
-    <td>{{ $project->title }}</td>
+    <td>{{ $proposals->getProposal($project->id) }}</td>
+    <td><span>&#8369;</span> {{ number_format($proposals->getPrice($project->id),2) }}</td>
+    <td>Closed</td>
     <td>
       <button class="btn btn-link wew " title="Repost" data-tooltip="true" data-toggle="modal" data-target="#repostModal{{ $project->id }}"><i class="fa fa-pencil-square-o"></i></button>
-      <button class="btn btn-link wew " data-tooltip="true" title="Delete" data-toggle="modal" data-target="#closedeleteModal{{ $project->id }}"><i class="text-danger fa fa-trash"></i></button>
     </td>
   <!-- EditMODAL -->
     <div class="modal fade" id="repostModal{{ $project->id }}" tabindex="-1" role="dialog" aria-labelledby="repostModalLabel" aria-hidden="true">
@@ -279,8 +261,7 @@
           </div>
           <div class="modal-body">
             <form action="{{ route('repostproject', ['id' => $project->id]) }}" class="form-horizontal" method="POST">
-                <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                <input type="hidden" name="_method" value="PATCH">
+               {{ csrf_field() }}
               <div class="floating-labels">
                 <div class="form-group{{ $errors->has('title') ? ' has-error' : ''}} m-b-40 m-t-15">
                   <input type="text" name="title" id="title" class="form-control" value="{{ $project->title }}" required>
@@ -299,8 +280,8 @@
                   @endif
                 </div>
                 <div class="form-group{{ $errors->has('category') ? ' has-error' : ''}} m-b-40 m-t-15">
-                  <select name="category" id="category" class="form-control">
-                    <?php $category = array('--' => '--', 'Mobile Development' => 'Mobile', 'Web Development' => 'Web'); ?>
+                  <select name="category" id="categoryr" class="form-control">
+                    <?php  $category = $category = array('Mobile Development' => 'Mobile', 'Web Development' => 'Web', 'Mobile and Web Development' => 'MobileWeb', 'Desktop Application' => 'Desktop'); ?>
                     @foreach($category as $categor => $val)
                       @if($val == $project->category)
                         <option value="{{ $val }}" selected>{{ $categor }}</option>
@@ -310,11 +291,47 @@
                     @endforeach
                  </select>
                  <span class="highlight"></span><span class="bar"></span>
-                 <label for="category" class="text-dark">Category</label>
+                 <label for="categoryr" class="text-dark">Category</label>
                  @if($errors->has('category'))
                     <p>{{ $errors->first('category') }}</p>
                  @endif
                 </div>
+                <!-- -->
+                <div id="rmw">
+        <div class="form-group m-b-30 m-t-15">
+        <select name="type" id="rtype" class="form-control">
+        <?php $category = array('IOS' => 'IOS', 'Android' => 'Android'); ?>
+        <option value="" disabled selected></option>
+                    @foreach($category as $categor => $val)
+                      @if($val == $project->type)
+                        <option value="{{ $val }}" selected>{{ $categor }}</option>
+                      @else
+                      <option value="{{ $val }}">{{ $categor }}</option>
+                      @endif
+                    @endforeach
+          </select>
+          <span class="highlight"></span><span class="bar"></span>
+          <label for="type" class="text-dark">Mobile Type</label>
+        </div>
+        </div>
+        <div id="ros">
+        <div class="form-group m-b-30 m-t-15">
+        <select name="os" id="rostype" class="form-control">
+        <?php $category = array('Linux' => 'Linux', 'Windows' => 'Windows', 'Mac' => 'Mac'); ?>
+                  <option value="" disabled selected></option>
+                    @foreach($category as $categor => $val)
+                      @if($val == $project->os)
+                        <option value="{{ $val }}" selected>{{ $categor }}</option>
+                      @else
+                      <option value="{{ $val }}">{{ $categor }}</option>
+                      @endif
+                    @endforeach
+          </select>
+          <span class="highlight"></span><span class="bar"></span>
+          <label class="text-dark" for="type">Os Type</label>
+        </div>
+        </div>
+                <!--  -->
                 <div class="form-group m-b-40 m-t-15">
                   <input type="number" name="min" value="{{ $project->min }}" id="min" class="form-control" step="any" required>
                   <span class="highlight"></span><span class="bar"></span>
@@ -336,38 +353,76 @@
       </div>
     </div>
   <!-- END OF REPOST MODAL -->
-
-  <!-- CLOSED DELETE MODAL -->
-  <div class="modal fade" tabindex="-1" role="dialog" id="closedeleteModal{{ $project->id }}">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
-          <h3 class="modal-title">Delete Project</h3>
-        </div>
-        <div class="modal-body">
-          <h3><b>Are you sure you want to delete this project for <i class="fa fa-rouble"></i>200 PHP?</b></h3>
-          <p style="font-weight:bold;margin-top:5%">Deleting your project will permanently remove it from our site so that no one will be able to view it. 
-          All bids and attached files will be erased.
-          </p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary wew" data-dismiss="modal">Cancel</button>
-          <form action="{{ route('deleteproject', ['id' => $project->id]) }}" method="POST">
-            {{ csrf_field() }}
-            <input type="hidden" name="_method" value="DELETE">
-            <button type="submit" class="btn btn-primary wew" style="background-color:#ee4b28;border:1px solid #ee4b28">Yes</button>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!--END OF CLOSED DELETE MODAL -->
   </tr>
   @endforeach
   </tbody>
 </table>
 <!-- END OF TABLE -->
+</div>
+<div class="tab-pane" id="ongoing">
+<table id="myOngoingProject" class="table table-bordered table-striped" width="100%" cellspacing="0">
+  <thead>
+    <tr>
+    <th>Project Name</th>
+    <th>Developer</th>
+    <th>Bid</th>
+    <th>Ratings</th>    
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tfoot>
+  <tr>
+      <th>Project Name</th>
+      <th>Developer</th>
+      <th>Bid</th>
+      <th>Ratings</th>
+      <th>Action</th>
+    </tr>
+  </tfoot>
+  <tbody>
+  @inject('users','App\Http\Controllers\RatingController')
+  @foreach($ongoingprojects as $project)
+  <tr>
+    <td><a href="{{ route('myProject', ['id' => $project->id]) }}"><b>{{ ucwords($project->title) }}</b></a></td>
+    <td>{{ $project->firstname }} {{ $project->lastname }}</td>
+    <td><span>&#8369;</span>{{ $project->price }} <br> in {{ $project->daysTodo }} days</td>
+    <td>
+
+    <input id="input-1" class="rating rating-loading" data-min="0" data-max="5" data-step="0.1" value="{{ $users->usersReview($project->bidder_id)->userAverageRating }}" data-size="s" disabled> 
+    <p class="text-muted">
+        User Reviews {{ $users->usersReview($project->bidder_id)->userSumRating }} Reviews
+    </p>
+    </td>
+    <td>
+    <button class="btn btn-link wew " title="Cancel" data-tooltip="true" data-toggle="modal" data-target="#cancelProject{{ $project->id }}"><i class="fa fa-times"></i></button>
+    </td>
+    <!-- CANCEL PROJECT -->
+      <div class="modal fade" id="cancelProject{{ $project->id }}">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button class="close" data-dismiss="modal"><span>&times;</span></button>
+              <h3>Cancel Project</h3>
+            </div>
+            <div class="modal-body">
+              <h3><b>Are you sure you want to cancel this project for <i class="fa fa-rouble"></i>200 PHP?</b></h3>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-secondary wew" data-dismiss="modal">No</button>
+              <form action="{{ route('cancelProject', ['id' => $project->project_id, 'bid_id' => $project->bid_id, 'project_name' => $project->title, 'user_paypal' => $project->paypal]) }}" method="POST">
+                 {{ csrf_field() }}
+              <input type="hidden" name="_method" value="PATCH">
+              <button type="submit" class="btn btn-primary wew" style="background-color:#ee4b28;border:1px solid #ee4b28">Yes</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    <!-- END CANCEL -->
+  </tr>
+  @endforeach
+  </tbody>
+</table>
 </div>
 </div>
 <!-- ADD PROject -->
@@ -477,10 +532,15 @@
 
 @endsection
 @section('scripts')
+<script src="{{ asset('js/star-rating.js') }}"></script>
+<script>
+    $('#input-id').rating();
+</script>
 <script>
     $(document).ready(function(){
         $('#myProject').DataTable();
         $('#myProjectClose').DataTable();
+        $('#myOngoingProject').DataTable();
     });
 </script>
 <script>
@@ -603,6 +663,39 @@ $(function(){
       $('#eos').removeClass('show').addClass('hidden'); 
       $('#type').attr("required", false);
       $('#ostype').attr("required", false);
+    }
+  }).change();
+  });
+</script>
+<script>
+$(function(){
+  $('#rmw').hide(); 
+   $('#ros').hide(); 
+  $('#categoryr').change(function(){
+    var data = $(this).val();
+    if(data == 'MobileWeb'){
+      $('#rtype').attr("required", true);
+      $('#rostype').attr("required", true);
+      $('#rmw').show();
+      $('#ros').show();
+    }else if(data == 'Web'){
+      $('#ros').show();
+      $('#rmw').hide();
+      $('#rtype').val('');
+      $('#rtype').attr("required", false);
+      $('#rostype').attr("required", true);
+    } else if(data == 'Mobile'){
+      $('#rmw').show();
+      $('#ros').hide();
+      $('#rtype').attr("required", true);
+      $('#rostype').attr("required", false);
+      $('#rostype').val('');
+    }
+    else{
+      $('#rmw').hide(); 
+      $('#ros').hide(); 
+      $('#rtype').attr("required", false);
+      $('#rostype').attr("required", false);
     }
   }).change();
   });
