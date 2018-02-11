@@ -18,7 +18,7 @@ class CreateProposalModulesTable extends Migration
             $table->integer('module_id')->unsigned();
             $table->foreign('module_id')->references('id')->on('modules');
             $table->string('description');
-            $table->string('status');
+            $table->string('percentDone');
             $table->timestamps();
         });
     }
