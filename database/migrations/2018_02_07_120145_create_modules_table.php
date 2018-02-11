@@ -18,6 +18,7 @@ class CreateModulesTable extends Migration
             $table->integer('proposal_id')->unsigned();
             $table->foreign('proposal_id')->references('id')->on('proposals');
             $table->string('module_name');
+            $table->string('status')->default('todo');
             // $table->decimal('price', 8,2);
             // $table->string('daysTodo');
             $table->timestamps();
