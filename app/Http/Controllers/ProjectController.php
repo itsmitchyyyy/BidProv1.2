@@ -379,24 +379,27 @@ class ProjectController extends Controller
             $proposal_id = $proposal->id;
 
             $module_name = $request->module_name;
-            $module_description = $request->module_description;
-            foreach($module_name as $name){
-               $id =  DB::table('modules')->insertGetId([
+            $module_description = array_chunk($request->module_description,4,true);
+            $id = array();
+            foreach($module_name as $name){ 
+               $id[] =  DB::table('modules')->insertGetId([
                 'proposal_id' => $proposal_id,
                 'module_name' => $name,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
                ]);
-               foreach($module_description as $description){
-                DB::table('proposal_modules')
+            }
+            foreach($module_description as $val => $description){
+                foreach($description as $key => $desc){
+                  DB::table('proposal_modules')
                     ->insert([
-                        'module_id' => $id,
-                        'description' => $description,
-                        'status' => 'todo' ,
+                        'module_id' => $id[$val],
+                        'description' => $desc,
+                        'percentDone' => 0,
                         'created_at' => Carbon::now(),
                         'updated_at' => Carbon::now()
                     ]);
-               }
+                }
             }
             event(new \App\Events\BidNotified(Auth::user()->firstname.' '.Auth::user()->lastname,'placed a bid on '.$project->title , Auth::user()->avatar, "route('projects')"));
             $this->insertNotification(['user_id' => $user_id, 'name' => Auth::user()->firstname.' '.Auth::user()->lastname, 'message' => 'placed a bid on '.$project->title, 'avatar' => Auth::user()->avatar, 'link' => route('projects'), 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()]);
@@ -469,7 +472,8 @@ class ProjectController extends Controller
         $projects->updated_at = Carbon::now();
         $projects->save();
         return redirect()
-            ->route('myProject',$project_id);
+            ->route('projects')
+            ->withInput(['tab' => 'ongoing']);
 
     }
     //END OF BIDDER
