@@ -22,6 +22,20 @@
 <div class="card m-t-15">
     <div class="card-block">
         <small><b>Project ID: {{ $proposal->id }} </b></small>
+        <small class="pull-right">{{ Carbon\Carbon::parse($proposal->created_at)->diffForHumans() }}</small>
+            <br>Development Type {{ $proposal->category }}
+            @if($proposal->category == 'Mobile')
+            <br>Runs On {{ $proposal->type }},
+            @else
+            @if($proposal->category == 'Web')
+            <br>Operating System {{ $proposal->os }}</p>
+            @else
+            @if($proposal->category == 'MobileWeb')
+            <p class="card-text">Runs On {{ $proposal->type }}<br>
+            Operating System {{ $proposal->os }}</p>
+            @endif
+            @endif
+            @endif
         <h4 class="card-title"><b>Project description</b></h4>
         <p class="card-text" style="max-width:40em;word-wrap:break-word">{{ $proposal->details }}</p>
     </div>
