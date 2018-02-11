@@ -383,7 +383,7 @@
   @inject('users','App\Http\Controllers\RatingController')
   @foreach($ongoingprojects as $project)
   <tr>
-    <td><a href="{{ route('myProject', ['id' => $project->id]) }}"><b>{{ ucwords($project->title) }}</b></a></td>
+    <td><a href="{{ route('acceptedBid', ['proposal_id' => $project->proposal_id, 'seeker_id' => $project->seeker_id, 'project_id' => $project->project_id]) }}"><b>{{ ucwords($project->title) }}</b></a></td>
     <td>{{ $project->firstname }} {{ $project->lastname }}</td>
     <td><span>&#8369;</span>{{ $project->price }} <br> in {{ $project->daysTodo }} days</td>
     <td>
@@ -536,6 +536,11 @@
 <script>
     $('#input-id').rating();
 </script>
+ <script>
+     $(document).ready(function(){
+         $('#tabMenu a[href="#{{ old('tab') }}"]').tab('show');
+     });
+    </script>
 <script>
     $(document).ready(function(){
         $('#myProject').DataTable();
