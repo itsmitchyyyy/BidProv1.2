@@ -95,7 +95,13 @@
         <div id="todo" class="section">
             <h1>To Do</h1>
             @foreach($todo as $todos)
-            <div id="c2" onclick="toggleModal(this,{{ $todos->module_id }})" data-name="{{ $todos->module_name }}" class="card-kanban">{{ $todos->module_name }}</div>
+            <div id="c2" onclick="toggleModal(this,{{ $todos->module_id }})" data-name="{{ $todos->module_name }}" class="card-kanban">
+            {{ $todos->module_name }}
+            <h5>{{ $todos->percentDone}}% Complete</h5>
+            <div class="progress">
+                <div class="progress-bar progress-bar-success progress-bar-animated h-100" role="progressbar" aria-valuenow="{{ $todos->percentDone }}" aria-valuemin="0" aria-valuemax="100" style="width:{{ $todos->percentDone}}%"><span class="sr-only">{{ $todos->percentDone}}% Complete</span></div>
+            </div>
+            </div>
             <!-- <div id="c3" class="card"><em>Retire!</em></div> -->
             @endforeach
         </div>
@@ -162,20 +168,15 @@
             cache:false,
             success: function(response){
                  console.log(response);
-                 var myData = `<table class="table table-bordered table-striped" width="100%"><h2>`+tableName+`</h2><tr><th>Done</th><th>Percent Done</th></tr>`;
+                 var myData = `<table class="table table-bordered table-striped" width="100%"><h2>Module Title: `+tableName+`</h2><tr><th>Description</th><th>Status</th></tr>`;
                  for(var i = 0; i < response.length; i++ ){
                 $.each(response[i], function(key,value){
                     if(key == 'description' ){
                     myData += '<tr><td>'+ value +'</td>';
                 }
-                if(key == 'percentDone' ){
+                if(key == 'status' ){
                     myData += `<td>
-                        <label class="text-dark">`+value+`% Complete</label>
-                    <div class="progress h-100">
-                        <div class="progress-bar progress-bar-success" role="progressbar" aria-value="12%" aria-valuemin="0" aria-valuemax="100" style="width:`+value+`%">
-                        <span>`+value+`% Complete</span>
-                        </div>
-                    </div>
+                       `+value+`
                     </td></tr>`;
                 }
                 });
@@ -187,7 +188,7 @@
         });
     }
 </script>
-<script>
+<!-- <script>
         var cards = document.querySelectorAll('.card');
         for (var i = 0, n = cards.length; i < n; i++) {
             var card = cards[i];
@@ -284,5 +285,5 @@
             }
             return null;
         }
-    </script>
+    </script> -->
 @endpush
