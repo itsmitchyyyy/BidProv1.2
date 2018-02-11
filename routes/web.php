@@ -19,9 +19,9 @@
 Route::get('/', function () {
     return view('home');
 });
-Route::get('testing', function(){
+/* Route::get('testing', function(){
     return view('ongoing/seeker');
-});
+})->name('testing'); */
 // Route::get('test/{project_id}/{user_id}/{proposal_id}', 'ProjectController@proposalModules');
 // Route::get('ratings', function(){
 //     return view('ratings/seeker');
@@ -76,6 +76,10 @@ Route::group(['middleware' => ['auth']], function(){
     Route::get('seeker/proposal/accept/{seeker_id}/{bidder_id}/{proposal_id}/{project_id}', ['as' => 'acceptBid', 'uses' => 'ProjectController@acceptBid']);
     Route::patch('/seeker/projects/cancel/paypal/{id}/{bid_id}/{project_name}/{user_paypal}', ['as' => 'cancelProject', 'uses' => 'BidController@cancelProject']);
     Route::get('/seeker/projects/paypal', ['as' => 'cancelprojects.status', 'uses' => 'BidController@paymentStatus']);
+    Route::get('seeker/view/bid/{module_id}', ['as' => 'viewModule', 'uses' => 'ModuleController@proposalModules']);
+    Route::get('seeker/view/project/bid/{proposal_id}/{seeker_id}/{project_id}', ['as' => 'acceptedBid', 'uses' => 'ModuleController@getModule']);
+
+    
     // end seeker
     //bidder
     // MAIN PAGE BIDDER
