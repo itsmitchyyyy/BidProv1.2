@@ -52,7 +52,7 @@
            
             @foreach($modules as $key => $module)
             Module name: {{ ucfirst($module->module_name) }}<br>
-            <a href="" data-toggle="collapse" data-target="#dataCollapse{{$key}}"><small>View Details</small></a>
+            <a href="" data-toggle="collapse" data-target="#dataCollapse{{$key}}"><small>View Details</small></a><br>
             <div class="collapse" id="dataCollapse{{$key}}">
                 Details:<br>
                 @foreach($controller->getProjectModules($module->id) as $proposal_modules)
