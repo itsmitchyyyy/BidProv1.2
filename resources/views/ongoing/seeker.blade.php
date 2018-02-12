@@ -45,11 +45,30 @@
         .card-block{
             border:1px solid rgba(0,0,0,.15);
         }
+        .gap-right{
+            margin-right:10px;
+        }
+        .gap-left{
+            margin-left:10px;
+        }
     </style>
 @endpush
 @section('content')
 @inject('modules','App\Http\Controllers\ModuleController')
+@inject('users','App\Http\Controllers\RatingController')
 <div class="container-fluid">
+    @if($errors->has('progress-comment'))
+        <div class="alert alert-danger alert-dismissable fade show" role="alert">
+            <button type="button" data-dismiss="alert" class="close"><span>&times;</span></button>
+            {{ $errors->first('progress-comment') }}
+        </div>
+    @endif
+    @if(session()->has('success'))
+        <div class="alert alert-success alert-dismissable fade show" role="alert">
+            <button type="button" data-dismiss="alert" class="close"><span>&times;</span></button>
+            {{ session()->get('success') }}
+        </div>
+    @endif
    <h3><b>{{ ucfirst($project->title) }}</b></h3>
     <div class="card-mt-15">
         <div class="card-block">
@@ -95,7 +114,7 @@
         <div id="todo" class="section">
             <h1>To Do</h1>
             @foreach($todo as $todos)
-            <div id="c2" onclick="toggleModal(this,{{ $todos->module_id }})" data-name="{{ $todos->module_name }}" class="card-kanban">
+            <div id="c2" onclick="toggleModal(this,{{ $todos->module_id }})" data-tooltip="true" title="Click to view" data-proposal="{{ $todos->proposal_id }}" data-project="{{ $todos->project_id }}" data-name="{{ $todos->module_name }}" class="card-kanban">
             {{ $todos->module_name }}
             <h5>{{ $todos->percentDone}}% Complete</h5>
             <div class="progress">
@@ -127,11 +146,43 @@
                 </div>
                 <div class="modal-body">
                     <div id="data"></div>
+                    <div  class="clearfix">
+                    @if($modules->moduleComments(1)->count() > 0)
+                       <h3>Comments</h3>
+                         @foreach($modules->moduleComments(1) as $comments)
+                         @if($users->usersReview($comments->user_id)->hasRoles('seeker'))
+                        <img src="/{{ $users->usersReview($comments->user_id)->avatar }}" alt="avatar" class="img-thumbnail pull-left gap-right" style="with:60px;height:60px">
+                        <div class="b-all">
+                            <a href="">{{ $users->usersReview($comments->user_id)->firstname }} {{ $users->usersReview($comments->user_id)->lastname }}</a>
+                            <p style="font-size:14px" class="word-wrap">{{ $comments->message }}
+                                <br>
+                                <small>{{ Carbon\Carbon::parse($comments->created_at)->diffForHumans() }}</small>
+                            </p>
+                        </div><br>
+                        @else
+                        @if($users->usersReview($comments->user_id)->hasRoles('bidder'))
+                        <img src="/{{ $users->usersReview($comments->user_id)->avatar }}" alt="avatar" class="img-thumbnail pull-right gap-left" style="with:60px;height:60px">
+                        <div class="b-all text-right" >
+                            <a href="" class="">{{ $users->usersReview($comments->user_id)->firstname }} {{ $users->usersReview($comments->user_id)->lastname }}</a>
+                            <p style="font-size:14px" class="word-wrap">{{ $comments->message }}
+                                <br>
+                                <small>{{ Carbon\Carbon::parse($comments->created_at)->diffForHumans() }}</small>
+                            </p>
+                        </div>
+                        @endif    
+                        @endif
+                        @endforeach
+                        @endif
+                    </div>
                     <a href="#" id="addComment" class="pull-right">Add comment</a>
                     <div class="form-group" id="commentDiv">
-                    <form method="post">
-                    <textarea name="progress-comment" id="progress-comment" class="form-control progress-comment" style="height:auto;border:1px solid rgba(0,0,0,.25)" cols="4" rows="4" placeholder="Write a comment"></textarea>
-                    <button type="button" class="btn btn-info wew pull-right m-t-10">Add Comment</button>
+                    <form method="post" action="{{ route('postComment') }}">
+                        {{ csrf_field() }}
+                        <input type="hidden" name="comment_proposal" id="comment_proposal" value="">
+                        <input type="hidden" name="comment_project" id="comment_project" value="">
+                        <input type="hidden" name="comment_module" id="comment_module" value="">
+                    <textarea name="progress_comment" id="progress-comment" class="form-control progress-comment" style="height:auto;border:1px solid rgba(0,0,0,.25)" cols="4" rows="4" placeholder="Write a comment"></textarea>
+                    <button type="submit" class="btn btn-info wew pull-right m-t-10">Add Comment</button>
                     </div>
                     </form>
                 </div>
@@ -146,20 +197,20 @@
         $('#commentDiv').hide();
         $('#addComment').click(function(){
             $('#commentDiv').show();
+           
         });
-        $('.modal').on('hidden.bs.modal', function(){
+        $('#toggleModal').on('hidden.bs.modal', function(){
             $('.progress-comment').val('');
-            $('#commentDiv').hide();
-            // console.log('hidden');
+            $('#commentDiv').hide();   
         });
     });
 </script>
 <script>
     function toggleModal(event,id,dataname){
-        console.log($(event).data('name'));
+       
         var tableName = $(event).data('name');
-        // var myId = id;
-        // console.log(name);
+        var projectComment = $(event).data('project');
+        var proposalComment = $(event).data('proposal');
         $.ajax({
             type: "get",
             url: "{{ route('viewModule',['module_id']) }}",
@@ -167,7 +218,6 @@
             dataType: 'json',
             cache:false,
             success: function(response){
-                 console.log(response);
                  var myData = `<table class="table table-bordered table-striped" width="100%"><h2>Module Title: `+tableName+`</h2><tr><th>Description</th><th>Status</th></tr>`;
                  for(var i = 0; i < response.length; i++ ){
                 $.each(response[i], function(key,value){
@@ -183,6 +233,9 @@
                  }
                  myData += '</table>';
                 $('#data').html(myData);
+                $('#comment_module').val(id);
+                $('#comment_project').val(projectComment);
+                $('#comment_proposal').val(proposalComment);
                 $('#toggleModal').modal('show');
             }
         });
