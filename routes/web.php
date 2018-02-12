@@ -78,7 +78,7 @@ Route::group(['middleware' => ['auth']], function(){
     Route::get('/seeker/projects/paypal', ['as' => 'cancelprojects.status', 'uses' => 'BidController@paymentStatus']);
     Route::get('seeker/view/bid/{module_id}', ['as' => 'viewModule', 'uses' => 'ModuleController@proposalModules']);
     Route::get('seeker/view/project/bid/{proposal_id}/{seeker_id}/{project_id}', ['as' => 'acceptedBid', 'uses' => 'ModuleController@getModule']);
-
+    Route::post('seeker/view/project/bid/comment/post', ['as' => 'postComment','uses' => 'ModuleController@addComment']);
     
     // end seeker
     //bidder
