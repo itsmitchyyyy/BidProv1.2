@@ -9,7 +9,7 @@
       <a class="nav-link" href="{{ route('bidder') }}">Home <span class="sr-only">(current)</span></a>
     </li>
     <li class="nav-item">
-      <a href="#" class="nav-link">My Works</a>
+      <a href="{{ route('bidderworks') }}" class="nav-link">My Works</a>
     </li>
     <li class="nav-item{{ Request::is('proposals') ? ' active' : ''}}">
       <a href="{{ route('bids') }}" class="nav-link">My Bids</a>
