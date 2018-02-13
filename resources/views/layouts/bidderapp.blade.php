@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="shortcut icon" href="/img/bidprologo.png" type="image/x-icon">
     <title>BidPro</title>
     <link rel="stylesheet" href="{{ asset('css/seeker/seeker.css') }}">
@@ -38,6 +39,7 @@
 </body>
 <script src="{{ asset('js/bower_components/datatables/jquery.dataTables.min.js') }}"></script>
 @yield('scripts')
+@stack('scripts')
 <!-- NOTIFICATION SCRIPT -->
 <script>
       var wrapper = $('.notifications');
@@ -45,10 +47,6 @@
       var element = toggle.find('i[data-count]');
       var counter = parseInt(element.data('count'));
       var notifications = wrapper.find('#menuItems');
-        /* if(counter = 0){
-         wrapper.hide();
-       }  */
-
       var pusher = new Pusher('9ab3129dae2df45ee2fc',{
         cluster: 'ap1',
         encrypted: true,
@@ -73,11 +71,7 @@
       counter += 1;
       element.attr('data-count', counter);
       wrapper.find('.notif-count').text(counter);
-      // wrapper.show();
       });
-     
-      //notifications.hide();
-     // wrapper.hide();
   </script>
   <script>
     $(document).ready(function(){
