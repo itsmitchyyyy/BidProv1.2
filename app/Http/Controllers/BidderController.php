@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\User;
 use App\Role;
+use DB;
 class BidderController extends Controller
 {
     public function getRole(){
@@ -166,5 +167,15 @@ class BidderController extends Controller
             }
         }
         
+    }
+    public function viewWorks(){
+        $works = DB::table('bids')
+            ->join('users','bids.seeker_id','=','users.id')
+            ->join('proposals','proposals.id','=','bids.proposal_id')
+            ->join('projects','projects.id','=','proposals.project_id')
+            ->where('bids.bidder_id',Auth::user()->id)
+            ->get();
+        return view('works/bidder')
+            ->with(compact('works'));
     }
 }
