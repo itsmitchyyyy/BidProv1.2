@@ -21,6 +21,7 @@
             <td><i class="fa fa-clock-o"></i> {{ Carbon\Carbon::parse($propose->projects->duration)->diffForHumans() }}</td>
             <td><span>&#8369;</span> {{ $propose->projects->min }} - <span>&#8369;</span> {{ $propose->projects->max }}</td>
             <td>
+            <a href="#"><i class="fa fa-eye text-blue" style="font-size:16px" data-toggle="tooltip" title="View"></i></a>
             <a href="#" data-toggle="modal" data-target="#cancelModal{{ $propose->projects->id }}" data-tooltip="true" Title="Cancel"><i class="text-danger fa fa-times"></i></a>
             </td>
             <div class="modal fade" tabindex="-1" role="dialog" id="cancelModal{{ $propose->projects->id }}">
