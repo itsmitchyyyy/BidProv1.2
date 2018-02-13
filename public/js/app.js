@@ -1051,6 +1051,7 @@ if (token) {
 
 // import Echo from 'laravel-echo'
 
+// import Moment from 'moment';
 // window.Pusher = require('pusher-js');
 
 // window.Echo = new Echo({
