@@ -22,6 +22,7 @@ class CreateProposalsTable extends Migration
             $table->string('status')->default('1');
             $table->decimal('price', 8,2);
             $table->string('daysTodo');
+            $table->string('status')->default('open');
             $table->timestamps();
         });
     }
