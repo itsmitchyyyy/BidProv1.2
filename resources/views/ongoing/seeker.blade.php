@@ -51,6 +51,7 @@
         .gap-left{
             margin-left:10px;
         }
+        
     </style>
 @endpush
 @section('content')
@@ -146,34 +147,10 @@
                 </div>
                 <div class="modal-body">
                     <div id="data"></div>
-                    <div  class="clearfix">
-                    @if($modules->moduleComments(1)->count() > 0)
-                       <h3>Comments</h3>
-                         @foreach($modules->moduleComments(1) as $comments)
-                         @if($users->usersReview($comments->user_id)->hasRoles('seeker'))
-                        <img src="/{{ $users->usersReview($comments->user_id)->avatar }}" alt="avatar" class="img-thumbnail pull-left gap-right" style="with:60px;height:60px">
-                        <div class="b-all">
-                            <a href="">{{ $users->usersReview($comments->user_id)->firstname }} {{ $users->usersReview($comments->user_id)->lastname }}</a>
-                            <p style="font-size:14px" class="word-wrap">{{ $comments->message }}
-                                <br>
-                                <small>{{ Carbon\Carbon::parse($comments->created_at)->diffForHumans() }}</small>
-                            </p>
-                        </div><br>
-                        @else
-                        @if($users->usersReview($comments->user_id)->hasRoles('bidder'))
-                        <img src="/{{ $users->usersReview($comments->user_id)->avatar }}" alt="avatar" class="img-thumbnail pull-right gap-left" style="with:60px;height:60px">
-                        <div class="b-all text-right" >
-                            <a href="" class="">{{ $users->usersReview($comments->user_id)->firstname }} {{ $users->usersReview($comments->user_id)->lastname }}</a>
-                            <p style="font-size:14px" class="word-wrap">{{ $comments->message }}
-                                <br>
-                                <small>{{ Carbon\Carbon::parse($comments->created_at)->diffForHumans() }}</small>
-                            </p>
-                        </div>
-                        @endif    
-                        @endif
-                        @endforeach
-                        @endif
-                    </div>
+                    <a href="#" id="collapseComment" data-toggle="collapse" data-target="#comment_section">
+                        Show comments
+                    </a>
+                    <div id="comment_section"  class="clearfix collapse"></div>
                     <a href="#" id="addComment" class="pull-right">Add comment</a>
                     <div class="form-group" id="commentDiv">
                     <form method="post" action="{{ route('postComment') }}">
@@ -192,8 +169,8 @@
 </div>
 @endsection
 @push('scripts')
+<script src="{{ asset('js/momment.js') }}"></script>
 <script>
-    $(function(){
         $('#commentDiv').hide();
         $('#addComment').click(function(){
             $('#commentDiv').show();
@@ -202,12 +179,64 @@
         $('#toggleModal').on('hidden.bs.modal', function(){
             $('.progress-comment').val('');
             $('#commentDiv').hide();   
+            $('#comment_section').html('');
         });
-    });
 </script>
 <script>
+function toggleComment(id){
+    
+
+        $.ajax({
+        type: "get",
+        url: "{{ route('viewComments', ['module_id']) }}",
+        data: {module_id: id},
+        dataType: "json",
+        cache:false,
+        success: function(data){
+            console.log(data);
+            var comments = '';
+           
+            for(var i = 0; i < data.length; i++){
+                console.log(data[i].comment_date)
+                if(data[i].role_type == 'seeker'){
+                         comments += 
+               `
+               <img src="/`+data[i].avatar+`" alt="avatar" class="img-thumbnail pull-left gap-right" style="with:60px;height:60px">
+               <div class="b-all">
+                    <a href="">`+data[i].firstname.charAt(0).toUpperCase() + data[i].firstname.slice(1)+' '+data[i].lastname.charAt(0).toUpperCase() + data[i].lastname.slice(1)+`</a>
+                        <p style="font-size:14px" class="word-wrap">`+data[i].message+`
+                            <br>
+                                <small>`+moment(data[i].comment_date, moment.ISO_8601).fromNow()+`</small>
+                        </p>
+                </div><br>
+               `;   
+                }
+                else if(data[i].role_type == 'bidder'){
+                    comments += 
+                    `
+                    <img src="/`+data[i].avatar+`" alt="avatar" class="img-thumbnail pull-right gap-left" style="with:60px;height:60px">
+                    <div class="b-all text-right" >
+                            <a href="" class="">`+data[i].firstname.charAt(0).toUpperCase() + data[i].firstname.slice(1)+' '+data[i].lastname.charAt(0).toUpperCase() + data[i].lastname.slice(1)+`</a>
+                            <p style="font-size:14px" class="word-wrap">`+data[i].message+`
+                                <br>
+                                <small>`+moment(data[i].comment_date, moment.ISO_8601).fromNow()+`</small>
+                            </p>
+                        </div>
+                    `;
+                }
+            }
+            $('#comment_section').html(comments);
+        }
+    });
+}
+
+</script>
+
+<script>
     function toggleModal(event,id,dataname){
-       
+      $(function(){
+
+     
         var tableName = $(event).data('name');
         var projectComment = $(event).data('project');
         var proposalComment = $(event).data('proposal');
@@ -237,9 +266,22 @@
                 $('#comment_project').val(projectComment);
                 $('#comment_proposal').val(proposalComment);
                 $('#toggleModal').modal('show');
+                // console.log(id);
+                // response = '';
+                toggleComment(id);
             }
         });
+    });
     }
+</script>
+<script>
+    $("#collapseComment[data-toggle='collapse']").click(function(){
+        if($(this).text() == 'Hide comments'){
+            $(this).text('Show comments');
+        }else{
+            $(this).text('Hide comments');
+        }
+    });
 </script>
 <!-- <script>
         var cards = document.querySelectorAll('.card');
