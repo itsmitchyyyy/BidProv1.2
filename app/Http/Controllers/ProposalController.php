@@ -11,10 +11,6 @@ class ProposalController extends Controller
 {
     public function viewProposals(){
         $proposal = Proposal::where('bidder_id',Auth::user()->id)->with('projects')->get();
-       /*  $proposal = DB::table('proposals')
-            ->join('projects', 'projects.id', '=', 'proposals.project_id')
-            ->where('proposals.bidder_id', '=', Auth::user()->id)
-            ->get(); */
         return view('bids/bidder')->with(compact('proposal'));
     }
 
