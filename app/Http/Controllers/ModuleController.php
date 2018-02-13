@@ -51,14 +51,50 @@ class ModuleController extends Controller
             return view('ongoing/seeker')
             ->with(compact('todo','doing','done','project','proposal'));
     }
+
+    public function biddergetModule($proposal_id,$bidder_id,$project_id)
+    {
+        $todo = DB::table('bids')
+            ->join('proposals','bids.proposal_id','=','proposals.id')
+            ->join('modules','modules.proposal_id','=','proposals.id')
+            ->where('modules.status','todo')
+            ->where('bids.bidder_id', $bidder_id)
+            ->where('bids.proposal_id',$proposal_id)
+            ->select('*','proposals.bidder_id as proposal_bidder_id','modules.id as module_id')
+            ->get();
+        $doing = DB::table('bids')
+         ->join('proposals','bids.proposal_id','=','bids.id')
+         ->join('modules','modules.proposal_id','=','proposals.id')
+          ->where('modules.status','doing')
+          ->where('bids.bidder_id', $bidder_id)
+          ->where('bids.proposal_id',$proposal_id)
+          ->select('*','proposals.bidder_id as proposal_bidder_id','modules.id as module_id')
+          ->get();
+
+          $done = DB::table('bids')
+         ->join('proposals','bids.proposal_id','=','bids.id')
+         ->join('modules','modules.proposal_id','=','proposals.id')
+          ->where('modules.status','done')
+          ->where('bids.bidder_id', $bidder_id)
+          ->where('bids.proposal_id',$proposal_id)
+          ->select('*','proposals.bidder_id as proposal_bidder_id','modules.id as module_id')
+          ->get();
+        
+          $project = DB::table('projects')
+            ->join('users','projects.user_id','=','users.id')
+            ->first();
+          $proposal = DB::table('proposals')
+            ->join('users','proposals.bidder_id','=','users.id')
+            ->where('proposals.id',$proposal_id)
+            ->first();
+            return view('ongoing/bidder')
+            ->with(compact('todo','doing','done','project','proposal'));
+    }
     public function proposalModules(){
-        session()->forget('module_id');
-        session()->regenerate();
         $module_id = $_GET['module_id'];
         $modules = DB::table('proposal_modules')
             ->where('proposal_modules.module_id',$module_id)
             ->get();
-        session()->put('module_id', $module_id);
         return json_encode($modules);
     }
 
@@ -85,11 +121,29 @@ class ModuleController extends Controller
             ->with('success','Comment added');
      }
 
-     public function moduleComments($id){
+     public function moduleComments(){
+         $module_id = $_GET['module_id'];
          $comments = DB::table('module_comments')
-            ->where('module_id',$id)
+            ->join('users','users.id','=','module_comments.user_id')
+            ->join('role_user','users.id','=','role_user.user_id')
+            ->join('roles','roles.id','=','role_user.role_id')
+            ->select('*','roles.name as role_type', 'module_comments.created_at as comment_date')
+            ->where('module_id',$module_id)
+            ->orderByRaw('module_comments.created_at ASC')
+            ->limit(5)
             ->get();    
-            // dd($comments);
-        return $comments;
+            // echo $comments;
+        return json_encode($comments);
+     }
+
+     public function updateModules(Request $request){
+        $module_id = $_POST['module_id'];
+        $module_status = $_POST['module_status'];
+        DB::table('modules')
+            ->where('id',$module_id)
+            ->update([
+                'status' => $module_status
+            ]);
+        echo 'ok';
      }
 }
