@@ -79,11 +79,12 @@ Route::group(['middleware' => ['auth']], function(){
     Route::get('seeker/view/bid/{module_id}', ['as' => 'viewModule', 'uses' => 'ModuleController@proposalModules']);
     Route::get('seeker/view/project/bid/{proposal_id}/{seeker_id}/{project_id}', ['as' => 'acceptedBid', 'uses' => 'ModuleController@getModule']);
     Route::post('seeker/view/project/bid/comment/post', ['as' => 'postComment','uses' => 'ModuleController@addComment']);
-    
+    Route::get('seeker/view/bid/module/{module_id}', ['as' => 'viewComments', 'uses' => 'ModuleController@moduleComments']);
     // end seeker
     //bidder
     // MAIN PAGE BIDDER
     Route::get('bidder', ['as' => 'bidder', 'uses' => 'ProjectController@getProjectsBidder']);
+    Route::get('bidder/works',['as' => 'bidderworks','uses' => 'BidderController@viewWorks']);
     // END
     // PROFILE
     Route::get('bidder/profile/{id}', ['as' => 'bidderprofile', 'uses' => 'BidderController@bidderProfile']);
@@ -108,6 +109,10 @@ Route::group(['middleware' => ['auth']], function(){
     Route::get('proposals', ['as' => 'bids', 'uses' => 'ProposalController@viewProposals']);
     Route::delete('proposals', ['uses' => 'ProposalController@cancelProposal']);
     // END
+    //WORKS
+    Route::get('bidder/view/project/bid/{proposal_id}/{bidder_id}/{project_id}', ['as' => 'myWorks', 'uses' => 'ModuleController@biddergetModule']);
+    Route::post('bidder/view/project/bid/update/{module_id}/{projetc_id}',['as' => 'updateModule', 'uses' => 'ModuleController@updateModules']);
+    // END works
     //ratings
     Route::post('ratings', 'RatingController@postReview')->name('rate.post');
     Route::get('ratings/{id}', 'RatingController@reviewUser')->name('rate.show');
