@@ -7,7 +7,7 @@
         YOU HAVE 0 NOTIFICATIONS
         @else
         @foreach($notifications as $notification)
-        <a href="{{ $notification->link }}" style="border-bottom:1px solid rgba(0,0,0,.25)" class="list-group-item list-group-item-action flex-column align-items-start{{ ($notification->status = 'unread') ? ' list-group-item-info': ' list-group-item-light' }}">
+        <a href="{{ $notification->link }}" style="border-bottom:1px solid rgba(0,0,0,.25)" class="list-group-item list-group-item-action flex-column align-items-start{{ ($notification->statuss ==  'unread') ? ' list-group-item-info': ' list-group-item-light' }}">
             <p class="mb-1">
                 <img src="/{{ $notification->avatar }}" alt="avatar" class="img-circle" style="height:50px;width:50px">
                 <b>{{ ucwords($notification->name) }}</b>
