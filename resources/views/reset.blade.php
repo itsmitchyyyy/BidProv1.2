@@ -6,7 +6,7 @@
                 <form class="form-horizontal form-material"  method="POST" id="loginform" action="{{ route('password.request') }}">
                     {{ csrf_field() }}
                     <h3 class="box-title m-b-20">Reset Password</h3>
-                    <input type="hidden" name="token" value="{{ $token }}">
+                    <input type="hidden" name="_token" value="{{ $token }}">
                     <div class="form-group">
                         <div class="col-xs-12">
                             <input type="email" name="email" id="email" class="form-control" value="{{ $email or old('email') }}" placeholder="Email Address" required autofocus>
