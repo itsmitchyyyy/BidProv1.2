@@ -128,13 +128,25 @@
         <div id="doing" class="section">
             <h1>Doing</h1>
             @foreach($doing as $doings)
-            <div id="c1"  onclick="toggleModal(this,{{ $doings->module_id }})" data-name="{{ $doings->module_name }}" class="card-kanban">{{ $doings->module_name }}</div>
+            <div id="c1"  onclick="toggleModal(this,{{ $doings->module_id }})" data-status="{{ $doings->module_status }}" data-module="{{ $doings->id }}" data-tooltip="true" title="Click to view" data-proposal="{{ $doings->proposal_id }}" data-project="{{ $doings->project_id }}" data-name="{{ $doings->module_name }}" class="card-kanban">
+            {{ $doings->module_name }}
+            <h5>{{ $doings->percentDone}}% Complete</h5>
+            <div class="progress">
+                <div class="progress-bar progress-bar-success progress-bar-animated h-100" role="progressbar" aria-valuenow="{{ $doings->percentDone }}" aria-valuemin="0" aria-valuemax="100" style="width:{{ $doings->percentDone}}%"><span class="sr-only">{{ $doings->percentDone}}% Complete</span></div>
+            </div>
+           </div>
             @endforeach
         </div>
         <div id="done" class="section">
             <h1>Done</h1>
             @foreach($done as $dones)
-            <div id="c3"  onclick="toggleModal(this,{{ $dones->module_id }})" data-name="{{ $dones->module_name }}" class="card-kanban">{{ $dones->module_name }}</div>
+            <div id="c3"  onclick="toggleModal(this,{{ $dones->module_id }})" data-status="{{ $dones->module_status }}"  data-module="{{ $dones->id }}" data-tooltip="true" title="Click to view" data-proposal="{{ $dones->proposal_id }}" data-project="{{ $dones->project_id }}" data-name="{{ $dones->module_name }}" class="card-kanban">
+            {{ $dones->module_name }}
+            <h5>{{ $dones->percentDone}}% Complete</h5>
+            <div class="progress">
+                <div class="progress-bar progress-bar-success progress-bar-animated h-100" role="progressbar" aria-valuenow="{{ $dones->percentDone }}" aria-valuemin="0" aria-valuemax="100" style="width:{{ $dones->percentDone}}%"><span class="sr-only">{{ $dones->percentDone}}% Complete</span></div>
+            </div>
+            </div>
             @endforeach
         </div>
     </div>
