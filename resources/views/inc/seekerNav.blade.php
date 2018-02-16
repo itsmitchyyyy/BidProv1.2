@@ -27,13 +27,13 @@
       </a>
       <div class="dropdown-menu dropdown-menu-right"  aria-labelledBy="dropdownMessage">
       <h6 class="dropdown-header">You have (<span class="notif-count">{{ $notifications->countNotification() }}</span>) unread notifications</h6>
-      <div class="text-center" style="font-size:12px"><small><a href="{{ route('viewNotification') }}" class="text-dark">See all messages</a></small></div>
+      <div class="text-center" style="font-size:16px"><small><a href="{{ route('viewNotification') }}" class="text-dark">See all messages</a></small></div>
      
      
       @foreach($notifications->navNotification() as $notify)
-      <a href="{{ $notify->link }}">
-          <div class="message-center">
-            <div class="user-img ml-2">
+      <a href="#" onclick="updateNotification('{{ $notify }}')">
+          <div class="message-center{{ ($notify->statuss == 'unread') ? ' list-group-item-info':' list-group-item-light' }} p-1">
+            <div class="user-img ml-2 mt-2">
               <img src="/{{ $notify->avatar }}" alt="avatar" style="border-radius:50%">
             </div>
             <div class="mail-content">
@@ -79,3 +79,31 @@
     </ul>
   </div>
 </nav>
+@push('scripts')
+<script>
+  function updateNotification($notif_data){
+    var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
+    var datas = JSON.parse($notif_data);
+    // console.log(CSRF_TOKEN);
+    $(function(){
+    $.ajax({
+      type: "post",
+      url: "{{ route('updateNotification', ['notif_id']) }}",
+      headers: {'X-CSRF-TOKEN': CSRF_TOKEN},
+      data: {
+        'notif_id': datas.id
+        },
+      // dataType: "json",
+      cache:false,
+      success:function(response){
+        console.log(response);
+        window.location = datas.link;
+      },
+      error:function(response){
+        console.log(response);
+      }
+    });
+});
+}
+</script>
+@endpush
