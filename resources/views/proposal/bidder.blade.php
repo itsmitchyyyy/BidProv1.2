@@ -31,6 +31,7 @@
 <div class="card m-t-15 mb-5">
     <div class="card-block">
         <small><b>Project ID: {{ $proposal->id }} </b></small>
+        <p>Development Type: {{ $proposal->category }}<br>@if($proposal->category == 'MobileWeb') Runs on: {{ $proposal->type }},<br>OS: {{ $proposal->os}}, @else  @if($proposal->type != '') Runs on: {{ $proposal->type }}, @endif @if($proposal->os != '') OS: {{ $proposal->os }},  @endif @endif</p>
         <h4 class="card-title"><b>Project description</b></h4>
         <p class="card-text" style="max-width:40em;word-wrap:break-word">{{ $proposal->details }}</p>
         <p class="card-text">
