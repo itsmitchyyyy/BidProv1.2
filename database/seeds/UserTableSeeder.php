@@ -45,5 +45,15 @@ class UserTableSeeder extends Seeder
         $seeker->avatar = 'uploads/blank.png';
         $seeker->save();
         $seeker->roles()->attach($role_seeker);
+
+        $kim = new User();
+        $kim->firstname = 'Kimberly';
+        $kim->lastname = 'Ready GO';
+        $kim->email = 'kimberlygo@gmail.com';
+        $kim->username = 'kimmynonawa';
+        $kim->password = bcrypt('kimmygostop');
+        $kim->avatar = 'uploads/26167765_892665504241346_8709188143586034821_n.jpg';
+        $kim->save();
+        $kim->roles()->attach($role_seeker);
     }
 }
