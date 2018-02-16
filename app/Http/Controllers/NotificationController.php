@@ -13,6 +13,12 @@ class NotificationController extends Controller
         $notifications = Notification::where('user_id', Auth::user()->id)->orderBy('created_at', 'desc')->get();
         return view('notifications/seeker')->with(compact('notifications'));
     }
+
+    public function viewBNotification(){
+        $notifications = Notification::where('user_id', Auth::user()->id)->orderBy('created_at', 'desc')->get();
+        return view('notifications/bidder')->with(compact('notifications'));
+    }
+
     public function navNotification(){
         $notifications = Notification::where('user_id', Auth::user()->id)->orderBy('created_at', 'desc')->get();
         return $notifications;
@@ -20,5 +26,11 @@ class NotificationController extends Controller
     public function countNotification(){
         $notifications = Notification::where(['user_id' => Auth::user()->id, 'statuss' => 'unread'])->count();
         return $notifications;
+    }
+    
+    public function updateNotification(Request $request){
+        $notif_id =  $request->notif_id;
+        $notifications = Notification::where('id', $notif_id)
+                            ->update(['statuss' => 'read']);
     }
 }
