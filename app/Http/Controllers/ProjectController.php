@@ -68,7 +68,7 @@ class ProjectController extends Controller
         $projects->category = $request->category;
         $projects->min = $request->min;
         $projects->max = $request->max;
-        $projects->duration = $current->addDays(7);
+        $projects->duration = $current->addDays(6);
         $projects->save();
 
         return redirect()->route('projects')->with('success','Data added');
@@ -212,12 +212,14 @@ class ProjectController extends Controller
 
     public function updateProject(Request $request, $id)
     {
-        
+        $regex = '/^\d{0,8}(\.\d{1,2})?$/';
         $project = Project::findOrFail($id);
         $validator = Validator::make($request->all(),[
             'titles' => 'required|max:255',
             'detailss' => 'required|max:255',
-            'categorys' => 'required|not_in:--'
+            'categorys' => 'required|not_in:--',
+            'min' => 'required|regex:'.$regex,
+            'max' => 'required|regex:'.$regex
         ]);
         if($validator->fails()){
             return redirect()->route('projects')
@@ -231,6 +233,8 @@ class ProjectController extends Controller
         $project->category = $request->categorys;
         $project->type = $request->type; 
         $project->os = $request->os;
+        $project->min = $request->min;
+        $project->max = $request->max;
         $project->save();
 
         return redirect('seeker/projects')
@@ -402,8 +406,8 @@ class ProjectController extends Controller
                     ]);
                 }
             }
-            event(new \App\Events\BidNotified(Auth::user()->firstname.' '.Auth::user()->lastname,'placed a bid on '.$project->title , Auth::user()->avatar, "route('projects')"));
-            $this->insertNotification(['user_id' => $user_id, 'name' => Auth::user()->firstname.' '.Auth::user()->lastname, 'message' => 'placed a bid on '.$project->title, 'avatar' => Auth::user()->avatar, 'link' => route('projects'), 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()]);
+            event(new \App\Events\BidNotified(Auth::user()->firstname.' '.Auth::user()->lastname,'placed a bid on '.$project->title , Auth::user()->avatar, "route('viewBids', ['project_id' => $project_id, 'user_id' => Auth::user()->id, 'proposal_id' => $proposal_id])"));
+            $this->insertNotification(['user_id' => $user_id, 'name' => Auth::user()->firstname.' '.Auth::user()->lastname, 'message' => 'placed a bid on '.$project->title, 'avatar' => Auth::user()->avatar, 'link' => route('viewBids', ['project_id' => $project_id, 'user_id' => Auth::user()->id, 'proposal_id' => $proposal_id]), 'created_at' => Carbon::now(new DateTimeZone('Asia/Manila')), 'updated_at' => Carbon::now(new DateTimeZone('Asia/Manila'))]);
             return redirect()->route('bidder')->with('success','Successfully bidded');
         }
     }
@@ -472,6 +476,9 @@ class ProjectController extends Controller
         $projects->status = 'ongoing';
         $projects->updated_at = Carbon::now(new DateTimeZone('Asia/Manila'));
         $projects->save();
+        
+        event(new \App\Events\BidNotified(Auth::user()->firstname.' '.Auth::user()->lastname,'accepted your bid on '.$projects->title, Auth::user()->avatar, "route('myWorks',['proposal_id' => $proposal_id, 'bidder_id' => $bidder_id, 'project_id' => $project_id])"));
+        $this->insertNotification(['user_id' => $bidder_id, 'name' => Auth::user()->firstname.' '.Auth::user()->lastname, 'message' => 'accepted your  bid on '.$projects->title, 'avatar' => Auth::user()->avatar, 'link' => route('myWorks',['proposal_id' => $proposal_id, 'bidder_id' => $bidder_id, 'project_id' => $project_id]), 'created_at' => Carbon::now(new DateTimeZone('Asia/Manila')), 'updated_at' => Carbon::now(new DateTimeZone('Asia/Manila'))]);
         return redirect()
             ->route('projects')
             ->withInput(['tab' => 'ongoing']);
