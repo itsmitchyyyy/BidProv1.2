@@ -1,3 +1,4 @@
+
 <nav class="navbar navbar-toggleable-md navbar-light bg-faded">
 <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
   <span class="navbar-toggler-icon"></span>
@@ -51,12 +52,27 @@
     @inject('notifications', 'App\Http\Controllers\NotificationController')
     <li class="nav-item dropdown notifications">
      <a href="" class="nav-link" data-toggle="dropdown" id="navbarDropdownMessage" href="#">
-        <i class="fa fa-bell" style="color:orange" data-count="{{ $notifications->countNotification() }}"></i>
-        <span class="text-danger notif-count">{{ $notifications->countNotification() }}</span>
+     <i class="fa fa-bell" style="color:orange" data-count="{{ $notifications->countNotification() }}"></i>
+        <span class="text-danger" id="counts" class="notify-count">{{ $notifications->countNotification() }}</span>
       </a>
-      <div id="menuItems" class="dropdown-menu dropdown-menu-right" aria-labelledBy="navbarDropdownMessage">
-       <h6 class="dropdown-header">You have (<span class="notif-count">{{ $notifications->countNotification() }}</span>) new notifications</h6>
-       <div class="text-center" style="font-size:12px"><small><a href="{{ route('viewNotification') }}" class="text-dark">See all messages</a></small></div>
+      <div class="dropdown-menu dropdown-menu-right"  aria-labelledBy="dropdownMessage">
+      <h6 class="dropdown-header">You have (<span class="notif-count">{{ $notifications->countNotification() }}</span>) unread notifications</h6>
+      <div class="text-center" style="font-size:16px"><small><a href="{{ route('viewNotification') }}" class="text-dark">See all messages</a></small></div>
+       
+      @foreach($notifications->navNotification() as $notify)
+      <a href="#" onclick="updateNotification('{{ $notify }}')">
+          <div class="message-center{{ ($notify->statuss == 'unread') ? ' list-group-item-info':' list-group-item-light' }} p-1">
+            <div class="user-img ml-2 mt-2">
+              <img src="/{{ $notify->avatar }}" alt="avatar" style="border-radius:50%">
+            </div>
+            <div class="mail-content">
+              <h5><b>{{ ucwords($notify->name) }} {{ $notify->message }}</b></h5>
+              <span class="mail-desc"><small>View</small></span>
+            </div>
+          </div>
+        </a>
+        <hr>
+    @endforeach
        <!-- <a href="http://">
         <div class="message-center">
           <div class="user-img ml-2">
@@ -94,3 +110,31 @@
     </ul>
   </div>
 </nav>
+@push('scripts')
+<script>
+  function updateNotification($notif_data){
+    var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
+    var datas = JSON.parse($notif_data);
+    // console.log(CSRF_TOKEN);
+    $(function(){
+    $.ajax({
+      type: "post",
+      url: "{{ route('updateNotification', ['notif_id']) }}",
+      headers: {'X-CSRF-TOKEN': CSRF_TOKEN},
+      data: {
+        'notif_id': datas.id
+        },
+      // dataType: "json",
+      cache:false,
+      success:function(response){
+        console.log(response);
+        window.location = datas.link;
+      },
+      error:function(response){
+        console.log(response);
+      }
+    });
+});
+}
+</script>
+@endpush
