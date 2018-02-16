@@ -92,6 +92,7 @@ Route::group(['middleware' => ['auth']], function(){
     Route::patch('bidder/profile/{id}', [ 'uses' => 'BidderController@updateProfile']);
     Route::patch('bidder/avatar/{id}', ['as' => 'avatar', 'uses' => 'BidderController@updateAvatar']);
     Route::patch('bidder/skills/{id}', ['as' => 'skills', 'uses' => 'BidderController@addSkills']);
+    Route::post('bidder/view/project/bid/comment/post', ['as' => 'postCommentBidder','uses' => 'ModuleController@addCommentBidder']);
     // END
     // Route::get('skills',  ['uses' => 'BidderController@getSkills']);
     // Route::get('bidder/inbox', function(){
@@ -112,9 +113,11 @@ Route::group(['middleware' => ['auth']], function(){
     //WORKS
     Route::get('bidder/view/project/bid/{proposal_id}/{bidder_id}/{project_id}', ['as' => 'myWorks', 'uses' => 'ModuleController@biddergetModule']);
     Route::post('bidder/view/project/bid/update/{module_id}/{projetc_id}',['as' => 'updateModule', 'uses' => 'ModuleController@updateModules']);
+    Route::post('bidder/view/project/bid/comment/post', ['as' => 'postCommentBidder','uses' => 'ModuleController@addCommentBidder']);
     // END works
     //ratings
     Route::post('ratings', 'RatingController@postReview')->name('rate.post');
     Route::get('ratings/{id}', 'RatingController@reviewUser')->name('rate.show');
+    // Route::get('sh/sh/sh', 'ModuleController@divide');
     // end ratings
 });
