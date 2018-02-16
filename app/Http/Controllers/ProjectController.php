@@ -15,6 +15,7 @@ use App\Project;
 use App\User;
 use App\Proposal;
 use App\Bid;
+use DateTimeZone;
 // Paypal
 use PayPal\Rest\ApiContext;
 use PayPal\Auth\OAuthTokenCredential;
@@ -57,7 +58,7 @@ class ProjectController extends Controller
                 ->with('adding_error',5)
                 ->withErrors($validator);
         }
-        $current = Carbon::now();
+        $current = Carbon::now(new DateTimeZone('Asia/Manila'));
         $projects = new Project();
         $projects->user_id = Auth::id();
         $projects->title = $request->title;
@@ -93,7 +94,7 @@ class ProjectController extends Controller
             ->withErrors($validator);
         }
         $closed = Project::find($id)->delete();
-        $current = Carbon::now();
+        $current = Carbon::now(new DateTimeZone('Asia/Manila'));
         $projects = new Project();
         $projects->user_id = Auth::id();
         $projects->title = $request->title;
@@ -325,7 +326,7 @@ class ProjectController extends Controller
     public function getProjectsBidder()
     {
          $projects = DB::table('projects')
-            ->where('duration', '>', Carbon::now())
+            ->where('duration', '>', Carbon::now(new DateTimeZone('Asia/Manila')))
             ->where('status', '=', 'open')
             ->orderByRaw('created_at DESC')
             ->get();  
@@ -385,8 +386,8 @@ class ProjectController extends Controller
                $id[] =  DB::table('modules')->insertGetId([
                 'proposal_id' => $proposal_id,
                 'module_name' => $name,
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now()
+                'created_at' => Carbon::now(new DateTimeZone('Asia/Manila')),
+                'updated_at' => Carbon::now(new DateTimeZone('Asia/Manila'))
                ]);
             }
             foreach($module_description as $val => $description){
@@ -396,8 +397,8 @@ class ProjectController extends Controller
                         'module_id' => $id[$val],
                         'description' => $desc,
                         'status' => 'todo',
-                        'created_at' => Carbon::now(),
-                        'updated_at' => Carbon::now()
+                        'created_at' => Carbon::now(new DateTimeZone('Asia/Manila')),
+                        'updated_at' => Carbon::now(new DateTimeZone('Asia/Manila'))
                     ]);
                 }
             }
@@ -465,11 +466,11 @@ class ProjectController extends Controller
         $bids->bidder_id = $bidder_id;
         $bids->proposal_id = $proposal_id;
         $bids->status = 'ongoing';
-        $bids->created_at = Carbon::now();
-        $bids->updated_at = Carbon::now();
+        $bids->created_at = Carbon::now(new DateTimeZone('Asia/Manila'));
+        $bids->updated_at = Carbon::now(new DateTimeZone('Asia/Manila'));
         $bids->save();
         $projects->status = 'ongoing';
-        $projects->updated_at = Carbon::now();
+        $projects->updated_at = Carbon::now(new DateTimeZone('Asia/Manila'));
         $projects->save();
         return redirect()
             ->route('projects')
