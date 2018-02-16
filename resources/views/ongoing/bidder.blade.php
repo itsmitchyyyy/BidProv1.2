@@ -1,5 +1,6 @@
 @extends('layouts.bidderapp')
 @push('css')
+<link rel="stylesheet" href="{{ asset('css/bidder/fileupload.css') }}">
     <style>
         #board {
             display: table;
@@ -51,7 +52,41 @@
         .gap-left{
             margin-left:10px;
         }
-        
+        .inputDnD {
+  .form-control-file {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 6em;
+    outline: none;
+    visibility: hidden;
+    cursor: pointer;
+    background-color: #c61c23;
+    box-shadow: 0 0 5px solid currentColor;
+    &:before {
+      content: attr(data-title);
+      position: absolute;
+      top: 0.5em;
+      left: 0;
+      width: 100%;
+      min-height: 6em;
+      line-height: 2em;
+      padding-top: 1.5em;
+      opacity: 1;
+      visibility: visible;
+      text-align: center;
+      border: 0.25em dashed currentColor;
+      transition: all 0.3s cubic-bezier(.25, .8, .25, 1);
+      overflow: hidden;
+    }
+    &:hover {
+      &:before {
+        border-style: solid;
+        box-shadow: inset 0px 0px 0px 0.25em currentColor;
+      }
+    }
+  }
+}
     </style>
 @endpush
 @section('content')
@@ -111,12 +146,12 @@
         </div>
     </div>
     <h2 class="m-t-15">PROJECT PROGRESS</h2>
-    <div id="board">
+    <div class="board" id="board">
         <div id="todo" class="section">
             <h1>To Do</h1>
             @foreach($todo as $todos)
 
-            <div id="c2" onclick="toggleModal(this,{{ $todos->module_id }})" data-module="{{ $todos->id }}" data-tooltip="true" title="Click to view" data-proposal="{{ $todos->proposal_id }}" data-project="{{ $todos->project_id }}" data-name="{{ $todos->module_name }}" class="card-kanban">
+            <div id="c2" onclick="toggleModal(this,{{ $todos->module_id }})" data-status="{{ $todos->module_status }}" data-module="{{ $todos->id }}" data-tooltip="true" title="Click to view" data-proposal="{{ $todos->proposal_id }}" data-project="{{ $todos->project_id }}" data-name="{{ $todos->module_name }}" class="card-kanban">
             {{ $todos->module_name }}
             <h5>{{ $todos->percentDone}}% Complete</h5>
             <div class="progress">
@@ -129,13 +164,25 @@
         <div id="doing" class="section">
             <h1>Doing</h1>
             @foreach($doing as $doings)
-            <div id="c1"  onclick="toggleModal(this,{{ $doings->module_id }})" data-module="{{ $doings->id }}" data-name="{{ $doings->module_name }}" class="card-kanban">{{ $doings->module_name }}</div>
+            <div id="c1"  onclick="toggleModal(this,{{ $doings->module_id }})" data-status="{{ $doings->module_status }}" data-module="{{ $doings->id }}" data-tooltip="true" title="Click to view" data-proposal="{{ $doings->proposal_id }}" data-project="{{ $doings->project_id }}" data-name="{{ $doings->module_name }}" class="card-kanban">
+            {{ $doings->module_name }}
+            <h5>{{ $doings->percentDone}}% Complete</h5>
+            <div class="progress">
+                <div class="progress-bar progress-bar-success progress-bar-animated h-100" role="progressbar" aria-valuenow="{{ $doings->percentDone }}" aria-valuemin="0" aria-valuemax="100" style="width:{{ $doings->percentDone}}%"><span class="sr-only">{{ $doings->percentDone}}% Complete</span></div>
+            </div>
+            </div>
             @endforeach
         </div>
         <div id="done" class="section">
             <h1>Done</h1>
             @foreach($done as $dones)
-            <div id="c3"  onclick="toggleModal(this,{{ $dones->module_id }})"  data-module="{{ $dones->id }}" data-name="{{ $dones->module_name }}" class="card-kanban">{{ $dones->module_name }}</div>
+            <div id="c3"  onclick="toggleModal(this,{{ $dones->module_id }})" data-status="{{ $dones->module_status }}"  data-module="{{ $dones->id }}" data-tooltip="true" title="Click to view" data-proposal="{{ $dones->proposal_id }}" data-project="{{ $dones->project_id }}" data-name="{{ $dones->module_name }}" class="card-kanban">
+            {{ $dones->module_name }}
+            <h5>{{ $dones->percentDone}}% Complete</h5>
+            <div class="progress">
+                <div class="progress-bar progress-bar-success progress-bar-animated h-100" role="progressbar" aria-valuenow="{{ $dones->percentDone }}" aria-valuemin="0" aria-valuemax="100" style="width:{{ $dones->percentDone}}%"><span class="sr-only">{{ $dones->percentDone}}% Complete</span></div>
+            </div>
+            </div>
             @endforeach
         </div>
     </div>
@@ -147,6 +194,7 @@
                     <h3>View Module</h3>
                 </div>
                 <div class="modal-body">
+                    <div id="options"></div>
                     <div id="data"></div>
                     <a href="#" id="collapseComment" data-toggle="collapse" data-target="#comment_section">
                         Show comments
@@ -154,7 +202,7 @@
                     <div id="comment_section"  class="clearfix collapse"></div>
                     <a href="#" id="addComment" class="pull-right">Add comment</a>
                     <div class="form-group" id="commentDiv">
-                    <form method="post" action="{{ route('postComment') }}">
+                    <form method="post" action="{{ route('postCommentBidder') }}">
                         {{ csrf_field() }}
                         <input type="hidden" name="comment_proposal" id="comment_proposal" value="">
                         <input type="hidden" name="comment_project" id="comment_project" value="">
@@ -163,6 +211,22 @@
                     <button type="submit" class="btn btn-info wew pull-right m-t-10">Add Comment</button>
                     </div>
                     </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modalUpload">
+        <div class="modal-dialog d-flex justify-content-center h-75 flex-column mx-auto">
+            <div class="modal-content m-2">
+                <div class="modal-body" onload="uploadFiles()">
+                 <form action="" enctype="multipart/form-data" method="post">
+                    <input type="file" name="upload_file" id="myUpload" onchange="uploadFiles()" multiple>
+                 </form>
+                 <p id="files"></p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary wew" data-dismiss="modal">Close</button>
+                    <button class="btn btn-info wew" id="btnUpload">Submit</button>
                 </div>
             </div>
         </div>
@@ -181,6 +245,7 @@
             $('.progress-comment').val('');
             $('#commentDiv').hide();   
             $('#comment_section').html('');
+            $('#options').html('');
         });
 </script>
 <script>
@@ -194,11 +259,11 @@ function toggleComment(id){
         dataType: "json",
         cache:false,
         success: function(data){
-            console.log(data);
+            // console.log(data);
             var comments = '';
            
             for(var i = 0; i < data.length; i++){
-                console.log(data[i].comment_date)
+                // console.log(data[i].comment_date)
                 if(data[i].role_type == 'seeker'){
                          comments += 
                `
@@ -237,7 +302,7 @@ function toggleComment(id){
     function toggleModal(event,id,dataname){
       $(function(){
 
-     
+        var dataStatus = $(event).data('status');
         var tableName = $(event).data('name');
         var projectComment = $(event).data('project');
         var proposalComment = $(event).data('proposal');
@@ -248,20 +313,42 @@ function toggleComment(id){
             dataType: 'json',
             cache:false,
             success: function(response){
-                 var myData = `<table class="table table-bordered table-striped" width="100%"><h2>Module Title: `+tableName+`</h2><tr><th>Description</th><th>Status</th></tr>`;
+                var dataValue = new Array();
+                var options = '';
+                 var myData = `<table class="table table-bordered table-striped" width="100%">
+                 <h2>Module Title: `+tableName+`</h2>
+                 <tr><th>Description</th><th>Status</th><th id="actionHead">Action</th></tr>`;
                  for(var i = 0; i < response.length; i++ ){
                 $.each(response[i], function(key,value){
                     if(key == 'description' ){
                     myData += '<tr><td>'+ value +'</td>';
                 }
                 if(key == 'status' ){
-                    myData += `<td>
-                       `+value+`
-                    </td></tr>`;
+                    myData += '<td>'+value+'</td>';
+                    if(dataStatus != 'todo'){
+                        myData +=  '<td><a><button class="btn btn-info wew">Done</button></a></tr></tr>'
+                        $('#actionHead').hide();
+                }
+                     dataValue[i] = value;
                 }
                 });
                  }
                  myData += '</table>';
+                 if(dataStatus == 'todo'){
+                    options = '<a id="myoption" class="pull-right"><button class="btn btn-info wew">Start</button></a>';
+                    // $('#actionHead').hide();
+                     }
+                 if(dataValue.length == 0){
+                     if(dataStatus == 'doing'){
+                   options =  `<a id="myoption" class="pull-right"><button class="btn btn-info wew">Finish</button></a>`;
+                     }else if(dataStatus == 'done'){
+
+                     }
+                }else{
+
+                }
+                
+                $('#options').html(options);
                 $('#data').html(myData);
                 $('#comment_module').val(id);
                 $('#comment_project').val(projectComment);
@@ -272,6 +359,14 @@ function toggleComment(id){
         });
     });
     }
+</script>
+<script>
+    $(function(){
+        $('#task').change(function(){
+            var value = $(this).val();
+            console.log(value);
+        });
+    });
 </script>
 <script>
     $("#collapseComment[data-toggle='collapse']").click(function(){
@@ -350,8 +445,10 @@ function toggleComment(id){
                         var module_id  = $(card).data('module');;
                         var module_status = '';
                         if(section.id == 'done'){
-                           module_status = section.id;
-                          section.appendChild(card);
+                          module_status = section.id;
+                          $('#modalUpload').modal('show');
+                        //   section.appendChild(card);
+                       
                         }
                         if(section.id == 'doing'){
                           module_status = section.id;
@@ -361,7 +458,9 @@ function toggleComment(id){
                          module_status = section.id;
                           section.appendChild(card);
                         }
-                        toggleUpdate(module_id,module_status);
+                        // toggleUpdate(module_id,module_status);
+                        
+                    
                     }
                 } else {
                     alert('couldn\'t find card #' + id);
@@ -397,13 +496,52 @@ function toggleComment(id){
                     cache:false,
                     success:function(response){
                         console.log(response);
-                        
+                        var url = "{{ Request::url() }}";
+                        location.reload();
                     },
                     error:function(response){
                         // console.log(data);
                     }
                 });
             });
+        }
+    </script>
+    <script>
+         $("#modalUpload").on('shown.bs.modal' ,function(){
+            uploadFiles();
+          });
+    </script>
+    <script>
+        function uploadFiles(){
+           
+            var x = document.getElementById("myUpload");
+            // var x = $('#myUpload');
+            var txt = "";
+            if('files' in x){
+                if(x.files.length == 0){
+                    txt = "Select one or more files.";
+                } else{
+                    for(var i = 0; i < x.files.length; i++){
+                        txt += "<br><strong>"+(i+1)+". file</strong><br>";
+                        var file = x.files[i];
+                        if('name' in file){
+                            txt += "name: " + file.name + "<br>";
+                        }
+                        /* if('size' in file){
+                            txt += "size: " + file.size + " bytes <br>";
+                        } */
+                    }
+                }
+            }else{
+                if(x.value == ""){
+                    txt += "Select one or more files.";
+                }else{
+                    txt += "The files property is not supported by your browser";
+                    // txt += "<br>The path of the selected file: " + x.value;
+                }
+            }
+            $('#files').text(txt);
+            // document.getElementById("files").innerHTML = txt;
         }
     </script>
 @endpush
