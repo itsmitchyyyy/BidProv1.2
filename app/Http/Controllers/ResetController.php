@@ -8,6 +8,10 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Auth;
 class ResetController extends Controller
 {
+    public function showReset(){
+        return view('/email');
+    }
+
     public function sendEmail(Request $request){
         $credentials = ['email' => $request->email];
         $response = Password::sendResetLink($credentials, function(Message $message){
@@ -24,9 +28,7 @@ class ResetController extends Controller
         }
     }
 
-    public function showReset(){
-        return view('email');
-    }
+   
 
     protected function getEmailSubject()
     {
