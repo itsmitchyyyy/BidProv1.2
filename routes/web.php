@@ -71,6 +71,7 @@ Route::group(['middleware' => ['auth']], function(){
     Route::patch('seeker/profile/{id}', [ 'uses' => 'SeekerController@updateProfile']);
     Route::patch('seeker/avatar/{id}', ['as' => 'seekavatar', 'uses' => 'SeekerController@updateAvatar']);
     Route::get('seeker/notifications', ['as' => 'viewNotification', 'uses' => 'NotificationController@viewNotification']);
+    Route::post('seeker/notifications/update/{notif_id}', ['as' => 'updateNotification', 'uses' => 'NotificationController@updateNotification']);
     Route::get('view/{id}', ['as' => 'myProject', 'uses' => 'ProjectController@getMyProject']);
     Route::get('seeker/proposal/details/{project_id}/{user_id}/{proposal_id}', ['as' => 'viewBids', 'uses' => 'ProjectController@ProposalModules']);
     Route::get('seeker/proposal/accept/{seeker_id}/{bidder_id}/{proposal_id}/{project_id}', ['as' => 'acceptBid', 'uses' => 'ProjectController@acceptBid']);
@@ -114,7 +115,8 @@ Route::group(['middleware' => ['auth']], function(){
     Route::get('bidder/view/project/bid/{proposal_id}/{bidder_id}/{project_id}', ['as' => 'myWorks', 'uses' => 'ModuleController@biddergetModule']);
     Route::post('bidder/view/project/bid/update/{module_id}/{projetc_id}',['as' => 'updateModule', 'uses' => 'ModuleController@updateModules']);
     Route::post('bidder/view/project/bid/comment/post', ['as' => 'postCommentBidder','uses' => 'ModuleController@addCommentBidder']);
-    // END works
+    Route::get('bidder/notifications', ['as' => 'viewBNotification', 'uses' => 'NotificationController@viewBNotification']);
+    // END works    
     //ratings
     Route::post('ratings', 'RatingController@postReview')->name('rate.post');
     Route::get('ratings/{id}', 'RatingController@reviewUser')->name('rate.show');
