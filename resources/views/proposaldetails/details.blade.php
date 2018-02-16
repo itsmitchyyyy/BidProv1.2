@@ -104,7 +104,7 @@
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-secondary wew" data-dismiss="modal">Cancel</button>
-                        <a href="{{ route('acceptBid',['seeker_id' => Auth::user()->id, 'bidder_id' => $user->id, 'proposal_id' => $modules[0]->proposal_id, 'project_id' => $projects->id]) }}"><button class="btn btn-info wew">Submit</button></a>
+                    <a href="{{ route('acceptBid',['seeker_id' => Auth::user()->id, 'bidder_id' => $user->id, 'proposal_id' => $modules[0]->proposal_id, 'project_id' => $projects->id]) }}"><button class="btn btn-info wew">Submit</button></a>
                     </div>
                 </div>
             </div>
