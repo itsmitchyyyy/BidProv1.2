@@ -170,6 +170,16 @@
           <label class="text-dark" for="type">Os Type</label>
         </div>
         </div>
+        <div class="form-group m-b-40 m-t-15">
+                  <input type="number" name="min" value="{{ $project->min }}" id="min" class="form-control" step="any" required>
+                  <span class="highlight"></span><span class="bar"></span>
+                  <label for="min" class="text-dark">Min Cost</label>
+                </div>
+                <div class="form-group m-b-40 m-t-15">
+                  <input type="number" name="max" value="{{ $project->max }}" id="max" class="form-control" step="any" required>
+                  <span class="highlight"></span><span class="bar"></span>
+                  <label for="max" class="text-dark">Max Cost</label>
+                </div>
               </div>
           </div>
           <div class="modal-footer">
