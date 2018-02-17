@@ -111,7 +111,7 @@
         </div>
     </div>
     <h2 class="m-t-15">PROJECT PROGRESS</h2>
-    <div id="board">
+    <div id="board" class="board w-100">
         <div id="todo" class="section">
             <h1>To Do</h1>
             @foreach($todo as $todos)
