@@ -115,6 +115,8 @@ Route::group(['middleware' => ['auth']], function(){
     Route::get('bidder/view/project/bid/{proposal_id}/{bidder_id}/{project_id}', ['as' => 'myWorks', 'uses' => 'ModuleController@biddergetModule']);
     Route::post('bidder/view/project/bid/update/{module_id}/{projetc_id}',['as' => 'updateModule', 'uses' => 'ModuleController@updateModules']);
     Route::post('bidder/view/project/bid/comment/post', ['as' => 'postCommentBidder','uses' => 'ModuleController@addCommentBidder']);
+    Route::post('bidder/view/project/bid/update/module/{propose_moduleID}/{propose_moduleStatus}/{module_percent}/{module_id}',['as' => 'moduleUpdate', 'uses' => 'ModuleController@moduleUpdate']);
+    Route::post('bidder/view/project/bid/update/files', ['as' => 'moduleFiles', 'uses' => 'ModuleController@addFiles']);
     Route::get('bidder/notifications', ['as' => 'viewBNotification', 'uses' => 'NotificationController@viewBNotification']);
     // END works    
     //ratings
