@@ -219,14 +219,20 @@
         <div class="modal-dialog d-flex justify-content-center h-75 flex-column mx-auto">
             <div class="modal-content m-2">
                 <div class="modal-body" onload="uploadFiles()">
-                 <form action="" enctype="multipart/form-data" method="post">
-                    <input type="file" name="upload_file" id="myUpload" onchange="uploadFiles()" multiple>
-                 </form>
-                 <p id="files"></p>
+                 <form action="{{ route('moduleFiles') }}" enctype="multipart/form-data" method="post">
+                 {{ csrf_field() }}
+                 <div class="form-group{{ $errors->has('upload_file') ? ' has-error' : ''}}">
+                    <input type="file" name="upload_file[]" id="myUpload" onchange="uploadFiles()" multiple>
+                    <p id="files"></p>
+                    @if($errors->has('upload_file'))
+                        <p class="text-danger">{{ $errors->first('upload_file') }}</p>
+                    @endif
+                </div>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary wew" data-dismiss="modal">Close</button>
                     <button class="btn btn-info wew" id="btnUpload">Submit</button>
+                 </form>
                 </div>
             </div>
         </div>
@@ -326,8 +332,11 @@ function toggleComment(id){
                 if(key == 'status' ){
                     myData += '<td>'+value+'</td>';
                     if(dataStatus != 'todo'){
-                        myData +=  '<td><a><button class="btn btn-info wew">Done</button></a></tr></tr>'
-                        $('#actionHead').hide();
+                        if(response[i].status == 'todo'){
+                            myData +=  `<td><a onclick="moduleUpdate(`+response[i].id+`,'done','25',`+id+`)"><button class="btn btn-info wew">Done</button></a></tr></tr>`;
+                        }else{
+                            myData += `<td>Done</tr></tr>`;
+                        }
                 }
                      dataValue[i] = value;
                 }
@@ -335,18 +344,15 @@ function toggleComment(id){
                  }
                  myData += '</table>';
                  if(dataStatus == 'todo'){
-                    options = '<a id="myoption" class="pull-right"><button class="btn btn-info wew">Start</button></a>';
+                    options = `<a onclick="toggleUpdate(`+id+`,'doing')" class="pull-right"><button class="btn btn-info wew">Start</button></a>`;
                     // $('#actionHead').hide();
                      }
-                 if(dataValue.length == 0){
+
                      if(dataStatus == 'doing'){
-                   options =  `<a id="myoption" class="pull-right"><button class="btn btn-info wew">Finish</button></a>`;
-                     }else if(dataStatus == 'done'){
-
+                         if(dataValue.every(checkDoing)){
+                             options =  `<a id="myoption" class="pull-right"><button class="btn btn-info wew">Finish</button></a>`;
+                         }
                      }
-                }else{
-
-                }
                 
                 $('#options').html(options);
                 $('#data').html(myData);
@@ -358,6 +364,11 @@ function toggleComment(id){
             }
         });
     });
+    }
+</script>
+<script>
+    function checkDoing(data){
+        return data == 'done';
     }
 </script>
 <script>
@@ -447,18 +458,20 @@ function toggleComment(id){
                         if(section.id == 'done'){
                           module_status = section.id;
                           $('#modalUpload').modal('show');
-                        //   section.appendChild(card);
+                          section.appendChild(card);
                        
                         }
                         if(section.id == 'doing'){
                           module_status = section.id;
+                          toggleUpdate(module_id,module_status);
                           section.appendChild(card);
                         }
                         if(section.id == 'todo'){
                          module_status = section.id;
+                         toggleUpdate(module_id,module_status);
                           section.appendChild(card);
                         }
-                        // toggleUpdate(module_id,module_status);
+                        
                         
                     
                     }
@@ -480,6 +493,7 @@ function toggleComment(id){
             return null;
         }
     </script>
+   
     <script>
         function toggleUpdate(module_id,module_status){
             var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
@@ -504,6 +518,28 @@ function toggleComment(id){
                     }
                 });
             });
+        }
+    </script>
+    <script>
+        function moduleUpdate(propose_moduleID,propose_moduleStatus,module_percent,module_id){
+            var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
+           $.ajax({
+               type: "post",
+               url: "{{ route('moduleUpdate',['propose_moduleID','propose_moduleStatus','module_percent','module_id']) }}",
+               headers: {'X-CSRF-TOKEN': CSRF_TOKEN},
+               data: {
+                   '_token': "{{ csrf_token() }}",
+                   'propose_moduleID': propose_moduleID,
+                   'propose_moduleStatus': propose_moduleStatus,
+                   'module_percent': module_percent,
+                   'module_id': module_id
+               },
+               cache:false,
+               success:function(response){
+                   console.log(response);
+                   location.reload();
+               }
+           });
         }
     </script>
     <script>
@@ -543,5 +579,12 @@ function toggleComment(id){
             $('#files').html(txt);
             // document.getElementById("files").innerHTML = txt;
         }
+    </script>
+    <script>
+        @if(!empty(Session::get('error_upload')))
+            $(function(){
+                $('#modalUpload').modal('show');
+            });
+        @endif
     </script>
 @endpush
