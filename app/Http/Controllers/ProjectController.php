@@ -406,7 +406,7 @@ class ProjectController extends Controller
                     ]);
                 }
             }
-            event(new \App\Events\BidNotified(Auth::user()->firstname.' '.Auth::user()->lastname,'placed a bid on '.$project->title , Auth::user()->avatar, "route('viewBids', ['project_id' => $project_id, 'user_id' => Auth::user()->id, 'proposal_id' => $proposal_id])"));
+            event(new \App\Events\BidNotified(Auth::user()->firstname.' '.Auth::user()->lastname,'placed a bid on '.$project->title , Auth::user()->avatar, route('viewBids', ['project_id' => $project_id, 'user_id' => Auth::user()->id, 'proposal_id' => $proposal_id])));
             $this->insertNotification(['user_id' => $user_id, 'name' => Auth::user()->firstname.' '.Auth::user()->lastname, 'message' => 'placed a bid on '.$project->title, 'avatar' => Auth::user()->avatar, 'link' => route('viewBids', ['project_id' => $project_id, 'user_id' => Auth::user()->id, 'proposal_id' => $proposal_id]), 'created_at' => Carbon::now(new DateTimeZone('Asia/Manila')), 'updated_at' => Carbon::now(new DateTimeZone('Asia/Manila'))]);
             return redirect()->route('bidder')->with('success','Successfully bidded');
         }
