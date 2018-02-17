@@ -20,8 +20,7 @@ class CreateModulesTable extends Migration
             $table->string('module_name');
             $table->string('status')->default('todo');
             $table->string('percentDone')->default('0');
-            // $table->decimal('price', 8,2);
-            // $table->string('daysTodo');
+            $table->string('files')->nullable();
             $table->timestamps();
         });
     }
