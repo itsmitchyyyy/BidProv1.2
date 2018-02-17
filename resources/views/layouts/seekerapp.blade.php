@@ -64,8 +64,9 @@
    // var footer = ``;
     //alert(existing);
     console.log(data.avatar);
+    console.log(data.link);
     var newnotifications = `
-        <a href="{{ `+data.link+` }}">
+        <a href="`+data.link+`">
           <div class="message-center">
             <div class="user-img ml-2">
               <img src="{{ asset('`+data.avatar+`') }}" alt="avatar" style="border-radius:50%">
@@ -97,6 +98,10 @@
             $('[data-toggle="tooltip"]').tooltip();
         });
     </script>
-  
+  <script>
+        function windowLocation($notif_link){
+            window.location = $notif_link;
+        }
+  </script>
   
 </html>
