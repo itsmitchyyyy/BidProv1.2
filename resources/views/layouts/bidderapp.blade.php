@@ -68,7 +68,7 @@
           </div>
         </a>
         <hr>
-    `;\
+    `;
         notifications.html(existing + newnotification);
       counter += 1;
       element.attr('data-count', counter);
