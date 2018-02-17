@@ -55,18 +55,20 @@
       var channel = pusher.subscribe('bid-notify');
       channel.bind('App\\Events\\BidNotified', function(data){
         var existing = notifications.html();
-        var newnotification = `<a href="http://">
-        <div class="message-center">
-          <div class="user-img ml-2">
-            <img src="/uploads/blank.png" alt="avatar" style="border-radius:50%;">
+        var newnotifications = `
+        <a href="{{ `+data.link+` }}">
+          <div class="message-center">
+            <div class="user-img ml-2">
+              <img src="{{ asset('`+data.avatar+`') }}" alt="avatar" style="border-radius:50%">
+            </div>
+            <div class="mail-content">
+              <h5><b>`+data.message+`</b></h5>
+              <span class="mail-desc"><small>View</small></span>
+            </div>
           </div>
-          <div class="mail-content">
-            <h5><b>`+data.message+`</b></h5>
-            <span class="mail-desc">View</span>
-          </div>
-        </div>
         </a>
-        <hr>`;
+        <hr>
+    `;\
         notifications.html(existing + newnotification);
       counter += 1;
       element.attr('data-count', counter);
