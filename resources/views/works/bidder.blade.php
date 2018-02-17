@@ -32,7 +32,7 @@
         <tbody>
         @foreach($works as $work)
             <tr>
-                <td><a href="">{{ ucfirst($work->title) }}</a></td>
+                <td><a href="{{ route('myWorks',['proposal_id' => $work->proposal_id,'bidder_id' => $work->bidder_id,'project_id' => $work->project_id]) }}">{{ ucfirst($work->title) }}</a></td>
                 <td>
                 <div class="clearfix">
                     <img src="/{{ $work->avatar }}" alt="avatar" style="width:70px;height:70px" class="gap-right img-thumbnail pull-left">
@@ -46,7 +46,7 @@
                 <td><span>&#8369;</span> {{ $work->min }} - <span>&#8369;</span> {{ $work->max }}</td>
                 <td>{{ ucfirst($work->status) }}</td>
                 <td>
-                    <a href="#"><i class="fa fa-eye text-blue" data-toggle="tooltip" title="View" style="font-size:20px"></i></a>
+                    <a href="{{ route('viewBids',['proposal_id' => $work->proposal_id,'bidder_id' => $work->bidder_id,'project_id' => $work->project_id]) }}"><i class="fa fa-eye text-blue" data-toggle="tooltip" title="View" style="font-size:20px"></i></a>
                     <a href="#"><i class="fa fa-trash text-danger p-1" data-toggle="tooltip" title="Delete" style="font-size:20px"></i></a>
                 </td>
             </tr>
