@@ -171,9 +171,39 @@ class ModuleController extends Controller
         echo 'ok';
      }
 
-    //  public function divide(){
-    //      $count = '100';
-    //      $sum = $count/4;
-    //      dd($sum);
-    //  }
+     public function moduleUpdate(){
+        $propose_moduleID = $_POST['propose_moduleID'];
+        $propose_moduleStatus = $_POST['propose_moduleStatus'];
+        $module_percent = $_POST['module_percent'];
+        $module_id = $_POST['module_id'];
+        DB::table('proposal_modules')
+            ->where('id',$propose_moduleID)
+            ->update([
+                'status' => $propose_moduleStatus
+            ]);
+        $module = Module::find($module_id);
+        $percent = $module->percentDone;
+        $total = $percent + $module_percent;
+        $module->percentDone = $total;
+        /* if($module->percentDone == '100'){
+            $module->status = 'done';
+        } */
+        $module->save();
+        echo 'ok';
+    }
+
+    public function addFiles(Request $request){
+        $message = ['required' => 'You must upload a file'];
+        $validator = Validator::make($request->all(),[
+            'upload_file' => 'required'
+        ],$message);
+        if($validator->fails()){
+            return back()
+                ->with('error_upload',5)
+                ->withErrors($validator);
+        }
+        if($request->hasFile('upload_file')){
+            echo 'naa';
+        }
+    }
 }
