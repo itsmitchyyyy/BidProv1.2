@@ -112,7 +112,7 @@
 </div>
 
 
-  <div class="card w-75 m-t-15 mr-auto ml-auto">
+  <div class="card w-100 m-t-15 mr-auto ml-auto">
     <div class="card-header">
       Recent Project
       <a href="{{ route('projects') }}" class="pull-right">View all</a>
@@ -149,7 +149,7 @@
 
   
    <!--row -->
-   <div class="container-fluid m-t-15">
+   <!-- <div class="container-fluid m-t-15">
                     <div class="col-md-12 col-lg-12 col-sm-12" >
                         <div class="white-box " style="border:1px solid rgba(0,0,0,.125); border-radius:.25rem">
                             <h3 class="box-title">Activity Feed</h3>
@@ -159,7 +159,7 @@
                                     <div class="user-img"> <img src="/img/users/pawandeep.jpg" alt="user" class="img-circle"></div>
                                     <div class="mail-contnet">
                                         <h5>Pavan kumar</h5> <span class="mail-desc">Donec ac condimentum massa. Etiam pellentesque pretium lacus. Phasellus ultricies dictum suscipit. Aenean commodo dui pellentesque molestie feugiat.</span> <span class="label label-rouded label-info">PENDING</span><a href="javacript:void(0)" class="action"><i class="ti-close text-danger"></i></a> <a href="javacript:void(0)" class="action"><i class="ti-check text-success"></i></a><span class="time pull-right">April 14, 2017</span></div>
-                                </div>
+                                </div> -->
                                <!-- <div class="comment-body" style="border-bottom:1px solid rgba(0,0,0,.125);">
                                     <div class="user-img"> <img src="/img/users/sonu.jpg" alt="user" class="img-circle"> </div>
                                     <div class="mail-contnet">
@@ -175,10 +175,10 @@
                                     <div class="mail-contnet">
                                         <h5>Pavan kumar</h5> <span class="mail-desc">Donec ac condimentum massa. Etiam pellentesque pretium lacus. Phasellus ultricies dictum suscipit. Aenean commodo dui pellentesque molestie feugiat.</span> <span class="label label-rouded label-info">PENDING</span> <a href="javacript:void(0)" class="action"><i class="ti-close text-danger"></i></a> <a href="javacript:void(0)" class="action"><i class="ti-check text-success"></i></a><span class="time pull-right">April 14, 2017</span></div>
                                 </div>-->
-                            </div>
+                      <!--       </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
 
 </div>
 @endsection
