@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Requests;
 use App\Module;
 use App\Bid;
 use App\Project;
@@ -11,11 +12,34 @@ use App\Proposal;
 use Session;
 use DB;
 use DateTimeZone;
+use Zipper;
+use ZipArchive;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Auth;
+// PAYPAL
+use PayPal\Rest\ApiContext;
+use PayPal\Auth\OAuthTokenCredential;
+use PayPal\Api\Amount;
+use PayPal\Api\Details;
+use PayPal\Api\Item;
+use PayPal\Api\ItemList;
+use PayPal\Api\Payer;
+use PayPal\Api\Payee;
+use PayPal\Api\Payment;
+use PayPal\Api\RedirectUrls;
+use PayPal\Api\ExecutePayment;
+use PayPal\Api\PaymentExecution;
+use PayPal\Api\Transaction;
 class ModuleController extends Controller
 {
+    private $_api_context;
+    public function __construct(){
+        $paypal_conf = \Config::get('paypal');
+        $this->_api_context = new ApiContext(new OAuthTokenCredential($paypal_conf['client_id'], $paypal_conf['secret']));
+        $this->_api_context->setConfig($paypal_conf['settings']);
+    }
     public function getModule($proposal_id,$seeker_id,$project_id)
     {
         $todo = DB::table('bids')
@@ -49,6 +73,7 @@ class ModuleController extends Controller
             ->join('users','proposals.bidder_id','=','users.id')
             ->where('proposals.id',$proposal_id)
             ->first();
+          
             return view('ongoing/seeker')
             ->with(compact('todo','doing','done','project','proposal'));
     }
@@ -202,8 +227,49 @@ class ModuleController extends Controller
                 ->with('error_upload',5)
                 ->withErrors($validator);
         }
+        $module_files = array();
         if($request->hasFile('upload_file')){
-            echo 'naa';
+            foreach($request->upload_file as $files){
+                $files->move('files', $files->getClientOriginalName());
+                // $image_path = "files/". $files->getClientOriginalName();
+                $module_files[] = $files->getClientOriginalName();
+            }
         }
+        $file_list = implode(",",$module_files);
+        DB::table('modules')
+            ->where('id',$request->module_id)
+            ->update([
+                'status' => 'done',
+                'files' => $file_list
+            ]);
+        return back()
+                ->with('success','Module updated');
     }
+
+    public function zipFile(Request $request){
+        $public_dir = public_path();
+        $zipName = 'files.zip';
+        $module_files = Module::find($request->module_id);
+        $files = explode(",",$module_files->files);
+        $download = array();
+        foreach($files as $file){
+            $download[] = glob(public_path('files/'.$file));
+        }
+        Zipper::make($zipName)->add($download);
+        $headers = array(
+            'Content-Type' => 'application/octet-stream',
+        );
+        $filetopath = $public_dir.'/'.$zipName;
+        if(file_exists($filetopath)){
+        return response()->download($filetopath,$zipName,$headers);
+        }
+        return back();
+    }
+   /*  public function payProject($project_id,$bid_id,$project_name,$user_paypal){
+        Session::put('project_id', $project_id);
+        Session::put('bid_id',$bid_id);
+        $item_name = $project_name;
+        $payer = new Payer();
+        $payer->setPaymentMethod('paypal');
+    } */
 }
