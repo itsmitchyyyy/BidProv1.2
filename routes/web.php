@@ -81,6 +81,10 @@ Route::group(['middleware' => ['auth']], function(){
     Route::get('seeker/view/project/bid/{proposal_id}/{seeker_id}/{project_id}', ['as' => 'acceptedBid', 'uses' => 'ModuleController@getModule']);
     Route::post('seeker/view/project/bid/comment/post', ['as' => 'postComment','uses' => 'ModuleController@addComment']);
     Route::get('seeker/view/bid/module/{module_id}', ['as' => 'viewComments', 'uses' => 'ModuleController@moduleComments']);
+    // PAYMENT
+    Route::patch('seeker/view/project/bid/paypal/{id}/{bid_id}/{project_name}/{user_paypal}', ['as' => 'payment', 'uses' => 'ModuleController@payProject']);
+    Route::get('seeker/view/project/bid/paypal', ['as' => 'payment.status','uses' => 'ModuleController@paymentStatus']);
+    // END
     // end seeker
     //bidder
     // MAIN PAGE BIDDER
