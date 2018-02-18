@@ -95,6 +95,7 @@
             
         </div>
     </div>
+    
     <div class="card">
         <div class="card-block">
             <div class="row">
@@ -115,7 +116,7 @@
         <div id="todo" class="section">
             <h1>To Do</h1>
             @foreach($todo as $todos)
-            <div id="c2" onclick="toggleModal(this,{{ $todos->module_id }})" data-tooltip="true" title="Click to view" data-proposal="{{ $todos->proposal_id }}" data-project="{{ $todos->project_id }}" data-name="{{ $todos->module_name }}" class="card-kanban">
+            <div id="c2" onclick="toggleModal(this,{{ $todos->module_id }})" data-mode="{{ $todos->module_id }}" data-tooltip="true" title="Click to view" data-proposal="{{ $todos->proposal_id }}" data-project="{{ $todos->project_id }}" data-name="{{ $todos->module_name }}" class="card-kanban">
             {{ $todos->module_name }}
             <h5>{{ $todos->percentDone}}% Complete</h5>
             <div class="progress">
@@ -128,7 +129,7 @@
         <div id="doing" class="section">
             <h1>Doing</h1>
             @foreach($doing as $doings)
-            <div id="c1"  onclick="toggleModal(this,{{ $doings->module_id }})" data-status="{{ $doings->module_status }}" data-module="{{ $doings->id }}" data-tooltip="true" title="Click to view" data-proposal="{{ $doings->proposal_id }}" data-project="{{ $doings->project_id }}" data-name="{{ $doings->module_name }}" class="card-kanban">
+            <div id="c1"  onclick="toggleModal(this,{{ $doings->module_id }})" data-mode="{{ $doings->module_id }}" data-status="{{ $doings->module_status }}" data-module="{{ $doings->id }}" data-tooltip="true" title="Click to view" data-proposal="{{ $doings->proposal_id }}" data-project="{{ $doings->project_id }}" data-name="{{ $doings->module_name }}" class="card-kanban">
             {{ $doings->module_name }}
             <h5>{{ $doings->percentDone}}% Complete</h5>
             <div class="progress">
@@ -140,7 +141,7 @@
         <div id="done" class="section">
             <h1>Done</h1>
             @foreach($done as $dones)
-            <div id="c3"  onclick="toggleModal(this,{{ $dones->module_id }})" data-status="{{ $dones->module_status }}"  data-module="{{ $dones->id }}" data-tooltip="true" title="Click to view" data-proposal="{{ $dones->proposal_id }}" data-project="{{ $dones->project_id }}" data-name="{{ $dones->module_name }}" class="card-kanban">
+            <div id="c3"  onclick="toggleModal(this,{{ $dones->module_id }})" data-mode="{{ $dones->module_id }}" data-status="{{ $dones->module_status }}"  data-module="{{ $dones->id }}" data-tooltip="true" title="Click to view" data-proposal="{{ $dones->proposal_id }}" data-project="{{ $dones->project_id }}" data-name="{{ $dones->module_name }}" class="card-kanban">
             {{ $dones->module_name }}
             <h5>{{ $dones->percentDone}}% Complete</h5>
             <div class="progress">
@@ -150,6 +151,11 @@
             @endforeach
         </div>
     </div>
+    <div class="p-1 pull-right">
+        <form>
+            <button class="btn btn-info wew">Pay Now</button>
+        </form>
+    </div>
     <div class="modal fade" id="toggleModal">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -158,6 +164,7 @@
                     <h3>View Module</h3>
                 </div>
                 <div class="modal-body">
+                    <div id="options"></div>
                     <div id="data"></div>
                     <a href="#" id="collapseComment" data-toggle="collapse" data-target="#comment_section">
                         Show comments
@@ -205,7 +212,6 @@ function toggleComment(id){
         dataType: "json",
         cache:false,
         success: function(data){
-            console.log(data);
             var comments = '';
            
             for(var i = 0; i < data.length; i++){
@@ -247,8 +253,8 @@ function toggleComment(id){
 <script>
     function toggleModal(event,id,dataname){
       $(function(){
-
-     
+        var dataID = $(event).data('mode'); 
+        var dataStatus = $(event).data('status');
         var tableName = $(event).data('name');
         var projectComment = $(event).data('project');
         var proposalComment = $(event).data('proposal');
@@ -273,6 +279,15 @@ function toggleComment(id){
                 });
                  }
                  myData += '</table>';
+                 if(dataStatus == 'done'){
+                         options = `
+                         <form action="{{ route('downloadFiles') }}" method="post">
+                         {{ csrf_field() }}
+                         <input type="hidden" value="`+dataID+`" name="module_id">
+                         <button class="btn btn-info wew">Download Files</button>
+                         </form>`;
+                     }
+                $('#options').html(options);
                 $('#data').html(myData);
                 $('#comment_module').val(id);
                 $('#comment_project').val(projectComment);
