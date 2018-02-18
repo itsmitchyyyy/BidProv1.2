@@ -11,7 +11,9 @@ use App\User;
 use App\Proposal;
 use Session;
 use DB;
+use Redirect;
 use DateTimeZone;
+use URL;
 use Zipper;
 use ZipArchive;
 use Carbon\Carbon;
@@ -73,8 +75,12 @@ class ModuleController extends Controller
             ->join('users','proposals.bidder_id','=','users.id')
             ->where('proposals.id',$proposal_id)
             ->first();
+           $module = Module::where('proposal_id', $proposal_id)
+                    ->pluck('status')
+                    ->toArray();
+            $bids = Bid::where('proposal_id', $proposal_id)->first();
             return view('ongoing/seeker')
-            ->with(compact('todo','doing','done','project','proposal'));
+            ->with(compact('todo','doing','done','project','proposal','module','bids'));
     }
 
     public function biddergetModule($proposal_id,$bidder_id,$project_id)
@@ -264,7 +270,15 @@ class ModuleController extends Controller
         }
         return back();
     }
-    public function payProject($project_id,$bid_id,$project_name,$user_paypal){
+    public function payProject($project_id,$bid_id,$project_name,$user_paypal,$amount,$user_id){
+        $toPay = $amount;
+        $percentToGet = 5;
+        $percentInDecimal  = $percentToGet / 100;
+        $percent = $percentInDecimal * $toPay;
+        $tax = number_format($percent / 2,2);
+        $total_tax = $tax * 2;
+        $total = $toPay + $total_tax;
+        Session::put('user_id', $user_id);
         Session::put('project_id', $project_id);
         Session::put('bid_id',$bid_id);
         $item_name = $project_name;
@@ -273,30 +287,30 @@ class ModuleController extends Controller
         
         $item_1 = new Item();
         $item_1->setName($item_name)
-            ->setCurrency('USD')
+            ->setCurrency('PHP')
             ->setQuantity(1)
-            ->setPrice(4);
+            ->setPrice($amount);
         
         $item_list = new ItemList();
         $item_list->setItems(array($item_1));
 
         $details = new Details();
-        $details->setShipping(1.2)
-            ->setTax(1.3)
-            ->setSubtotal(4);
+        $details->setShipping($tax)
+            ->setTax($tax)
+            ->setSubtotal($amount);
 
         $amount = new Amount();
         $amount->setCurrency('PHP')
-            ->setTotal(6.5)
+            ->setTotal($total)
             ->setDetails($details);
         
-        $payee = new Payee();
-        $payee->setEmail($user_paypal);
+        /* $payee = new Payee();
+        $payee->setEmail($user_paypal); */
 
         $transaction = new Transaction();
         $transaction->setAmount($amount)
             ->setItemList($item_list)
-            ->setPayee($payee)
+            // ->setPayee($payee)
             ->setDescription('Payment')
             ->setInvoiceNumber(uniqid());
         
@@ -339,6 +353,7 @@ class ModuleController extends Controller
     }
 
     public function paymentStatus(){
+        $user_id = Session::get('user_id');
         $bid_id = Session::get('bid_id');
         $project_id = Session::get('project_id');
         $paypal_payment_id = Session::get('paypal_payment_id');
@@ -356,9 +371,12 @@ class ModuleController extends Controller
         $execution->setPayerId(Input::get('PayerID'));
         $result = $payment->execute($execution, $this->_api_context);
         if($result->getState() == 'approved'){
+            DB::table('bids')->where('id',$bid_id)->update(['status'=>'done']);
+            DB::table('projects')->where('id',$project_id)->update(['status'=>'done']);
             \Session::put('success', 'Payment Success');
+                return Redirect::route('rate.show', $user_id);
             // return Redirect::route('projects');
-            return back();
+            // return back();
         }
         \Session::put('error','Payment failed');
         // return Redirect::route('projects');
