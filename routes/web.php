@@ -81,8 +81,10 @@ Route::group(['middleware' => ['auth']], function(){
     Route::get('seeker/view/project/bid/{proposal_id}/{seeker_id}/{project_id}', ['as' => 'acceptedBid', 'uses' => 'ModuleController@getModule']);
     Route::post('seeker/view/project/bid/comment/post', ['as' => 'postComment','uses' => 'ModuleController@addComment']);
     Route::get('seeker/view/bid/module/{module_id}', ['as' => 'viewComments', 'uses' => 'ModuleController@moduleComments']);
+    Route::get('seeker/ratings/{id}', ['as' => 'rate.show', 'uses' => 'RatingController@reviewUser']);
+    Route::post('seeker/ratings',['as' => 'rate.post', 'uses' => 'RatingController@postReview']);
     // PAYMENT
-    Route::patch('seeker/view/project/bid/paypal/{id}/{bid_id}/{project_name}/{user_paypal}', ['as' => 'payment', 'uses' => 'ModuleController@payProject']);
+    Route::patch('seeker/view/project/bid/paypal/{id}/{bid_id}/{project_name}/{user_paypal}/{amount}/{user_id}', ['as' => 'payment', 'uses' => 'ModuleController@payProject']);
     Route::get('seeker/view/project/bid/paypal', ['as' => 'payment.status','uses' => 'ModuleController@paymentStatus']);
     // END
     // end seeker
@@ -123,10 +125,12 @@ Route::group(['middleware' => ['auth']], function(){
     Route::post('bidder/view/project/bid/update/files', ['as' => 'moduleFiles', 'uses' => 'ModuleController@addFiles']);
     Route::post('bidder/view/project/bid/zip/files', ['as' => 'downloadFiles', 'uses' => 'ModuleController@zipFile']);
     Route::get('bidder/notifications', ['as' => 'viewBNotification', 'uses' => 'NotificationController@viewBNotification']);
+    Route::get('bidder/ratings/{id}', ['as' => 'rate.seeker', 'uses' => 'RatingController@reviewBUser']);
+    Route::post('bidder/ratings',['as' => 'rate.postseeker', 'uses' => 'RatingController@postBReview']);
     // END works    
     //ratings
-    Route::post('ratings', 'RatingController@postReview')->name('rate.post');
-    Route::get('ratings/{id}', 'RatingController@reviewUser')->name('rate.show');
+
+   
     // Route::get('sh/sh/sh', 'ModuleController@divide');
     // end ratings
 });
