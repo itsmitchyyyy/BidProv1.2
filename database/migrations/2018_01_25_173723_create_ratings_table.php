@@ -19,6 +19,7 @@ class CreateRatingsTable extends Migration
             $table->index('rateable_id');
             $table->index('rateable_type');
             $table->foreign('user_id')->references('id')->on('users');
+            $table->string('comments')->nullable();
         });
     }
 
