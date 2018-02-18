@@ -152,9 +152,9 @@
         </div>
     </div>
     <div class="p-1 pull-right">
-        <form>
+   <!--  <form action="{{ route('payment', ['id' => $project->id, 'bid_id' => $project->bid_id, 'project_name' => $project->title, 'user_paypal' => $project->paypal]) }}" method="POST">
             <button class="btn btn-info wew">Pay Now</button>
-        </form>
+        </form> -->
     </div>
     <div class="modal fade" id="toggleModal">
         <div class="modal-dialog modal-lg">
