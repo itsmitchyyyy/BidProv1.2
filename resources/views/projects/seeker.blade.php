@@ -12,6 +12,9 @@
     content: "\f005";
     font-family: FontAwesome;
 }
+.gap-right{
+  margin-right:10px;
+}
 </style>
 @endpush
 @section('content')
@@ -376,7 +379,6 @@
     <th>Project Name</th>
     <th>Developer</th>
     <th>Bid</th>
-    <th>Ratings</th>    
       <th>Action</th>
     </tr>
   </thead>
@@ -385,7 +387,6 @@
       <th>Project Name</th>
       <th>Developer</th>
       <th>Bid</th>
-      <th>Ratings</th>
       <th>Action</th>
     </tr>
   </tfoot>
@@ -394,15 +395,17 @@
   @foreach($ongoingprojects as $project)
   <tr>
     <td><a href="{{ route('acceptedBid', ['proposal_id' => $project->proposal_id, 'seeker_id' => $project->seeker_id, 'project_id' => $project->project_id]) }}"><b>{{ ucwords($project->title) }}</b></a></td>
-    <td>{{ $project->firstname }} {{ $project->lastname }}</td>
-    <td><span>&#8369;</span>{{ $project->price }} <br> in {{ $project->daysTodo }} days</td>
     <td>
-
-    <input id="input-1" class="rating rating-loading" data-min="0" data-max="5" data-step="0.1" value="{{ $users->usersReview($project->bidder_id)->userAverageRating }}" data-size="s" disabled> 
-    <p class="text-muted">
-        User Reviews {{ $users->usersReview($project->bidder_id)->userSumRating }} Reviews
-    </p>
-    </td>
+    <div class="clearfix">
+      <img src="/{{$users->usersReview($project->bidder_id)->avatar}}" alt="avatar" style="height:100px;height:100px" class="pull-left gap-right">
+      <p>
+        <a href="">{{ ucfirst($users->usersReview($project->bidder_id)->firstname) }} {{ ucfirst($users->usersReview($project->bidder_id)->lastname) }} </a><br>
+        <input id="input-1" class="rating rating-loading" data-min="0" data-max="5" data-step="0.1" value="{{ $users->usersReview($project->bidder_id)->userAverageRating }}" data-size="s" disabled>
+        Reviews: {{ $users->usersReview($project->bidder_id)->userSumRating }} reviews
+      </p>
+    </div>
+      </td>
+    <td><span>&#8369;</span>{{ $project->price }} <br> in {{ $project->daysTodo }} days</td>
     <td>
     <button class="btn btn-link wew " title="Cancel" data-tooltip="true" data-toggle="modal" data-target="#cancelProject{{ $project->id }}"><i class="fa fa-times"></i></button>
     </td>
