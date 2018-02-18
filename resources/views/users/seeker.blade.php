@@ -98,6 +98,7 @@
           @if($errors->has('max'))
             <p class="help-block">{{ $errors->first('max') }}</p>
           @endif
+          <div id="error"></div>
         </div>
         </div>
         </div>
@@ -146,40 +147,6 @@
         </div>
     </div>
   </div>
-
-  
-   <!--row -->
-   <!-- <div class="container-fluid m-t-15">
-                    <div class="col-md-12 col-lg-12 col-sm-12" >
-                        <div class="white-box " style="border:1px solid rgba(0,0,0,.125); border-radius:.25rem">
-                            <h3 class="box-title">Activity Feed</h3>
-                            <hr style="background-color:rgba(0,0,0,.125)">
-                            <div class="comment-center">
-                                <div class="comment-body" style="border-bottom:1px solid rgba(0,0,0,0.125);">
-                                    <div class="user-img"> <img src="/img/users/pawandeep.jpg" alt="user" class="img-circle"></div>
-                                    <div class="mail-contnet">
-                                        <h5>Pavan kumar</h5> <span class="mail-desc">Donec ac condimentum massa. Etiam pellentesque pretium lacus. Phasellus ultricies dictum suscipit. Aenean commodo dui pellentesque molestie feugiat.</span> <span class="label label-rouded label-info">PENDING</span><a href="javacript:void(0)" class="action"><i class="ti-close text-danger"></i></a> <a href="javacript:void(0)" class="action"><i class="ti-check text-success"></i></a><span class="time pull-right">April 14, 2017</span></div>
-                                </div> -->
-                               <!-- <div class="comment-body" style="border-bottom:1px solid rgba(0,0,0,.125);">
-                                    <div class="user-img"> <img src="/img/users/sonu.jpg" alt="user" class="img-circle"> </div>
-                                    <div class="mail-contnet">
-                                        <h5>Sonu Nigam</h5> <span class="mail-desc">Donec ac condimentum massa. Etiam pellentesque pretium lacus. Phasellus ultricies dictum suscipit. Aenean commodo dui pellentesque molestie feugiat.</span><span class="label label-rouded label-success">APPROVED</span><a href="javacript:void(0)" class="action"><i class="ti-close text-danger"></i></a> <a href="javacript:void(0)" class="action"><i class="ti-check text-success"></i></a><span class="time pull-right">April 14, 2017</span></div>
-                                </div>
-                                <div class="comment-body">
-                                    <div class="user-img"> <img src="/img/users/arijit.jpg" alt="user" class="img-circle"> </div>
-                                    <div class="mail-contnet">
-                                        <h5>Arijit Sinh</h5> <span class="mail-desc">Donec ac condimentum massa. Etiam pellentesque pretium lacus. Phasellus ultricies dictum suscipit. Aenean commodo dui pellentesque molestie feugiat. </span><span class="label label-rouded label-danger">REJECTED</span><a href="javacript:void(0)" class="action"><i class="ti-close text-danger"></i></a> <a href="javacript:void(0)" class="action"><i class="ti-check text-success"></i></a><span class="time pull-right">April 14, 2017</span></div>
-                                </div>
-                                <div class="comment-body b-none">
-                                    <div class="user-img"> <img src="/img/users/pawandeep.jpg" alt="user" class="img-circle"></div>
-                                    <div class="mail-contnet">
-                                        <h5>Pavan kumar</h5> <span class="mail-desc">Donec ac condimentum massa. Etiam pellentesque pretium lacus. Phasellus ultricies dictum suscipit. Aenean commodo dui pellentesque molestie feugiat.</span> <span class="label label-rouded label-info">PENDING</span> <a href="javacript:void(0)" class="action"><i class="ti-close text-danger"></i></a> <a href="javacript:void(0)" class="action"><i class="ti-check text-success"></i></a><span class="time pull-right">April 14, 2017</span></div>
-                                </div>-->
-                      <!--       </div>
-                        </div>
-                    </div>
-                </div> -->
-
 </div>
 @endsection
 @push('scripts')
@@ -212,4 +179,35 @@
   }).change();
   });
 </script>
+<script>
+        var maxChar = 255;
+        $('#charLeft').text(maxChar + ' characters left');
+        $('#details').keyup(function(){
+            var textLength = $(this).val().length;
+            if(textLength >= maxChar){
+                $('#charLeft').text('You have reached the limit of ' + maxChar + ' characters');
+            } else {
+                var count = maxChar - textLength;
+                $('#charLeft').text(count + ' characters left');
+            }
+        });
+    </script>
+    <script>
+      $('#myModal').on('shown.bs.modal', function(){
+        $('#max').keyup(function(){
+          var min = $('#min').val();
+          var max = $(this).val();
+          console.log(min);
+          var error = '';
+          if(parseInt(max) < parseInt(min)){
+            error = `<p style="color:red">Max Price must be greater than minimum price</p>`;
+            $('#addBtn').prop('disabled',true);
+          }else{
+            $('#addBtn').prop('disabled',false);
+          }
+       
+          $('#error').html(error);
+        });
+      });
+    </script>
 @endpush
