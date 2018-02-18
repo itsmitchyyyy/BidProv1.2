@@ -103,5 +103,4 @@
             window.location = $notif_link;
         }
   </script>
-  
 </html>
