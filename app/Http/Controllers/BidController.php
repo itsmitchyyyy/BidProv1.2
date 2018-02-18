@@ -49,30 +49,30 @@ class BidController extends Controller
         $payer->setPaymentMethod('paypal');
         $item_1 = new Item();
         $item_1->setName($item_name)
-            ->setCurrency('USD')
+            ->setCurrency('PHP')
             ->setQuantity(1)
-            ->setPrice(4);
+            ->setPrice(200);
         $item_list = new ItemList();
         $item_list->setItems(array($item_1));
 
         $details = new Details();
-        $details->setShipping(1.2)
-            ->setTax(1.3)
-            ->setSubtotal(4);
+        $details->setShipping(5)
+            ->setTax(5)
+            ->setSubtotal(200);
 
 
         $amount = new Amount();
-        $amount->setCurrency('USD')
-            ->setTotal(6.5)
+        $amount->setCurrency('PHP')
+            ->setTotal(210)
             ->setDetails($details);
             
-        $payee = new Payee();
-        $payee->setEmail($user_paypal);
+       /*  $payee = new Payee();
+        $payee->setEmail($user_paypal); */
 
         $transaction = new Transaction();
         $transaction->setAmount($amount)
             ->setItemList($item_list)
-            ->setPayee($payee)
+            // ->setPayee($payee)
             ->setDescription('Cancel project')
             ->setInvoiceNumber(uniqid());
 
