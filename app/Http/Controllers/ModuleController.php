@@ -51,7 +51,7 @@ class ModuleController extends Controller
             ->select('*','proposals.bidder_id as proposal_bidder_id','modules.id as module_id','modules.status as module_status')
             ->get();
         $doing = DB::table('bids')
-         ->join('proposals','bids.proposal_id','=','bids.id')
+         ->join('proposals','bids.proposal_id','=','proposals.id')
          ->join('modules','modules.proposal_id','=','proposals.id')
           ->where('modules.status','doing')
           ->where('bids.seeker_id', $seeker_id)
@@ -60,7 +60,7 @@ class ModuleController extends Controller
           ->get();
 
           $done = DB::table('bids')
-         ->join('proposals','bids.proposal_id','=','bids.id')
+         ->join('proposals','bids.proposal_id','=','proposals.id')
          ->join('modules','modules.proposal_id','=','proposals.id')
           ->where('modules.status','done')
           ->where('bids.seeker_id', $seeker_id)
@@ -88,7 +88,7 @@ class ModuleController extends Controller
             ->select('*','proposals.bidder_id as proposal_bidder_id','modules.id as module_id','modules.status as module_status')
             ->get();
         $doing = DB::table('bids')
-         ->join('proposals','bids.proposal_id','=','bids.id')
+         ->join('proposals','bids.proposal_id','=','proposals.id')
          ->join('modules','modules.proposal_id','=','proposals.id')
           ->where('modules.status','doing')
           ->where('bids.bidder_id', $bidder_id)
@@ -97,7 +97,7 @@ class ModuleController extends Controller
           ->get();
 
           $done = DB::table('bids')
-         ->join('proposals','bids.proposal_id','=','bids.id')
+         ->join('proposals','bids.proposal_id','=','proposals.id')
          ->join('modules','modules.proposal_id','=','proposals.id')
           ->where('modules.status','done')
           ->where('bids.bidder_id', $bidder_id)
