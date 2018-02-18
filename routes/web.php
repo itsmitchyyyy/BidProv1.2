@@ -117,6 +117,7 @@ Route::group(['middleware' => ['auth']], function(){
     Route::post('bidder/view/project/bid/comment/post', ['as' => 'postCommentBidder','uses' => 'ModuleController@addCommentBidder']);
     Route::post('bidder/view/project/bid/update/module/{propose_moduleID}/{propose_moduleStatus}/{module_percent}/{module_id}',['as' => 'moduleUpdate', 'uses' => 'ModuleController@moduleUpdate']);
     Route::post('bidder/view/project/bid/update/files', ['as' => 'moduleFiles', 'uses' => 'ModuleController@addFiles']);
+    Route::post('bidder/view/project/bid/zip/files', ['as' => 'downloadFiles', 'uses' => 'ModuleController@zipFile']);
     Route::get('bidder/notifications', ['as' => 'viewBNotification', 'uses' => 'NotificationController@viewBNotification']);
     // END works    
     //ratings
