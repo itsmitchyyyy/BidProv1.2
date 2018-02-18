@@ -1,6 +1,12 @@
 @extends('layouts.bidderapp')
 @section('content')
  <div class="container-fluid">
+   @if(session()->has('success'))
+    <div class="alert alert-success alert-dismissable fade show">
+        <button data-dismiss="alert" class="close"><i class="fa fa-close"></i></button>
+        {{ session()->get('success') }}
+    </div>
+   @endif
  <h3>Project List</h3>
  <table id="myTable" class="table-striped table-bordered table" width="100%" cellspacing="0">
   <thead>
