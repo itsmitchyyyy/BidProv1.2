@@ -69,7 +69,7 @@
         </a>
         <hr>
     `;
-        notifications.html(existing + newnotification);
+        notifications.html(existing + newnotifications);
       counter += 1;
       element.attr('data-count', counter);
       wrapper.find('.notif-count').text(counter);
