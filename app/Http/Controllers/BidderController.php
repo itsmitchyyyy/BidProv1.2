@@ -174,8 +174,16 @@ class BidderController extends Controller
             ->join('proposals','proposals.id','=','bids.proposal_id')
             ->join('projects','projects.id','=','proposals.project_id')
             ->where('bids.bidder_id',Auth::user()->id)
+            ->where('bids.status','ongoing')
             ->get();
+        $done = DB::table('bids')
+        ->join('users','bids.seeker_id','=','users.id')
+        ->join('proposals','proposals.id','=','bids.proposal_id')
+        ->join('projects','projects.id','=','proposals.project_id')
+        ->where('bids.bidder_id',Auth::user()->id)
+        ->where('bids.status','done')
+        ->get();
         return view('works/bidder')
-            ->with(compact('works'));
+            ->with(compact('works','done'));
     }
 }
