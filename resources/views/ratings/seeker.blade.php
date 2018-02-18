@@ -1,4 +1,4 @@
-@extends('layouts.bidderapp')
+@extends('layouts.seekerapp')
 @push('css')
 <style>
 .glyphicon-star:before {
@@ -45,7 +45,9 @@
                                         <input type="hidden" name="id" required="" value="{{ $user->id }}">
                                         <span class="review-no">Average Rating: {{ number_format($user->averageRating,0) }}</span>
                                         <br/>
-                                        <button class="btn btn-success">Submit Review</button>
+                                        <br>
+                                        <textarea name="comment_review" style="height:auto;border:1px solid rgba(0,0,0,.25)" id="comment_review" class="form-control"  rows="4" placeholder="Write a review here"></textarea><br>
+                                        <button class="btn btn-success wew">Submit Review</button>
                                     </div>
                                 </div>
                             </div>
@@ -57,7 +59,44 @@
             </div>
         </div>
     </div>
-</div>
+    </div>
+     <!--row -->
+   <div class="container-fluid m-t-15">
+                    <div class="col-md-12 col-lg-12 col-sm-12" >
+                        <div class="white-box " style="border:1px solid rgba(0,0,0,.125); border-radius:.25rem">
+                            <h3 class="box-title">Review Feed</h3>
+                            <hr style="background-color:rgba(0,0,0,.125)">
+                            <div class="comment-center">
+                                @foreach($reviews as $review)
+                                    
+                                <div class="comment-body" style="border-bottom:1px solid rgba(0,0,0,0.125);">
+                                    <div class="user-img"> <img src="/{{ $review->avatar }}" alt="user" class="img-circle"></div>
+                                    <div class="mail-contnet">
+                                        <h5>{{ ucfirst($review->firstname) }} {{ ucfirst($review->lastname) }}</h5> <span class="mail-desc">{{ $review->comments }}</span><span class="time pull-right">{{ Carbon\Carbon::parse($review->created_at)->diffForHumans() }}</span>
+                                    </div>
+                                         
+                                </div>
+                                @endforeach
+                               <!-- <div class="comment-body" style="border-bottom:1px solid rgba(0,0,0,.125);">
+                                    <div class="user-img"> <img src="/{{ $review->avatar }}" alt="user" class="img-circle"> </div>
+                                    <div class="mail-contnet">
+                                        <h5>Sonu Nigam</h5> <span class="mail-desc">Donec ac condimentum massa. Etiam pellentesque pretium lacus. Phasellus ultricies dictum suscipit. Aenean commodo dui pellentesque molestie feugiat.</span><span class="label label-rouded label-success">APPROVED</span><a href="javacript:void(0)" class="action"><i class="ti-close text-danger"></i></a> <a href="javacript:void(0)" class="action"><i class="ti-check text-success"></i></a><span class="time pull-right">April 14, 2017</span></div>
+                                </div> -->
+                                <!-- <div class="comment-body">
+                                    <div class="user-img"> <img src="/img/users/arijit.jpg" alt="user" class="img-circle"> </div>
+                                    <div class="mail-contnet">
+                                        <h5>Arijit Sinh</h5> <span class="mail-desc">Donec ac condimentum massa. Etiam pellentesque pretium lacus. Phasellus ultricies dictum suscipit. Aenean commodo dui pellentesque molestie feugiat. </span><span class="label label-rouded label-danger">REJECTED</span><a href="javacript:void(0)" class="action"><i class="ti-close text-danger"></i></a> <a href="javacript:void(0)" class="action"><i class="ti-check text-success"></i></a><span class="time pull-right">April 14, 2017</span></div>
+                                </div> -->
+                                <!-- <div class="comment-body b-none">
+                                    <div class="user-img"> <img src="/img/users/pawandeep.jpg" alt="user" class="img-circle"></div>
+                                    <div class="mail-contnet">
+                                        <h5>Pavan kumar</h5> <span class="mail-desc">Donec ac condimentum massa. Etiam pellentesque pretium lacus. Phasellus ultricies dictum suscipit. Aenean commodo dui pellentesque molestie feugiat.</span> <span class="label label-rouded label-info">PENDING</span> <a href="javacript:void(0)" class="action"><i class="ti-close text-danger"></i></a> <a href="javacript:void(0)" class="action"><i class="ti-check text-success"></i></a><span class="time pull-right">April 14, 2017</span></div>
+                                </div> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
 
 @endsection
 @section('scripts')
@@ -65,5 +104,8 @@
 <script src="{{ asset('js/star-rating.js') }}"></script>
 <script type="text/javascript">
     $("#input-id").rating();
+</script>
+<script>
+
 </script>
 @endsection
