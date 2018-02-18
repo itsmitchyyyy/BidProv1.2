@@ -57,7 +57,22 @@
 @section('content')
 @inject('modules','App\Http\Controllers\ModuleController')
 @inject('users','App\Http\Controllers\RatingController')
+
 <div class="container-fluid">
+@if(session()->has('error'))
+    <div class="alert alert-danger alert-dismissable fade show">
+      <button type="button" data-dismiss="alert" class="close"><i class="fa fa-close"></i></button>
+        {{ session()->get('error') }}
+    </div>
+    <?php Session::forget('error'); ?>
+    @endif
+    @if(session()->has('success'))
+    <div class="alert alert-success alert-dismissable fade show">
+      <button type="button" data-dismiss="alert" class="close"><i class="fa fa-close"></i></button>
+        {{ session()->get('success') }}
+    </div>
+    <?php Session::forget('success'); ?>
+    @endif
     @if($errors->has('progress-comment'))
         <div class="alert alert-danger alert-dismissable fade show" role="alert">
             <button type="button" data-dismiss="alert" class="close"><span>&times;</span></button>
@@ -88,14 +103,11 @@
             @endif
             @endif
             @endif
-           
-           
             <h4 class="card-title"><b>Project Description</b></h4>
             <p class="card-text wrap-word">{{ $project->details }}</p>
             
         </div>
     </div>
-    
     <div class="card">
         <div class="card-block">
             <div class="row">
@@ -151,11 +163,15 @@
             @endforeach
         </div>
     </div>
-    <div class="p-1 pull-right">
-   <!--  <form action="{{ route('payment', ['id' => $project->id, 'bid_id' => $project->bid_id, 'project_name' => $project->title, 'user_paypal' => $project->paypal]) }}" method="POST">
-            <button class="btn btn-info wew">Pay Now</button>
-        </form> -->
+        @if(count(array_unique($module)) === 1 && end($module) === 'done')
+         <div class="p-1 pull-right">
+         <form action="{{ route('payment', ['id' => $project->id, 'bid_id' => $bids->id, 'project_name' => $project->title, 'user_paypal' => $proposal->paypal, 'amount' => $proposal->price,'user_id' => $proposal->id]) }}" method="POST">
+         {{ csrf_field() }}     
+    <input type="hidden" name="_method" value="PATCH">   
+         <button class="btn btn-info wew">Pay Now</button>
+        </form>
     </div>
+        @endif
     <div class="modal fade" id="toggleModal">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
