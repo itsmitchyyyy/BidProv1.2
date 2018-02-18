@@ -73,7 +73,6 @@ class ModuleController extends Controller
             ->join('users','proposals.bidder_id','=','users.id')
             ->where('proposals.id',$proposal_id)
             ->first();
-          
             return view('ongoing/seeker')
             ->with(compact('todo','doing','done','project','proposal'));
     }
@@ -265,11 +264,104 @@ class ModuleController extends Controller
         }
         return back();
     }
-   /*  public function payProject($project_id,$bid_id,$project_name,$user_paypal){
+    public function payProject($project_id,$bid_id,$project_name,$user_paypal){
         Session::put('project_id', $project_id);
         Session::put('bid_id',$bid_id);
         $item_name = $project_name;
         $payer = new Payer();
         $payer->setPaymentMethod('paypal');
-    } */
+        
+        $item_1 = new Item();
+        $item_1->setName($item_name)
+            ->setCurrency('USD')
+            ->setQuantity(1)
+            ->setPrice(4);
+        
+        $item_list = new ItemList();
+        $item_list->setItems(array($item_1));
+
+        $details = new Details();
+        $details->setShipping(1.2)
+            ->setTax(1.3)
+            ->setSubtotal(4);
+
+        $amount = new Amount();
+        $amount->setCurrency('PHP')
+            ->setTotal(6.5)
+            ->setDetails($details);
+        
+        $payee = new Payee();
+        $payee->setEmail($user_paypal);
+
+        $transaction = new Transaction();
+        $transaction->setAmount($amount)
+            ->setItemList($item_list)
+            ->setPayee($payee)
+            ->setDescription('Payment')
+            ->setInvoiceNumber(uniqid());
+        
+        $redirect_urls = new RedirectUrls();
+        $redirect_urls->setReturnUrl(URL::route('payment.status'))
+            ->setCancelUrl(URL::route('payment.status'));
+        
+        $payment = new Payment();
+        $payment->setIntent('Sale')
+            ->setPayer($payer)
+            ->setRedirectUrls($redirect_urls)
+            ->setTransactions(array($transaction));
+        
+        try{
+            $payment->create($this->_api_context);
+        }catch(\Paypal\Exception\PPConnectionException $e){
+            if(\Config::get('app.debug')){
+                \Session::put('error', 'Connection Timeout');
+                // return Redirect::route('projects');
+                return back();
+            }else{
+                \Session::put('error', 'An error occured');
+                // return Redirect::route('projects');
+                return back();
+            }
+        }
+        foreach($payment->getLinks() as $link){
+            if($link->getRel() == 'approval_url'){
+                $redirect_url = $link->getHref();
+                break;
+            }
+        }
+        Session::put('paypal_payment_id', $payment->getId());
+        if(isset($redirect_url)){
+            return Redirect::away($redirect_url);
+        }
+        \Session::put('error',' Unknown error occured');
+        // return Redirect::route('projects');
+        return back();
+    }
+
+    public function paymentStatus(){
+        $bid_id = Session::get('bid_id');
+        $project_id = Session::get('project_id');
+        $paypal_payment_id = Session::get('paypal_payment_id');
+    
+        Session::forget('paypal_payment_id');
+        Session::forget('project_id');
+        Session::forget('bid_id');
+        if(empty(Input::get('PayerID')) || empty(Input::get('token'))){
+            \Session::put('error', 'Payment failed');
+            // return Redirect::route('projects');
+            return back();
+        }
+        $payment = Payment::get($paypal_payment_id, $this->_api_context);
+        $execution = new PaymentExecution();
+        $execution->setPayerId(Input::get('PayerID'));
+        $result = $payment->execute($execution, $this->_api_context);
+        if($result->getState() == 'approved'){
+            \Session::put('success', 'Payment Success');
+            // return Redirect::route('projects');
+            return back();
+        }
+        \Session::put('error','Payment failed');
+        // return Redirect::route('projects');
+        return back();
+    }
 }
