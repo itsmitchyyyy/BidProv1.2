@@ -151,7 +151,7 @@
             <h1>To Do</h1>
             @foreach($todo as $todos)
 
-            <div id="c2" onclick="toggleModal(this,{{ $todos->module_id }})" data-status="{{ $todos->module_status }}" data-module="{{ $todos->id }}" data-tooltip="true" title="Click to view" data-proposal="{{ $todos->proposal_id }}" data-project="{{ $todos->project_id }}" data-name="{{ $todos->module_name }}" class="card-kanban">
+            <div id="c2" onclick="toggleModal(this,{{ $todos->module_id }})" data-mode="{{ $todos->module_id }}" data-status="{{ $todos->module_status }}" data-module="{{ $todos->id }}" data-tooltip="true" title="Click to view" data-proposal="{{ $todos->proposal_id }}" data-project="{{ $todos->project_id }}" data-name="{{ $todos->module_name }}" class="card-kanban">
             {{ $todos->module_name }}
             <h5>{{ $todos->percentDone}}% Complete</h5>
             <div class="progress">
@@ -164,7 +164,7 @@
         <div id="doing" class="section">
             <h1>Doing</h1>
             @foreach($doing as $doings)
-            <div id="c1"  onclick="toggleModal(this,{{ $doings->module_id }})" data-status="{{ $doings->module_status }}" data-module="{{ $doings->id }}" data-tooltip="true" title="Click to view" data-proposal="{{ $doings->proposal_id }}" data-project="{{ $doings->project_id }}" data-name="{{ $doings->module_name }}" class="card-kanban">
+            <div id="c1"  onclick="toggleModal(this,{{ $doings->module_id }})" data-mode="{{ $doings->module_id }}" data-percent="{{ $doings->percentDone }}" data-status="{{ $doings->module_status }}" data-module="{{ $doings->id }}" data-tooltip="true" title="Click to view" data-proposal="{{ $doings->proposal_id }}" data-project="{{ $doings->project_id }}" data-name="{{ $doings->module_name }}" class="card-kanban">
             {{ $doings->module_name }}
             <h5>{{ $doings->percentDone}}% Complete</h5>
             <div class="progress">
@@ -176,7 +176,7 @@
         <div id="done" class="section">
             <h1>Done</h1>
             @foreach($done as $dones)
-            <div id="c3"  onclick="toggleModal(this,{{ $dones->module_id }})" data-status="{{ $dones->module_status }}"  data-module="{{ $dones->id }}" data-tooltip="true" title="Click to view" data-proposal="{{ $dones->proposal_id }}" data-project="{{ $dones->project_id }}" data-name="{{ $dones->module_name }}" class="card-kanban">
+            <div id="c3"  onclick="toggleModal(this,{{ $dones->module_id }})" data-mode="{{ $dones->module_id }}" data-percent="{{ $dones->percentDone }}" data-status="{{ $dones->module_status }}"  data-module="{{ $dones->id }}" data-tooltip="true" title="Click to view" data-proposal="{{ $dones->proposal_id }}" data-project="{{ $dones->project_id }}" data-name="{{ $dones->module_name }}" class="card-kanban">
             {{ $dones->module_name }}
             <h5>{{ $dones->percentDone}}% Complete</h5>
             <div class="progress">
@@ -223,9 +223,10 @@
                  {{ csrf_field() }}
                  <div class="form-group{{ $errors->has('upload_file') ? ' has-error' : ''}}">
                     <input type="file" name="upload_file[]" id="myUpload" onchange="uploadFiles()" multiple>
+                    <input type="hidden" id="module_id" name="module_id" value="">
                     <p id="files"></p>
                     @if($errors->has('upload_file'))
-                        <p class="text-danger">{{ $errors->first('upload_file') }}</p>
+                        <p style="color:red">{{ $errors->first('upload_file') }}</p>
                     @endif
                 </div>
                 </div>
@@ -239,6 +240,7 @@
     </div>
 </div>
 @endsection
+
 @push('scripts')
 <script src="{{ asset('js/momment.js') }}"></script>
 <script>
@@ -307,7 +309,7 @@ function toggleComment(id){
 <script>
     function toggleModal(event,id,dataname){
       $(function(){
-
+        var dataID = $(event).data('mode');  
         var dataStatus = $(event).data('status');
         var tableName = $(event).data('name');
         var projectComment = $(event).data('project');
@@ -350,8 +352,16 @@ function toggleComment(id){
 
                      if(dataStatus == 'doing'){
                          if(dataValue.every(checkDoing)){
-                             options =  `<a id="myoption" class="pull-right"><button class="btn btn-info wew">Finish</button></a>`;
+                             options =  `<a onclick="toggleUpdate(`+id+`,'done')" class="pull-right"><button class="btn btn-info wew">Finish</button></a>`;
                          }
+                     }
+                     if(dataStatus == 'done'){
+                         options = `
+                         <form action="{{ route('downloadFiles') }}" method="post">
+                         {{ csrf_field() }}
+                         <input type="hidden" value="`+dataID+`" name="module_id">
+                         <button class="btn btn-info wew">Download Files</button>
+                         </form>`;
                      }
                 
                 $('#options').html(options);
@@ -365,6 +375,9 @@ function toggleComment(id){
         });
     });
     }
+</script>
+<script>
+
 </script>
 <script>
     function checkDoing(data){
@@ -453,23 +466,37 @@ function toggleComment(id){
                 // Might be a card from another window.
                 if (card) {
                     if (section !== card.parentNode) {
-                        var module_id  = $(card).data('module');;
+                        var module_id  = $(card).data('module');
+                        var status_check = $(card).data('status');
                         var module_status = '';
                         if(section.id == 'done'){
-                          module_status = section.id;
-                          $('#modalUpload').modal('show');
-                          section.appendChild(card);
-                       
+                        var percent = $(card).data('percent');
+                         if(percent == 100){
+                            module_status = section.id;
+                            $('#module_id').val(module_id);
+                            $('#modalUpload').modal('show');
+                            section.appendChild(card);
+                         }else{
+                           swal("Incomplete","Module be 100% complete","error");
+                            }
                         }
                         if(section.id == 'doing'){
+                            if(status_check == 'done'){
+                                swal("Finished","This module has already been completed","error");
+                            }else{
                           module_status = section.id;
                           toggleUpdate(module_id,module_status);
                           section.appendChild(card);
                         }
+                        }
                         if(section.id == 'todo'){
+                            if(status_check == 'done'){
+                                swal("Finished","This module has already been completed","error");
+                            }else{
                          module_status = section.id;
                          toggleUpdate(module_id,module_status);
                           section.appendChild(card);
+                            }
                         }
                         
                         
