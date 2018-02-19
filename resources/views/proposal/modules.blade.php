@@ -63,16 +63,16 @@
                             </div>
                             </p>
                         </div>
-                        <!-- <a href="#" id="addFields">Add more fields</a> -->
                    </div>
                    </p>
                    </div>
                    <div style="border:1px solid rgba(0,0,0,.25)" class="p-10">
                    <div class="floating-labels">
-                    <div class="form-group mt-3">
+                    <div class="form-group mt-3" id="price_div">
                         <input type="text" name="proposal_price" id="proposal_price" class="form-control" required>
                         <span class="highlight"></span><span class="bar"></span>
                         <label for="proposal_price">Price</label>
+                        <div id="price_error"></div>
                     </div>
                     <div class="form-group">
                         <input type="text" name="proposal_days" id="proposal_days" class="form-control" required>
@@ -95,23 +95,6 @@
         this.value = parseFloat(this.value).toFixed(2);
     })
 </script>
-<!-- <script>
-    $(function(){
-        var divModule = $('#divModule');
-        var i = $('#module_description p').length + 1;
-        $('#addFields').click(function(){
-            i++;
-            $(`<p>
-              <div class="form-group">
-                <input type="text" name="module_description[]" id="module_description`+i+`" required class="form-control">
-                <span class="highlight"></span><span class="bar"></span>
-                <label for="module_description`+i+`">Module Description</label>
-                </div>
-                </p>`).appendTo(divModule);
-                return false;
-        });
-    });
-</script> -->
 <script>
 $(function(){
     var moduleHeader = $('#moduleHeader');
@@ -159,12 +142,31 @@ $(function(){
     });    
 });
 </script>
-<!-- <script>
-    $(function(){
-        $('#btnSubmit').click(function(){
-          var  data = $('#myForm').serialize();
-            console.log(data);
-        });
-    });
-</script> -->
+<script>
+   $(function(){
+       $('#btnSubmit').prop('disabled',true);
+       $('#proposal_price').keyup(function(){
+        @foreach($proposals as $proposal)
+            var min = {{$proposal->min}}
+            var max = {{$proposal->max}}
+            var current = $(this).val();
+            var days = $('#proposal_days').val();
+            if(current < min){
+                console.log('greater than');
+                $('#price_div').addClass("has-error");    
+                $('#price_error').html('<p style="color:red">Must be in between the given price</p>');
+            }
+            else if(current > max){
+                console.log('lesser than');
+            }
+
+            else{
+                $('#btnSubmit').prop('disabled','');
+                $('#price_div').removeClass("has-error");    
+                $('#price_error').html('');
+            }
+       @endforeach
+       });
+   });
+</script>
 @endsection
