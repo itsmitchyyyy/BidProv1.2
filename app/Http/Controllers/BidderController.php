@@ -186,4 +186,11 @@ class BidderController extends Controller
         return view('works/bidder')
             ->with(compact('works','done'));
     }
+
+    public function viewUser($id){
+        $user = User::find($id);
+        
+        return view('view/bidder')
+            ->with(compact('user'));
+    }
 }
