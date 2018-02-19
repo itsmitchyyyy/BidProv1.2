@@ -527,6 +527,7 @@
           @if($errors->has('max'))
             <p class="help-block">{{ $errors->first('max') }}</p>
           @endif
+          <div id="max_error"></div>
         </div>
         </div>
       
@@ -553,6 +554,23 @@
      $(document).ready(function(){
          $('#tabMenu a[href="#{{ old('tab') }}"]').tab('show');
      });
+    </script>
+    <script>
+      $('#myModal').on('shown.bs.modal', function(){
+        $('#max').keyup(function(){
+          var min = $('#min').val();
+          var max = $(this).val();
+          var error = '';
+          if(max < min){
+            error = `<p style="color:red">Max price must be greater than minumum price</p>`; 
+            $('#addBtn').prop('disabled',true);
+          }
+          else{
+            $('#addBtn').prop('disabled','');
+          }
+          $('#max_error').html(error);
+        });
+      });
     </script>
 <script>
     $(document).ready(function(){
