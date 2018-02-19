@@ -203,7 +203,7 @@
             error = `<p style="color:red">Max Price must be greater than minimum price</p>`;
             $('#addBtn').prop('disabled',true);
           }else{
-            $('#addBtn').prop('disabled',false);
+            $('#addBtn').prop('disabled','');
           }
        
           $('#error').html(error);
