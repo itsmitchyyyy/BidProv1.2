@@ -68,30 +68,13 @@
                             <hr style="background-color:rgba(0,0,0,.125)">
                             <div class="comment-center">
                                 @foreach($reviews as $review)
-                                    
                                 <div class="comment-body" style="border-bottom:1px solid rgba(0,0,0,0.125);">
                                     <div class="user-img"> <img src="/{{ $review->avatar }}" alt="user" class="img-circle"></div>
                                     <div class="mail-contnet">
                                         <h5>{{ ucfirst($review->firstname) }} {{ ucfirst($review->lastname) }}</h5> <span class="mail-desc">{{ $review->comments }}</span><span class="time pull-right">{{ Carbon\Carbon::parse($review->created_at)->diffForHumans() }}</span>
                                     </div>
-                                         
                                 </div>
                                 @endforeach
-                               <!-- <div class="comment-body" style="border-bottom:1px solid rgba(0,0,0,.125);">
-                                    <div class="user-img"> <img src="/{{ $review->avatar }}" alt="user" class="img-circle"> </div>
-                                    <div class="mail-contnet">
-                                        <h5>Sonu Nigam</h5> <span class="mail-desc">Donec ac condimentum massa. Etiam pellentesque pretium lacus. Phasellus ultricies dictum suscipit. Aenean commodo dui pellentesque molestie feugiat.</span><span class="label label-rouded label-success">APPROVED</span><a href="javacript:void(0)" class="action"><i class="ti-close text-danger"></i></a> <a href="javacript:void(0)" class="action"><i class="ti-check text-success"></i></a><span class="time pull-right">April 14, 2017</span></div>
-                                </div> -->
-                                <!-- <div class="comment-body">
-                                    <div class="user-img"> <img src="/img/users/arijit.jpg" alt="user" class="img-circle"> </div>
-                                    <div class="mail-contnet">
-                                        <h5>Arijit Sinh</h5> <span class="mail-desc">Donec ac condimentum massa. Etiam pellentesque pretium lacus. Phasellus ultricies dictum suscipit. Aenean commodo dui pellentesque molestie feugiat. </span><span class="label label-rouded label-danger">REJECTED</span><a href="javacript:void(0)" class="action"><i class="ti-close text-danger"></i></a> <a href="javacript:void(0)" class="action"><i class="ti-check text-success"></i></a><span class="time pull-right">April 14, 2017</span></div>
-                                </div> -->
-                                <!-- <div class="comment-body b-none">
-                                    <div class="user-img"> <img src="/img/users/pawandeep.jpg" alt="user" class="img-circle"></div>
-                                    <div class="mail-contnet">
-                                        <h5>Pavan kumar</h5> <span class="mail-desc">Donec ac condimentum massa. Etiam pellentesque pretium lacus. Phasellus ultricies dictum suscipit. Aenean commodo dui pellentesque molestie feugiat.</span> <span class="label label-rouded label-info">PENDING</span> <a href="javacript:void(0)" class="action"><i class="ti-close text-danger"></i></a> <a href="javacript:void(0)" class="action"><i class="ti-check text-success"></i></a><span class="time pull-right">April 14, 2017</span></div>
-                                </div> -->
                             </div>
                         </div>
                     </div>
