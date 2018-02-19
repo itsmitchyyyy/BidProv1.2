@@ -352,7 +352,7 @@ function toggleComment(id){
 
                      if(dataStatus == 'doing'){
                          if(dataValue.every(checkDoing)){
-                             options =  `<a onclick="toggleUpdate(`+id+`,'done')" class="pull-right"><button class="btn btn-info wew">Finish</button></a>`;
+                             options =  `<a onclick="finishModule(`+id+`)" class="pull-right"><button class="btn btn-info wew">Finish</button></a>`;
                          }
                      }
                      if(dataStatus == 'done'){
@@ -400,6 +400,13 @@ function toggleComment(id){
             $(this).text('Hide comments');
         }
     });
+</script>
+<script>
+    function finishModule(id){
+        $('#module_id').val(id);
+        $('#modalUpload').modal('show');
+        $('#toggleModal').modal('hide');
+    }
 </script>
 <script>
         var cards = document.querySelectorAll('.card-kanban');
