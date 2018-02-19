@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 //use Intervention\Image\Facades\Image;
 use Hash;
 use Image;
+use DB;
 //use Illuminate\Support\Facades\Redirect;
 use App\User;
 class SeekerController extends Controller
@@ -122,5 +123,16 @@ class SeekerController extends Controller
                 return redirect('/seeker/profile/'.$id);
             }
         }
+    }
+
+    public function viewUser($id){
+        $user = User::find($id);
+        $projects = DB::table('projects')
+            ->join('proposals','projects.id','=','proposals.project_id')
+            ->join('users','users.id','=','projects.user_id')
+            ->where(['proposals.status' => 0, 'proposals.bidder_id' => $id])
+            ->get();
+        return view('view/seeker')
+            ->with(compact('user','projects'));
     }
 }
