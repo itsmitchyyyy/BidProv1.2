@@ -36,6 +36,9 @@
     <li class="nav-item" role="presentation">
       <a href="#ongoing" class="nav-link" aria-controls="ongoing" role="tab" data-toggle="tab">Ongoing Projects</a>
     </li>
+    <li class="nav-item" role="presentation">
+      <a href="#done" class="nav-link" role="tab" data-toggle="tab">Done Projects</a>
+    </li>
   </ul>
     @if(session()->has('error'))
     <div class="alert alert-danger alert-dismissable fade show">
@@ -399,7 +402,7 @@
     <div class="clearfix">
       <img src="/{{$users->usersReview($project->bidder_id)->avatar}}" alt="avatar" style="height:100px;height:100px" class="pull-left gap-right">
       <p>
-        <a href="">{{ ucfirst($users->usersReview($project->bidder_id)->firstname) }} {{ ucfirst($users->usersReview($project->bidder_id)->lastname) }} </a><br>
+        <a href="{{ route('viewUser',['user_id' => $project->bidder_id]) }}">{{ ucfirst($users->usersReview($project->bidder_id)->firstname) }} {{ ucfirst($users->usersReview($project->bidder_id)->lastname) }} </a><br>
         <input id="input-1" class="rating rating-loading" data-min="0" data-max="5" data-step="0.1" value="{{ $users->usersReview($project->bidder_id)->userAverageRating }}" data-size="s" disabled>
         Reviews: {{ $users->usersReview($project->bidder_id)->userSumRating }} reviews
       </p>
@@ -436,6 +439,30 @@
   @endforeach
   </tbody>
 </table>
+</div>
+<div class="tab-pane" id="done">
+  <table id="doneProjects">
+    <thead>
+      <tr>
+        <th>Project Name</th>
+        <th>Developer</th>
+        <th>Bid</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+    @foreach($doneprojects as $dones)
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+    @endforeach
+    </tbody>
+  </table>
 </div>
 </div>
 <!-- ADD PROject -->
@@ -577,13 +604,14 @@
         $('#myProject').DataTable();
         $('#myProjectClose').DataTable();
         $('#myOngoingProject').DataTable();
+        $('#doneProjects').DataTable();
+        
     });
 </script>
 <script>
         $('#min').change(function(){
             this.value = parseFloat(this.value).toFixed(2);
         });
-
         $('#max').change(function(){
             this.value = parseFloat(this.value).toFixed(2);
         });
