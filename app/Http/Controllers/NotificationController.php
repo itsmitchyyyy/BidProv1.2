@@ -20,7 +20,7 @@ class NotificationController extends Controller
     }
 
     public function navNotification(){
-        $notifications = Notification::where(['user_id' => Auth::user()->id, 'statuss' => 'unread'])->orderBy('created_at', 'desc')->get();
+        $notifications = Notification::where(['user_id' => Auth::user()->id])->orderBy('created_at', 'desc')->get();
         return $notifications;
     }
     public function countNotification(){
