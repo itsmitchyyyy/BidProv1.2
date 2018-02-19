@@ -26,9 +26,11 @@ Route::get('/', function () {
 // Route::get('ratings', function(){
 //     return view('ratings/seeker');
 // });
-Route::get('ratings', 'RatingController@viewUser')->name('rate');
+// Route::get('ratings', 'RatingController@viewUser')->name('rate');
 
-
+Route::get('seeker/400', function(){
+    return view('page/seeker');
+})->name('seeker.expired');
 Route::get('login', 'LoginController@loginForm')->name('login');
 Route::post('login', 'LoginController@login');
 Route::get('email', 'ResetController@showReset')->name('password.email');
@@ -83,6 +85,8 @@ Route::group(['middleware' => ['auth']], function(){
     Route::get('seeker/view/bid/module/{module_id}', ['as' => 'viewComments', 'uses' => 'ModuleController@moduleComments']);
     Route::get('seeker/ratings/{id}', ['as' => 'rate.show', 'uses' => 'RatingController@reviewUser']);
     Route::post('seeker/ratings',['as' => 'rate.post', 'uses' => 'RatingController@postReview']);
+    Route::get('seeker/view/user/profile/{user_id}', ['as' => 'viewUser', 'uses' => 'SeekerController@viewUser']);
+    
     // PAYMENT
     Route::patch('seeker/view/project/bid/paypal/{id}/{bid_id}/{project_name}/{user_paypal}/{amount}/{user_id}', ['as' => 'payment', 'uses' => 'ModuleController@payProject']);
     Route::get('seeker/view/project/bid/paypal', ['as' => 'payment.status','uses' => 'ModuleController@paymentStatus']);
@@ -100,6 +104,7 @@ Route::group(['middleware' => ['auth']], function(){
     Route::patch('bidder/avatar/{id}', ['as' => 'avatar', 'uses' => 'BidderController@updateAvatar']);
     Route::patch('bidder/skills/{id}', ['as' => 'skills', 'uses' => 'BidderController@addSkills']);
     Route::post('bidder/view/project/bid/comment/post', ['as' => 'postCommentBidder','uses' => 'ModuleController@addCommentBidder']);
+    Route::get('bidder/view/user/profile/{user_id}', ['as' => 'viewBuser', 'uses' => 'BidderController@viewUser']);
     // END
     // Route::get('skills',  ['uses' => 'BidderController@getSkills']);
     // Route::get('bidder/inbox', function(){
@@ -129,7 +134,7 @@ Route::group(['middleware' => ['auth']], function(){
     Route::post('bidder/ratings',['as' => 'rate.postseeker', 'uses' => 'RatingController@postBReview']);
     // END works    
     //ratings
-
+    
    
     // Route::get('sh/sh/sh', 'ModuleController@divide');
     // end ratings
