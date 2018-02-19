@@ -304,8 +304,8 @@ class ModuleController extends Controller
             ->setTotal($total)
             ->setDetails($details);
         
-        /* $payee = new Payee();
-        $payee->setEmail($user_paypal); */
+        $payee = new Payee();
+        $payee->setEmail($user_paypal);
 
         $transaction = new Transaction();
         $transaction->setAmount($amount)
