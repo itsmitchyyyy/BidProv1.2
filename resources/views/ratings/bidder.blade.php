@@ -60,6 +60,24 @@
         </div>
     </div>
 </div>
+<div class="container-fluid m-t-15">
+                    <div class="col-md-12 col-lg-12 col-sm-12" >
+                        <div class="white-box " style="border:1px solid rgba(0,0,0,.125); border-radius:.25rem">
+                            <h3 class="box-title">Review Feed</h3>
+                            <hr style="background-color:rgba(0,0,0,.125)">
+                            <div class="comment-center">
+                                @foreach($reviews as $review)
+                                <div class="comment-body" style="border-bottom:1px solid rgba(0,0,0,0.125);">
+                                    <div class="user-img"> <img src="/{{ $review->avatar }}" alt="user" class="img-circle"></div>
+                                    <div class="mail-contnet">
+                                        <h5>{{ ucfirst($review->firstname) }} {{ ucfirst($review->lastname) }}</h5> <span class="mail-desc">{{ $review->comments }}</span><span class="time pull-right">{{ Carbon\Carbon::parse($review->created_at)->diffForHumans() }}</span>
+                                    </div>
+                                </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
 @endsection
 @section('scripts')
