@@ -24,7 +24,11 @@ class RatingController extends Controller
     
     public function reviewBUser($id){
         $user = User::find($id);
-        return view('ratings/bidder', compact('user'));
+        $reviews = DB::table('ratings')
+            ->join('users','users.id','=','ratings.user_id')
+            ->where('rateable_id', $id)
+            ->get();
+        return view('ratings/bidder', compact('user','reviews'));
     }
 
    
