@@ -210,4 +210,14 @@
         });
       });
     </script>
+    <script>
+      $(function(){
+        $('#min').change(function(){
+          this.value = parseFloat(this.value).toFixed(2);
+        });
+        $('#max').change(function(){
+          this.value = parseFloat(this.value).toFixed(2);
+        });
+      });
+    </script>
 @endpush

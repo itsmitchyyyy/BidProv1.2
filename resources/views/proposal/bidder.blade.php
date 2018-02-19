@@ -51,7 +51,11 @@
         @if($proposal->duration < Carbon\Carbon::now())
         <button disabled class="btn btn-info wew">Bid</button>
         @else
+        @if(Auth::user()->paypal == '')
+        Set paypal email first
+        @else
         <a href="{{ route('proposal', ['project_id' => $proposal->id]) }}"><button  class="btn btn-info wew">Bid</button></a>
+        @endif
         @endif
         </div>
     </div>
