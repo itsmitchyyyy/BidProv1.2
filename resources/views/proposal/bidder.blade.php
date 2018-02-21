@@ -40,7 +40,7 @@
         <div class="clearfix mb-2">
         <img src="/{{ $user->avatar }}" alt="avatar" class="img-thumbnail m-b-15 pull-left gap-right" style="width:100px;height:100px">
         <p>
-        <a href="#">{{ ucfirst($user->firstname) }} {{ ucfirst($user->lastname) }}</a>
+        <a href="{{ route('viewBuser',['user_id' => $user->id]) }}">{{ ucfirst($user->firstname) }} {{ ucfirst($user->lastname) }}</a>
         <br>
         <small>{{ $user->email }}</small>
         </p>
