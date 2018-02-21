@@ -189,8 +189,12 @@ class BidderController extends Controller
 
     public function viewUser($id){
         $user = User::find($id);
-        
+        $projects = DB::table('projects')
+            ->join('proposals','projects.id','=','proposals.project_id')
+            ->join('users','users.id','=','projects.user_id')
+            ->where(['proposals.status' => 0, 'proposals.bidder_id' => $id])
+            ->get();
         return view('view/bidder')
-            ->with(compact('user'));
+            ->with(compact('user','projects'));
     }
 }
