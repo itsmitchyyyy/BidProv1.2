@@ -30,7 +30,23 @@ class MobileController extends Controller
             );
             echo json_encode($error);
         }    
+        
     }
 
-    
+    public function userRatings(Request $request){
+        $ratings = DB::table('ratings')
+                ->where('rateable_id',$request->id)
+                ->avg('rating');
+        if($ratings == null){
+            $rate = array(
+                'rating' => 0
+            );
+        }else{
+            $rate = array(
+                'rating' => $ratings
+            );
+        }        
+        echo json_encode($rate);
+    }
+
 }
