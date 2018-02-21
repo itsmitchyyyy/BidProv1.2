@@ -118,6 +118,43 @@
                     </div>
                 </div>
             </div>
+            @if($user->hasRoles('bidder'))
+            <h3>Projects Done</h3>
+            <table id="projectsDone">
+                <thead>
+                    <tr>
+                        <th>Project Name</th>
+                        <th>Client</th>
+                        <th>Bid</th>
+                        <th>Status</th>
+                    </tr>
+                </thead> 
+                <tbody>
+                    @foreach($projects as $project)
+                    <tr>
+                        <td><a href="#">{{ ucfirst($project->title) }}</a></td>
+                        <td>
+                            <div class="clearfix">
+                                <img src="/{{ $project->avatar }}" alt="avatar" style="width:100px;height:100px" class="gap-right img-thumbnail pull-left">
+                                <p>
+                                    <a href="{{ route('viewBuser',['user_id' => $project->user_id]) }}">{{ ucfirst($project->firstname) }} {{ ucfirst($project->lastname) }}</a>
+                                    <br>
+                                    <input id="input-1" name="input-1" data-min="0" data-step="0.1" data-max="5" value="{{ $user->userAverageRating }}" data-size="s" class="rating rating-loading" disabled>
+                                    Reviews: {{ $user->userSumRating }} Reviews
+                                </p>
+                            </div>
+                        </td>
+                        <td>
+                            <span>&#8369;</span> {{ $project->price }} in {{ $project->daysTodo }} days
+                        </td>
+                        <td>
+                            Done
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+            @endif
             <!-- /.container-fluid -->
             <footer class="footer text-center"> 2017 &copy;  brought to you by BidPro </footer>
         </div>
@@ -127,5 +164,10 @@
 <script src="{{ asset('js/star-rating.js') }}"></script>
 <script>
     $('#input-id').rating();
+</script>
+<script>
+    $(function(){
+        $('#projectsDone').DataTable();
+    });
 </script>
 @endsection
