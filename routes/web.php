@@ -27,7 +27,10 @@ Route::get('/', function () {
 //     return view('ratings/seeker');
 // });
 // Route::get('ratings', 'RatingController@viewUser')->name('rate');
-
+// MOBILE
+Route::post('loginmobile', 'MobileController@login')->name('mobile.login');
+Route::get('rolemobile', 'MobileController@roles')->name('mobile.roles');
+// END OF MOBILE
 Route::get('seeker/400', function(){
     return view('page/seeker');
 })->name('seeker.expired');
@@ -133,9 +136,5 @@ Route::group(['middleware' => ['auth']], function(){
     Route::get('bidder/ratings/{id}', ['as' => 'rate.seeker', 'uses' => 'RatingController@reviewBUser']);
     Route::post('bidder/ratings',['as' => 'rate.postseeker', 'uses' => 'RatingController@postBReview']);
     // END works    
-    //ratings
-    
-   
-    // Route::get('sh/sh/sh', 'ModuleController@divide');
-    // end ratings
+
 });
