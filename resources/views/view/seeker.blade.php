@@ -121,6 +121,7 @@
                     </div>
                 </div>
             </div>
+            @if($user->hasRoles('bidder'))
             <h3>Projects Done</h3>
             <table id="projectsDone">
                 <thead>
@@ -139,7 +140,7 @@
                             <div class="clearfix">
                                 <img src="/{{ $project->avatar }}" alt="avatar" style="width:100px;height:100px" class="gap-right img-thumbnail pull-left">
                                 <p>
-                                    <a href="">{{ ucfirst($project->firstname) }} {{ ucfirst($project->lastname) }}</a>
+                                    <a href="{{ route('viewUser', ['user_id' => $project->user_id]) }}">{{ ucfirst($project->firstname) }} {{ ucfirst($project->lastname) }}</a>
                                     <br>
                                     <input id="input-1" name="input-1" data-min="0" data-step="0.1" data-max="5" value="{{ $user->userAverageRating }}" data-size="s" class="rating rating-loading" disabled>
                                     Reviews: {{ $user->userSumRating }} Reviews
@@ -156,6 +157,7 @@
                     @endforeach
                 </tbody>
             </table>
+            @endif
             <!-- /.container-fluid -->
             <footer class="footer text-center"> 2017 &copy;  brought to you by BidPro </footer>
         </div>
