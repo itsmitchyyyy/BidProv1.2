@@ -46,7 +46,7 @@
                 <td>
                 <div class="clearfix">
                     <img src="/{{ $work->avatar }}" alt="avatar" style="width:70px;height:70px" class="gap-right img-thumbnail pull-left">
-                    <p><a href="">{{ ucfirst($work->firstname) }} {{ ucfirst($work->lastname) }}</a>
+                    <p><a href="{{ route('viewBuser',['user_id' => $work->seeker_id]) }}">{{ ucfirst($work->firstname) }} {{ ucfirst($work->lastname) }}</a>
                     <br>
                     <input id="input-1" name="input-1" class="rating rating-loading" data-min="0" data-max="5" data-step="0.1" value="{{ $users->usersReview($work->seeker_id)->userAverageRating }}" data-size="s" disabled>
                     Reviews: {{ $users->usersReview($work->seeker_id)->userSumRating }} Reviews
