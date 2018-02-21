@@ -29,7 +29,7 @@ Route::get('/', function () {
 // Route::get('ratings', 'RatingController@viewUser')->name('rate');
 // MOBILE
 Route::post('loginmobile', 'MobileController@login')->name('mobile.login');
-Route::get('rolemobile', 'MobileController@roles')->name('mobile.roles');
+Route::post('ratingmobile', 'MobileController@userRatings')->name('mobile.ratings');
 // END OF MOBILE
 Route::get('seeker/400', function(){
     return view('page/seeker');
