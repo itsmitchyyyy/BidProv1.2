@@ -46,7 +46,7 @@
       var toggle = wrapper.find('a[data-toggle]');
       var element = toggle.find('i[data-count]');
       var counter = parseInt(element.data('count'));
-      var notifications = wrapper.find('#menuItems');
+      var notifications = wrapper.find('div.dropdown-menu');
       var pusher = new Pusher('9ab3129dae2df45ee2fc',{
         cluster: 'ap1',
         encrypted: true,
@@ -54,6 +54,8 @@
 
       var channel = pusher.subscribe('bid-notify');
       channel.bind('App\\Events\\BidNotified', function(data){
+        console.log(data.avatar);
+    console.log(data.link);
         var existing = notifications.html();
         var newnotifications = `
         <a href="`+data.link+`">
