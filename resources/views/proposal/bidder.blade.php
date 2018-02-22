@@ -52,7 +52,7 @@
         <button disabled class="btn btn-info wew">Bid</button>
         @else
         @if(Auth::user()->paypal == '')
-        Set paypal email first
+        Set paypal email first in your profile 
         @else
         <a href="{{ route('proposal', ['project_id' => $proposal->id]) }}"><button  class="btn btn-info wew">Bid</button></a>
         @endif
