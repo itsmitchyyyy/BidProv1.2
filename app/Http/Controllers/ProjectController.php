@@ -415,15 +415,14 @@ class ProjectController extends Controller
         $proposal = Proposal::find($proposal_id);
         $proposal->status = 0;
         $proposal->save();
-        event(new \App\Events\BidNotified(Auth::user()->firstname.' '.Auth::user()->lastname,'accepted your bid on '.$projects->title, Auth::user()->avatar, "route('myWorks',['proposal_id' => $proposal_id, 'bidder_id' => $bidder_id, 'project_id' => $project_id])"));
-         $this->insertNotification(['user_id' => $bidder_id, 'name' => Auth::user()->firstname.' '.Auth::user()->lastname, 'message' => 'accepted your  bid on '.$projects->title, 'avatar' => Auth::user()->avatar, 'link' => route('myWorks',['proposal_id' => $proposal_id, 'bidder_id' => $bidder_id, 'project_id' => $project_id]), 'created_at' => Carbon::now(new DateTimeZone('Asia/Manila')), 'updated_at' => Carbon::now(new DateTimeZone('Asia/Manila'))]);
-       /*  $notification = Notification::find($notif_id);
-        $notification->statuss = 'read';
-        $notification->save(); */
+        event(new \App\Events\BidNotified(Auth::user()->firstname.' '.Auth::user()->lastname,'accepted your bid on '.$projects->title, Auth::user()->avatar, route('myWorks',['proposal_id' => $proposal_id, 'bidder_id' => $bidder_id, 'project_id' => $project_id])));
+        $this->insertNotification(['user_id' => $bidder_id, 'name' => Auth::user()->firstname.' '.Auth::user()->lastname, 'message' => 'accepted your  bid on '.$projects->title, 'avatar' => Auth::user()->avatar, 'link' => route('myWorks',['proposal_id' => $proposal_id, 'bidder_id' => $bidder_id, 'project_id' => $project_id]), 'created_at' => Carbon::now(new DateTimeZone('Asia/Manila')), 'updated_at' => Carbon::now(new DateTimeZone('Asia/Manila'))]);
+       
         return redirect()
             ->route('projects')
             ->withInput(['tab' => 'ongoing']);
 
     }
+    
     //END OF BIDDER
 }
