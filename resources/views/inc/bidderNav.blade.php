@@ -15,40 +15,10 @@
     <li class="nav-item{{ Request::is('proposals') ? ' active' : ''}}">
       <a href="{{ route('bids') }}" class="nav-link">My Bids</a>
     </li>
-   <!--<li class="nav-item">
-      <a class="nav-link" href="#">Features</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="#">Pricing</a>
-    </li>-->
+  
     </ul>
     <ul class="navbar-nav">
-    <!-- <li class="nav-item dropdown">
-    <a href="#" class="nav-link" data-toggle="dropdown" id="navbarDropdownInbox">
-      <i class="ti-email"></i>
-      <span class="text-danger">0</span>
-    </a>
-
-    <div id="inboxItems" class="dropdown-menu dropdown-menu-right" aria-laballedBy="navbarDropdownInbox">
-      <h6 class="dropdown-header">You have <span>(0)</span> new messages</h6>
-      <a href="http://">
-        <div class="message-center">
-          <div class="user-img ml-2">
-            <img src="/uploads/blank.png" alt="" style="border-radius:50%;">
-          </div>
-          <div class="mail-content">
-         
-            <h5><b>Asd</b></h5>
-            <span class="mail-desc">ASDSAD</span>
-          </div>
-        </div>
-        </a>
-        <hr>
-        <div class="text-center">
-        <a href="" class="text-dark"><strong>See all messages </strong><i class="fa fa-angle-right"></i></a>
-        </div>
-    </div>
-    </li> -->
+    
     @inject('notifications', 'App\Http\Controllers\NotificationController')
     <li class="nav-item dropdown notifications">
      <a href="" class="nav-link" data-toggle="dropdown" id="navbarDropdownMessage" href="#">
