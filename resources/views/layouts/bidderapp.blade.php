@@ -56,7 +56,7 @@
       channel.bind('App\\Events\\BidNotified', function(data){
         var existing = notifications.html();
         var newnotifications = `
-        <a href="{{ `+data.link+` }}">
+        <a href="`+data.link+`">
           <div class="message-center">
             <div class="user-img ml-2">
               <img src="{{ asset('`+data.avatar+`') }}" alt="avatar" style="border-radius:50%">
@@ -69,10 +69,11 @@
         </a>
         <hr>
     `;
-        notifications.html(existing + newnotifications);
+      notifications.html(existing + newnotifications);
       counter += 1;
       element.attr('data-count', counter);
       wrapper.find('.notif-count').text(counter);
+      wrapper.find('#counts').text(counter);
       });
   </script>
   <script>
