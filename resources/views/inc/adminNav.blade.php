@@ -123,29 +123,3 @@
 <!-- /.navbar-top-links -->
 <!-- /.navbar-static-side -->
 </nav>
-@push('scripts')
-    <script>
-        var pusher = new Pusher('9ab3129dae2df45ee2fc',{
-            cluster: 'ap1',
-            encrypted: true,
-        });
-        var channel = pusher.subscribe('report-nofity');
-        channel.bind('App\\Events\\ReportEvent', function(data){
-            var first = data.seeker_id;
-            var second = data.bidder_id;
-            $.ajax({
-                type: "post",
-                url: "{{ route('user.report') }}",
-                data:{
-                    'seeker_id':first,
-                    'bidder_id':second
-                },
-                dataType:"json"
-                cache:false,
-                success:function(response){
-                    console.log(response);
-                }
-            });
-        });
-    </script>
-@endpush
