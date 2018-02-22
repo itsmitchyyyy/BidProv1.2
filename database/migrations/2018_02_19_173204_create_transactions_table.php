@@ -23,6 +23,9 @@ class CreateTransactionsTable extends Migration
             $table->foreign('project_id')->references('id')->on('projects');
             $table->integer('payment_id')->nullabe();
             $table->decimal('amount', 8,2)->nullable();
+            $table->decimal('commission', 8,2)->nullable();
+            $table->decimal('total', 8,2)->nullable();
+            $table->string('status')->nullable();
             $table->timestamps();
         });
     }
