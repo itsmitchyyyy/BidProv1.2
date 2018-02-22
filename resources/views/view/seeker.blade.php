@@ -15,7 +15,7 @@
 </style>
 @endpush
 @section('content')
-<div class="modal fade" id="reportModal">
+<!-- <div class="modal fade" id="reportModal">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -37,19 +37,19 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->
   <!-- Page Content -->
             <div id="">
             <div class="container-fluid">
                 <div class="row bg-title">
                     <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
-                        <h4 class="page-title">Seeker Profile</h4> </div>
+                        <h4 class="page-title">User Profile</h4> </div>
                 </div>
                 <!-- /.row -->
                 <!-- .row -->
                 <div class="row">
                     <div class="col-md-4 col-xs-12">
-                    <a href="#" data-toggle="modal" data-target="#reportModal" style="color:red"><strong>Report User</strong></a>
+                    <a href="#" id="reportBtn" data-uid="{{ Auth::id() }}" data-sid="{{ $user->id }}" style="color:red"><strong>Report User</strong></a>
                         <div class="white-box">
                             <div class="user-bg"> 
                             <img width="100%" alt="user" src="/uploads/blank.png">
@@ -172,5 +172,41 @@
     $(function(){
         $('#projectsDone').DataTable();
     });
+</script>
+<script>
+   $(function(){
+       $('#reportBtn').click(function(){
+        var uid = $(this).data('uid');
+        var sid = $(this).data('sid');
+        var textarea = document.createElement("textarea");
+        textarea.rows = "4";
+        textarea.cols="50";
+        // textarea.placeholder="Write your report here";
+        swal({
+            title:"Report user",
+            content: textarea,
+            buttons:true
+        }).then(function(value){
+            if(value){
+                $.ajax({
+                    type: "post",
+                    url: "{{ route('post.seeker') }}",
+                    data:{
+                        '_token': "{{ csrf_token() }}",
+                        'seeker_id':uid,
+                        'bidder_id':sid,
+                        'message':textarea.value
+                    },
+                    cache:false,
+                    success:function(response){
+                        swal("Report Successful","Thanks for your report","success");
+                    }
+                });
+            }else{
+            swal("Report Cancelled","Error reporting user","error");
+            }
+        });
+       });
+   });
 </script>
 @endsection
