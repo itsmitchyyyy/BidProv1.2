@@ -212,7 +212,7 @@
           <h3><b>Are you sure you want to close this project?</b></h3>
           <p style="font-weight:bold;margin-top:5%">
           By closing your project you will not be able to receive bids.
-           Your project will then be archived and cannot be reopened.
+           Your project will then be archived.
           </p>
         </div>
         <div class="modal-footer">
@@ -220,7 +220,7 @@
           <form action="{{ route('closeproject', ['id' => $project->id]) }}" method="POST">
           <input type="hidden" name="_token" value="{{ csrf_token() }}">
           <input type="hidden" name="_method" value="PATCH">
-          <button type="submit" class="btn btn-primary wew" style="background-color:#ee4b28;border:1px solid #ee4b28;">Yes</button>
+          <button type="submit" class="btn btn-info wew" >Yes</button>
           </form>
         </div>
       </div>
@@ -410,6 +410,7 @@
       </td>
     <td><span>&#8369;</span>{{ $project->price }} <br> in {{ $project->daysTodo }} days</td>
     <td>
+      <a href="{{ route('acceptedBid', ['proposal_id' => $project->proposal_id, 'seeker_id' => $project->seeker_id, 'project_id' => $project->project_id]) }}" data-tooltip="true" title="View"><button class="btn btn-link wew"><i class="fa fa-eye" style="color:green"></i></button></a>
     <button class="btn btn-link wew " title="Cancel" data-tooltip="true" data-toggle="modal" data-target="#cancelProject{{ $project->id }}"><i class="fa fa-times"></i></button>
     </td>
     <!-- CANCEL PROJECT -->
