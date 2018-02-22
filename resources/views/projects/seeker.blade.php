@@ -449,17 +449,28 @@
         <th>Developer</th>
         <th>Bid</th>
         <th>Status</th>
-        <th>Action</th>
       </tr>
     </thead>
     <tbody>
     @foreach($doneprojects as $dones)
       <tr>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
+        <td>
+          <a href="{{ route('acceptedBid', ['proposal_id' => $dones->proposal_id, 'seeker_id' => $dones->seeker_id, 'project_id' => $dones->project_id]) }}">{{ ucwords($dones->title) }}</a>
+        </td>
+        <td>
+        <div class="clearfix">
+      <img src="/{{$users->usersReview($dones->bidder_id)->avatar}}" alt="avatar" style="height:100px;height:100px" class="pull-left gap-right">
+      <p>
+        <a href="{{ route('viewUser',['user_id' => $dones->bidder_id]) }}">{{ ucfirst($users->usersReview($dones->bidder_id)->firstname) }} {{ ucfirst($users->usersReview($dones->bidder_id)->lastname) }} </a><br>
+        <input id="input-1" class="rating rating-loading" data-min="0" data-max="5" data-step="0.1" value="{{ $users->usersReview($dones->bidder_id)->userAverageRating }}" data-size="s" disabled>
+        Reviews: {{ $users->usersReview($dones->bidder_id)->userSumRating }} reviews
+      </p>
+    </div>
+        </td>
+        <td><span>&#8369;</span>{{ $dones->price }} <br> in {{ $dones->daysTodo }} days</td>
+        <td>
+          {{ ucfirst($dones->status) }}(Paid)
+        </td>
       </tr>
     @endforeach
     </tbody>
