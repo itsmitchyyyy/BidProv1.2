@@ -13,6 +13,12 @@
 @endpush
 @section('content')
 <div class="container mt-5">
+    @if(session()->get('success'))
+    <div class="alert alert-success alert-dismissable fade show">
+        <button class="close" data-dismiss="alert"><span>&times;</span></button>
+        {{ session()->get('success') }}
+    </div>
+    @endif
     <div class="row">
         <div class="col-md-12">
             <div class="panel panel-default">
