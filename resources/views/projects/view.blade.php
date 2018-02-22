@@ -68,7 +68,7 @@
 <div class="clearfix">
 <a href=""><img src="/{{ $bidding->avatar }}" alt="" class="img-thumbnail m-b-15 pull-left gap-right" style="width:100px;height:100px"></a>
 <p class="text-muted">
-<a href="">{{ $bidding->firstname }} {{ $bidding->lastname }}</a>
+<a href="{{ route('viewUser',['user_id' => $bidding->id]) }}">{{ $bidding->firstname }} {{ $bidding->lastname }}</a>
 <br><small>@foreach($controller->getCreatedAt($bidding->proposal_id) as $date)  {{ Carbon\Carbon::parse($date->created_at)->diffForHumans() }} @endforeach</small>
 </p>
 </div>
