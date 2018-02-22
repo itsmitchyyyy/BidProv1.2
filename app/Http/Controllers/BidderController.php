@@ -125,6 +125,45 @@ class BidderController extends Controller
             ->withInput(['tab' => 'profile'])
             ->withErrors($validator);
         }
+        $skill_list = array(
+            'PHP',
+            'AngularJS',
+            'ReactJS',
+            'Ionic',
+            'Java',
+            'Javascript',
+            'JQuery',
+            'CSS3',
+            'HTML5',
+            'Laravel',
+            'Codeigniter',
+            'TypeScript',
+            'Python',
+            'Elixer',
+            'Rust',
+            'Go',
+            'Ruby on Rails',
+            'Swift',
+            'SQL',
+            'C#',
+            'C++',
+            'C'
+        );
+        foreach(array_combine($request->skills, $request->proficiency) as $rskills => $rproficiency){
+            if($rproficiency == '%'){
+                return back()
+                    ->withInput(['tab' => 'profile'])
+                    ->with('error','Proficiency error');
+                break;
+            }
+            if($rskills == '' || !in_array($rskills,$skill_list)){
+                return back()
+                    ->withInput(['tab' => 'profile'])
+                    ->with('error','Language error');
+                break;
+            }
+            
+        }
         $user = User::find($id);
         $skills = $request->skills;
         $proficiency = $request->proficiency;
