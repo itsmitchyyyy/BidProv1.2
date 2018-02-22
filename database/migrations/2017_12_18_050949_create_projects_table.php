@@ -22,8 +22,8 @@ class CreateProjectsTable extends Migration
             $table->string('type')->nullable();
             $table->string('os')->nullable();
             $table->string('category');
-            $table->decimal('min', 8,2);
-            $table->decimal('max', 8,2);
+            $table->decimal('min', 11,2);
+            $table->decimal('max', 11,2);
             $table->string('status')->default('open');
             $table->date('duration');
             $table->timestamps();
