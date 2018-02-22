@@ -11,12 +11,6 @@
     <li class="nav item{{ Request::is('seeker/projects') ? ' active' : ''}}">
       <a href="{{ route('projects') }}" class="nav-link">Projects</a>
     </li>
-   <!--<li class="nav-item">
-      <a class="nav-link" href="#">Features</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="#">Pricing</a>
-    </li>-->
     </ul>
     <ul class="navbar-nav">
     @inject('notifications', 'App\Http\Controllers\NotificationController')
