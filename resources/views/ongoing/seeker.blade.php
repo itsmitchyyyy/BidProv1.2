@@ -164,6 +164,7 @@
         </div>
     </div>
         @if(count(array_unique($module)) === 1 && end($module) === 'done')
+            @if(count($transactions) == 0)
          <div class="p-1 pull-right">
          <form action="{{ route('payment', ['id' => $project->id, 'bid_id' => $bids->id, 'project_name' => $project->title, 'user_paypal' => $proposal->paypal, 'amount' => $proposal->price,'user_id' => $proposal->id]) }}" method="POST">
          {{ csrf_field() }}     
@@ -171,6 +172,7 @@
          <button class="btn btn-info wew">Pay Now</button>
         </form>
     </div>
+    @endif
         @endif
     <div class="modal fade" id="toggleModal">
         <div class="modal-dialog modal-lg">
@@ -296,26 +298,46 @@ function toggleComment(id){
                  }
                  myData += '</table>';
                  if(dataStatus == 'done'){
-                         options = `
-                         <form action="{{ route('downloadFiles') }}" method="post">
+                     $.ajax({
+                         type: "post",
+                         url: "{{ route('transaction.status', ['project_id']) }}",
+                         headers: {'X-CSRF-TOKEN': "{{  csrf_token() }}"},
+                         data:{
+                             'project_id': "{{ $project->id }}"
+                         },
+                         dataType: "json",
+                         cache:false,
+                         success:function(response){
+                          if(response.length == 0){
+                            $('#options').html(`
+                         <button onclick="downloadBtn()" class="btn btn-info wew">Download Files</button>
+                         `);
+                          }else{
+                            $('#options').html(`<form action="{{ route('downloadFiles') }}" method="post">
                          {{ csrf_field() }}
                          <input type="hidden" value="`+dataID+`" name="module_id">
                          <button class="btn btn-info wew">Download Files</button>
-                         </form>`;
+                         </form>`);
+                          }
+                         }
+                     });
+                       
                      }
-                $('#options').html(options);
                 $('#data').html(myData);
                 $('#comment_module').val(id);
                 $('#comment_project').val(projectComment);
                 $('#comment_proposal').val(proposalComment);
                 $('#toggleModal').modal('show');
-                // console.log(id);
-                // response = '';
                 toggleComment(id);
             }
         });
     });
     }
+</script>
+<script>
+   function downloadBtn(){
+            swal("Report","Pay first before downloading the files","error");
+   }
 </script>
 <script>
     $("#collapseComment[data-toggle='collapse']").click(function(){
