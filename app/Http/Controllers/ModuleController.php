@@ -20,7 +20,11 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Auth;
-// PAYPAL
+// PAYOUT
+use PayPal\Api\Payout;
+use PayPal\Api\PayoutSenderBatchHeader;
+use PayPal\Api\PayoutItem;
+// PAYPAL\
 use PayPal\Rest\ApiContext;
 use PayPal\Auth\OAuthTokenCredential;
 use PayPal\Api\Amount;
@@ -78,9 +82,16 @@ class ModuleController extends Controller
            $module = Module::where('proposal_id', $proposal_id)
                     ->pluck('status')
                     ->toArray();
+           $transactions = DB::table('transactions')
+            ->join('users','users.id','=','transactions.seeker_id')
+            ->where('transactions.seeker_id',Auth::user()->id)
+            ->where('transactions.project_id',$project_id)
+            ->first();
+            // dd($transactions);
             $bids = Bid::where('proposal_id', $proposal_id)->first();
+
             return view('ongoing/seeker')
-            ->with(compact('todo','doing','done','project','proposal','module','bids'));
+            ->with(compact('todo','doing','done','project','proposal','module','bids','transactions'));
     }
 
     public function biddergetModule($proposal_id,$bidder_id,$project_id)
@@ -251,6 +262,16 @@ class ModuleController extends Controller
                 ->with('success','Module updated');
     }
 
+    public function checkPayment(){
+        $project_id = $_POST['project_id'];
+        $payment = DB::table('transactions')
+            ->join('users','users.id','=','transactions.seeker_id')
+            ->where('transactions.seeker_id', Auth::user()->id)
+            ->where('transactions.project_id',$project_id)
+            ->get();
+        echo json_encode($payment);
+    }
+
     public function zipFile(Request $request){
         $public_dir = public_path();
         $zipName = 'files.zip';
@@ -275,12 +296,16 @@ class ModuleController extends Controller
         $percentToGet = 5;
         $percentInDecimal  = $percentToGet / 100;
         $percent = $percentInDecimal * $toPay;
-        $tax = number_format($percent / 2,2);
+        $tax =  round($percent / 2,2);
         $total_tax = $tax * 2;
-        $total = $toPay + $total_tax;
+        $total = $toPay - $total_tax;
+        // $percentage = round($total_tax,2);
         Session::put('user_id', $user_id);
         Session::put('project_id', $project_id);
         Session::put('bid_id',$bid_id);
+        Session::put('pay_amount', $amount);
+        Session::put('commission', $total_tax);
+        Session::put('total', $total);
         $item_name = $project_name;
         $payer = new Payer();
         $payer->setPaymentMethod('paypal');
@@ -289,43 +314,45 @@ class ModuleController extends Controller
         $item_1->setName($item_name)
             ->setCurrency('PHP')
             ->setQuantity(1)
-            ->setPrice($amount);
+            ->setPrice($total);
         
         $item_list = new ItemList();
         $item_list->setItems(array($item_1));
 
-        $details = new Details();
+        /* $details = new Details();
         $details->setShipping($tax)
             ->setTax($tax)
-            ->setSubtotal($amount);
+            ->setSubtotal($amount); */
+        
 
         $amount = new Amount();
         $amount->setCurrency('PHP')
-            ->setTotal($total)
-            ->setDetails($details);
-        
+            ->setTotal($total);
+            // ->setDetails($details);
+
         $payee = new Payee();
         $payee->setEmail($user_paypal);
 
         $transaction = new Transaction();
         $transaction->setAmount($amount)
             ->setItemList($item_list)
-            // ->setPayee($payee)
-            ->setDescription('Payment')
+            ->setPayee($payee)
+            ->setDescription('Amount sent to the bidder, The 5% is sent to bidpro')
             ->setInvoiceNumber(uniqid());
-        
+
         $redirect_urls = new RedirectUrls();
         $redirect_urls->setReturnUrl(URL::route('payment.status'))
             ->setCancelUrl(URL::route('payment.status'));
-        
+           
         $payment = new Payment();
         $payment->setIntent('Sale')
             ->setPayer($payer)
             ->setRedirectUrls($redirect_urls)
             ->setTransactions(array($transaction));
-        
+
         try{
             $payment->create($this->_api_context);
+            
         }catch(\Paypal\Exception\PPConnectionException $e){
             if(\Config::get('app.debug')){
                 \Session::put('error', 'Connection Timeout');
@@ -357,7 +384,9 @@ class ModuleController extends Controller
         $bid_id = Session::get('bid_id');
         $project_id = Session::get('project_id');
         $paypal_payment_id = Session::get('paypal_payment_id');
-    
+        $total = Session::get('pay_amount');
+        $percent_commision = Session::get('commission');
+        $amount_pay = Session::get('total');
         Session::forget('paypal_payment_id');
         Session::forget('project_id');
         Session::forget('bid_id');
@@ -371,8 +400,40 @@ class ModuleController extends Controller
         $execution->setPayerId(Input::get('PayerID'));
         $result = $payment->execute($execution, $this->_api_context);
         if($result->getState() == 'approved'){
+            $payouts = new Payout();
+            $senderBatchHeader = new PayoutSenderBatchHeader();
+            $senderBatchHeader->setSenderBatchId(uniqid())
+                ->setEmailSubject("You have a payment");
+            $senderItem1 = new PayoutItem(
+                '{
+                    "recipient_type": "EMAIL",
+                    "amount": {
+                        "value": "'.$percent_commision.'",
+                        "currency": "USD"
+                    },
+                    "receiver": "bidproadmin@gmail.com",
+                    "note": "Commission fee.",
+                    "sender_item_id": "'.uniqid().'"
+            }'
+        );
+        $payouts->setSenderBatchHeader($senderBatchHeader)
+            ->addItem($senderItem1);
+        $output = $payouts->create(null,$this->_api_context);
             DB::table('bids')->where('id',$bid_id)->update(['status'=>'done']);
             DB::table('projects')->where('id',$project_id)->update(['status'=>'done']);
+            $transaction = array(
+                'seeker_id' => Auth::user()->id,
+                'bidder_id' => $user_id,
+                'project_id' => $project_id,
+                'payment_id' => $paypal_payment_id,
+                'amount' => $amount_pay,
+                'commission' => $percent_commision,
+                'total' => $total,
+                'status' => 'Paid',
+                'created_at' => Carbon::now(new DateTimeZone('Asia/Manila')),
+                'updated_at' => Carbon::now(new DateTimeZone('Asia/Manila'))
+            );
+            DB::table('transactions')->insert($transaction); 
             \Session::put('success', 'Payment Success');
                 return Redirect::route('rate.show', $user_id);
             // return Redirect::route('projects');
@@ -382,4 +443,28 @@ class ModuleController extends Controller
         // return Redirect::route('projects');
         return back();
     }
+
+    /* public function payProject($project_id,$bid_id,$project_name,$user_paypal,$amount,$user_id){
+     
+        $payouts = new Payout();
+        $senderBatchHeader = new PayoutSenderBatchHeader();
+        $senderBatchHeader->setSenderBatchId(uniqid())
+            ->setEmailSubject("You have a payment");
+        $senderItem1 = new PayoutItem(
+            '{
+                "recipient_type": "EMAIL",
+                "amount": {
+                    "value": 0.90,
+                    "currency": "USD"
+                },
+                "receiver": "adminbidpro@gmail.com",
+                "note": "Thank you.",
+                "sender_item_id": "'.uniqid().'"
+        }'
+    );
+    $payouts->setSenderBatchHeader($senderBatchHeader)
+        ->addItem($senderItem1);
+        $output = $payouts->create(null,$this->_api_context);
+       dd($output);
+    } */
 }
