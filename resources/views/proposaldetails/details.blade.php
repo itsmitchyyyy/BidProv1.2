@@ -69,7 +69,7 @@
             <div class="clearfix">
             <img src="/{{ $user->avatar }}" alt="avatar" class="img-thumbnail m-b-15 pull-left gap-right" style="width:100px;height:100px">
             <p class="text-muted">
-            <a href="">{{ ucfirst($user->firstname) }} {{ ucfirst($user->lastname) }}</a>
+            <a href="{{ route('viewUser',['user_id' => $user->id]) }}">{{ ucfirst($user->firstname) }} {{ ucfirst($user->lastname) }}</a>
             <br><small>{{ $user->email }}</small><br>
             <small>Skills</small>
             <?php $data = array_slice($skill, 0 ,2) ?>
@@ -126,7 +126,7 @@
                     <div class="clearfix">
                         <img src="/{{ $bidding->avatar }}" alt="avatar" class="img-thumbnail m-b-15 pull-left gap-right" style="width:100px;height:100px">
                         <p class="text-muted">
-                        <a href="">{{ $bidding->firstname }} {{ $bidding->lastname }}</a>
+                        <a href="{{ route('viewUser',['user_id' => $bidding->id]) }}">{{ ucfirst($bidding->firstname) }} {{ ucfirst($bidding->lastname) }}</a>
                         <br><small>{{ Carbon\Carbon::parse($bidding->proposal_created_at)->diffForHumans() }}</small>
                         </p>
                     </div>
