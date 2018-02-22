@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>BidPro</title>
+    <style>
+        .swal-wide{
+            width:850px !important;
+        }
+    </style>
     <link rel="shortcut icon" href="/img/bidprologo.png" type="image/x-icon">
     <link rel="stylesheet" href="{{ asset('css/admin/admin.css') }}">
     <script src="{{ asset('js/app.js') }}"></script>
@@ -56,7 +61,7 @@
     <script src="{{ asset('js/bower_components/raphael/raphael-min.js') }}"></script>
     <script src="{{ asset('js/bower_components/morrisjs/morris.js') }}"></script>
     <!-- Custom Theme JavaScript -->
-    <script src="{{ asset('js/custom.min.js') }}"></script>
+    <!-- <script src="{{ asset('js/custom.min.js') }}"></script> -->
     <script src="{{ asset('js/dashboard4.js') }}"></script>
     <script src="{{ asset('js/bower_components/sidebar-nav/dist/sidebar-nav.min.js') }}"></script>
      <!-- Sparkline chart JavaScript -->
@@ -65,16 +70,16 @@
      <!--Style Switcher -->
     <script src="{{ asset('js/bower_components/styleswitcher/jQuery.style.switcher.js') }}"></script>
      <!-- Custom Theme JavaScript -->
-    <script src="{{ asset('js/custom.min.js') }}"></script>
+    <!-- <script src="{{ asset('js/custom.min.js') }}"></script> -->
     <script src="{{ asset('js/bower_components/datatables/jquery.dataTables.min.js') }}"></script>
     <!-- Calendar JavaScript -->
     <script src="{{ asset('js/bower_components/calendar/jquery-ui.min.js') }}"></script>
     <script src="{{ asset('js/bower_components/moment/moment.js') }}"></script>
-    <script src="{{ asset('js/bower_components/calendar/dist/fullcalendar.min.js') }}"></script>
-    <script src="{{ asset('js/bower_components/calendar/dist/cal-init.js') }}"></script>
+    <!-- <script src="{{ asset('js/bower_components/calendar/dist/fullcalendar.min.js') }}"></script> -->
+    <!-- <script src="{{ asset('js/bower_components/calendar/dist/cal-init.js') }}"></script> -->
       <!-- Sweet-Alert  -->
-    <script src="{{ asset('js/bower_components/sweetalert/sweetalert.min.js') }}"></script>
-    <script src="{{ asset('js/bower_components/sweetalert/jquery.sweet-alert.custom.js') }}"></script>
+    <!-- <script src="{{ asset('js/bower_components/sweetalert/sweetalert.min.js') }}"></script> -->
+    <!-- <script src="{{ asset('js/bower_components/sweetalert/jquery.sweet-alert.custom.js') }}"></script> -->
      <!-- start - This is for export functionality only -->
     <script src="{{ asset('js/cdn.datatables.net/buttons/1.2.2/js/dataTables.buttons.min.js') }}"></script>
     <script src="{{ asset('js/cdn.datatables.net/buttons/1.2.2/js/buttons.flash.min.js') }}"></script>
@@ -86,10 +91,49 @@
   <!-- end - This is for export functionality only -->
 
 
-
-
+    @stack('scripts')
+    <script>
+        var pusher = new Pusher('9ab3129dae2df45ee2fc',{
+            cluster: 'ap1',
+            encrypted: true,
+        });
+        var channel = pusher.subscribe('report-notify');
+        channel.bind('App\\Events\\ReportEvent', function(data){
+            var first = data.seeker_id;
+            console.log(first);
+            var second = data.bidder_id;
+            $.ajax({
+                type: "post",
+                url: "{{ route('user.report') }}",
+                data:{
+                    '_token': "{{ csrf_token() }}",
+                    'seeker_id':first,
+                    'bidder_id':second
+                },
+                dataType:"json",
+                cache:false,
+                success:function(response){
+                    var seeker_name = response.first.firstname +" "+response.first.lastname+ " ";
+                    var bidder_name = response.second.firstname +" "+response.second.lastname;
+                    var message = data.message;
+                    console.log(message);
+                    var textarea = document.createElement("textarea");
+                    textarea.rows = "4";
+                    textarea.cols="50";
+                    textarea.value = "Message: "+message;
+                    textarea.style="border:none";
+                    swal({
+                        title: "Report",
+                        text: ""+seeker_name+ "reported " + bidder_name,
+                        icon: "warning",
+                        content: textarea
+                    });
+                }
+            });
+        });
+    </script>
     <!-- my own script here!!!-->
-    <script type="text/javascript">
+    <!-- <script type="text/javascript">
         function validation() {
               swal({   
             title: "Are you sure?",   
@@ -116,8 +160,8 @@
             swal("Deleted!", "Your event has been deleted.", "success"); 
         });
           };
-    </script>
-     <script>
+    </script> -->
+    <!--  <script>
     $(document).ready(function() {
         $('#myTable').DataTable();
         $(document).ready(function() {
@@ -149,10 +193,10 @@
                         }
                     });
                 }
-            });
+            }); -->
 
             // Order by the grouping
-            $('#example tbody').on('click', 'tr.group', function() {
+           /*  $('#example tbody').on('click', 'tr.group', function() {
                 var currentOrder = table.order()[0];
                 if (currentOrder[0] === 2 && currentOrder[1] === 'asc') {
                     table.order([2, 'desc']).draw();
@@ -161,7 +205,7 @@
                 }
             });
         });
-    });
+    }); */
     $('#example23').DataTable({
         dom: 'Bfrtip',
         buttons: [
