@@ -34,6 +34,7 @@ Route::post('ratingmobile', 'MobileController@userRatings')->name('mobile.rating
 Route::get('seeker/400', function(){
     return view('page/seeker');
 })->name('seeker.expired');
+// START
 Route::get('login', 'LoginController@loginForm')->name('login');
 Route::post('login', 'LoginController@login');
 Route::get('email', 'ResetController@showReset')->name('password.email');
@@ -49,6 +50,7 @@ Route::group(['middleware' => ['auth']], function(){
     Route::get('admin/dashboard', ['as' => 'admin', function(){
         return view('admin/admin');
     }]);
+    Route::post('bidder/user/report', ['as' => 'user.report', 'uses' => 'ReportController@getReport']);
     Route::get('list/bidder', ['as' => 'bidderAdmin', 'uses' => 'BidderController@getRole']);
     Route::get('list/seeker', ['as' => 'adminSeeker', 'uses' => 'SeekerController@getRole']);
     Route::get('calendar', ['as' => 'calendarAdmin', function(){
@@ -137,4 +139,8 @@ Route::group(['middleware' => ['auth']], function(){
     Route::post('bidder/ratings',['as' => 'rate.postseeker', 'uses' => 'RatingController@postBReview']);
     // END works    
 
+
+    
+    Route::post('seeker/report/post',['as' => 'post.seeker', 'uses' => 'ReportController@postReport']);
+  
 });
