@@ -17,6 +17,8 @@ use URL;
 use Zipper;
 use ZipArchive;
 use Carbon\Carbon;
+use Illuminate\Mail\Message;
+use Illuminate\Mail\Mailer;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Auth;
@@ -124,7 +126,9 @@ class ModuleController extends Controller
         
           $project = DB::table('projects')
             ->join('users','projects.user_id','=','users.id')
+            ->select('*','projects.id as project_id')
             ->first();
+       
           $proposal = DB::table('proposals')
             ->join('users','proposals.bidder_id','=','users.id')
             ->where('proposals.id',$proposal_id)
@@ -209,7 +213,16 @@ class ModuleController extends Controller
             ->update([
                 'status' => $module_status
             ]);
-        echo 'ok';
+          
+     }
+
+     public function sendMail($receiver,$project_name){
+        $data['receiver'] = $receiver;
+        $data['project_name'] = $project_name;
+        \Mail::send('email/seeker',  $data, function($message){
+            $message->to('saturre.mic2@gmail.com','Mickale Saturre')
+                ->subject('Project');
+        });
      }
 
      public function moduleUpdate(){
@@ -226,9 +239,6 @@ class ModuleController extends Controller
         $percent = $module->percentDone;
         $total = $percent + $module_percent;
         $module->percentDone = $total;
-        /* if($module->percentDone == '100'){
-            $module->status = 'done';
-        } */
         $module->save();
         echo 'ok';
     }
@@ -258,6 +268,19 @@ class ModuleController extends Controller
                 'status' => 'done',
                 'files' => $file_list
             ]);
+        $project = $request->project_id;
+        $client = $request->client_id;
+        $project_name = Project::find($project);
+        $client_name = User::find($client);
+        $receiver = ucfirst($client_name->firstname).' '.ucfirst($client_name->lastname);
+        $project_title = strtoupper($project_name->title);
+        $proposal_id = $request->proposal_id;
+        $module = Module::where('proposal_id', $proposal_id)
+            ->pluck('status')
+            ->toArray();
+        if(count(array_unique($module)) === 1 && end($module) === 'done'){
+            $this->sendMail($receiver,$project_title);
+        }
         return back()
                 ->with('success','Module updated');
     }
@@ -274,14 +297,15 @@ class ModuleController extends Controller
 
     public function zipFile(Request $request){
         $public_dir = public_path();
-        $zipName = 'files.zip';
+        $file_name = Carbon::now(new DateTimeZone('Asia/Manila'))->timestamp;
+        $zipName = $file_name.".zip";
         $module_files = Module::find($request->module_id);
         $files = explode(",",$module_files->files);
         $download = array();
         foreach($files as $file){
             $download[] = glob(public_path('files/'.$file));
         }
-        Zipper::make($zipName)->add($download);
+        Zipper::make($zipName)->add($download)->close();
         $headers = array(
             'Content-Type' => 'application/octet-stream',
         );
@@ -289,6 +313,7 @@ class ModuleController extends Controller
         if(file_exists($filetopath)){
         return response()->download($filetopath,$zipName,$headers);
         }
+       
         return back();
     }
     public function payProject($project_id,$bid_id,$project_name,$user_paypal,$amount,$user_id){
