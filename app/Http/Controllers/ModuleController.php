@@ -216,11 +216,13 @@ class ModuleController extends Controller
           
      }
 
-     public function sendMail($receiver,$project_name){
+     public function sendMail($receiver,$project_name,$client_email){
         $data['receiver'] = $receiver;
         $data['project_name'] = $project_name;
-        \Mail::send('email/seeker',  $data, function($message){
-            $message->to('saturre.mic2@gmail.com','Mickale Saturre')
+        $client_mail = $client_email;
+        $to_receiver = $receiver;
+        \Mail::send('email/seeker',  $data, function($message) use($client_mail,$to_receiver){
+            $message->to($client_mail,$to_receiver)
                 ->subject('Project');
         });
      }
@@ -274,12 +276,13 @@ class ModuleController extends Controller
         $client_name = User::find($client);
         $receiver = ucfirst($client_name->firstname).' '.ucfirst($client_name->lastname);
         $project_title = strtoupper($project_name->title);
+        $client_email = $client_name->email;
         $proposal_id = $request->proposal_id;
         $module = Module::where('proposal_id', $proposal_id)
             ->pluck('status')
             ->toArray();
         if(count(array_unique($module)) === 1 && end($module) === 'done'){
-            $this->sendMail($receiver,$project_title);
+            $this->sendMail($receiver,$project_title,$client_email);
         }
         return back()
                 ->with('success','Module updated');
