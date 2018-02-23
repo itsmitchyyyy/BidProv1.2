@@ -151,7 +151,7 @@
             <h1>To Do</h1>
             @foreach($todo as $todos)
 
-            <div id="c2" onclick="toggleModal(this,{{ $todos->module_id }})" data-mode="{{ $todos->module_id }}" data-status="{{ $todos->module_status }}" data-module="{{ $todos->id }}" data-tooltip="true" title="Click to view" data-proposal="{{ $todos->proposal_id }}" data-project="{{ $todos->project_id }}" data-name="{{ $todos->module_name }}" class="card-kanban">
+            <div id="c2" onclick="toggleModal(this,{{ $todos->module_id }})" data-email="{{ $project->user_id }}" data-prname="{{ $project->project_id }}"  data-mode="{{ $todos->module_id }}" data-status="{{ $todos->module_status }}" data-module="{{ $todos->id }}" data-tooltip="true" title="Click to view" data-proposal="{{ $todos->proposal_id }}" data-project="{{ $todos->project_id }}" data-name="{{ $todos->module_name }}" class="card-kanban">
             {{ $todos->module_name }}
             <h5>{{ $todos->percentDone}}% Complete</h5>
             <div class="progress">
@@ -164,7 +164,7 @@
         <div id="doing" class="section">
             <h1>Doing</h1>
             @foreach($doing as $doings)
-            <div id="c1"  onclick="toggleModal(this,{{ $doings->module_id }})" data-mode="{{ $doings->module_id }}" data-percent="{{ $doings->percentDone }}" data-status="{{ $doings->module_status }}" data-module="{{ $doings->id }}" data-tooltip="true" title="Click to view" data-proposal="{{ $doings->proposal_id }}" data-project="{{ $doings->project_id }}" data-name="{{ $doings->module_name }}" class="card-kanban">
+            <div id="c1"  onclick="toggleModal(this,{{ $doings->module_id }})" data-email="{{ $project->user_id  }}" data-prname="{{ $project->project_id }}"  data-mode="{{ $doings->module_id }}" data-percent="{{ $doings->percentDone }}" data-status="{{ $doings->module_status }}" data-module="{{ $doings->id }}" data-tooltip="true" title="Click to view" data-proposal="{{ $doings->proposal_id }}" data-project="{{ $doings->project_id }}" data-name="{{ $doings->module_name }}" class="card-kanban">
             {{ $doings->module_name }}
             <h5>{{ $doings->percentDone}}% Complete</h5>
             <div class="progress">
@@ -176,7 +176,7 @@
         <div id="done" class="section">
             <h1>Done</h1>
             @foreach($done as $dones)
-            <div id="c3"  onclick="toggleModal(this,{{ $dones->module_id }})" data-mode="{{ $dones->module_id }}" data-percent="{{ $dones->percentDone }}" data-status="{{ $dones->module_status }}"  data-module="{{ $dones->id }}" data-tooltip="true" title="Click to view" data-proposal="{{ $dones->proposal_id }}" data-project="{{ $dones->project_id }}" data-name="{{ $dones->module_name }}" class="card-kanban">
+            <div id="c3"  onclick="toggleModal(this,{{ $dones->module_id }})" data-email="{{ $project->user_id }}" data-prname="{{ $project->project_id }}" data-mode="{{ $dones->module_id }}" data-percent="{{ $dones->percentDone }}" data-status="{{ $dones->module_status }}"  data-module="{{ $dones->id }}" data-tooltip="true" title="Click to view" data-proposal="{{ $dones->proposal_id }}" data-project="{{ $dones->project_id }}" data-name="{{ $dones->module_name }}" class="card-kanban">
             {{ $dones->module_name }}
             <h5>{{ $dones->percentDone}}% Complete</h5>
             <div class="progress">
@@ -224,6 +224,9 @@
                  <div class="form-group{{ $errors->has('upload_file') ? ' has-error' : ''}}">
                     <input type="file" name="upload_file[]" id="myUpload" onchange="uploadFiles()" multiple>
                     <input type="hidden" id="module_id" name="module_id" value="">
+                    <input type="hidden" name="proposal_id" id="proposal_id" value="">
+                    <input type="hidden" name="client_id" id="client_id" value="">
+                    <input type="hidden" name="project_id" id="project_id" value="">
                     <p id="files"></p>
                     @if($errors->has('upload_file'))
                         <p style="color:red">{{ $errors->first('upload_file') }}</p>
@@ -309,6 +312,9 @@ function toggleComment(id){
 <script>
     function toggleModal(event,id,dataname){
       $(function(){
+        // var proposal_id = $(event).data('proposal');
+        var client_id = $(event).data('email');
+        var project_id = $(event).data('prname');
         var dataID = $(event).data('mode');  
         var dataStatus = $(event).data('status');
         var tableName = $(event).data('name');
@@ -352,7 +358,7 @@ function toggleComment(id){
 
                      if(dataStatus == 'doing'){
                          if(dataValue.every(checkDoing)){
-                             options =  `<a onclick="finishModule(`+id+`)" class="pull-right"><button class="btn btn-info wew">Finish</button></a>`;
+                             options =  `<a onclick="finishModule(`+id+`,`+proposalComment+`,`+client_id+`,`+project_id+`)" class="pull-right"><button class="btn btn-info wew">Finish</button></a>`;
                          }
                      }
                      if(dataStatus == 'done'){
@@ -475,12 +481,18 @@ function toggleComment(id){
                     if (section !== card.parentNode) {
                         var module_id  = $(card).data('module');
                         var status_check = $(card).data('status');
+                        var proposal_id = $(card).data('proposal');
+                        var client_id = $(card).data('email');
+                        var project_id = $(card).data('prname');
                         var module_status = '';
                         if(section.id == 'done'){
                         var percent = $(card).data('percent');
                          if(percent == 100){
                             module_status = section.id;
                             $('#module_id').val(module_id);
+                            $('#proposal_id').val(proposal_id);
+                            $('#project_id').val(project_id);
+                            $('#client_id').val(client_id);
                             $('#modalUpload').modal('show');
                             section.appendChild(card);
                          }else{
@@ -583,7 +595,6 @@ function toggleComment(id){
     </script>
     <script>
         function uploadFiles(){
-           
             var x = document.getElementById("myUpload");
             // var x = $('#myUpload');
             var txt = "";
