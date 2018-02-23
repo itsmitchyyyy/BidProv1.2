@@ -199,6 +199,7 @@
                     },
                     cache:false,
                     success:function(response){
+                        console.log(response);
                         swal("Report Successful","Thanks for your report","success");
                     }
                 });
