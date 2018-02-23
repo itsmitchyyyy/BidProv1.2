@@ -20,6 +20,7 @@ class CreateReportsTable extends Migration
             $table->integer('bidder_id')->unsigned();
             $table->foreign('bidder_id')->references('id')->on('users');
             $table->string('message');
+            $table->string('status')->default('pending');
             $table->timestamps();
         });
     }
