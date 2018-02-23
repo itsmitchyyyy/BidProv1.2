@@ -60,8 +60,8 @@ Morris.Area({
         element: 'morris-area-chart2',
         data: [{
             period: '2010',
-            SiteA: 0,
-            SiteB: 0,
+            SiteA: 120,
+            SiteB: 120,
             
         }, {
             period: '2011',
