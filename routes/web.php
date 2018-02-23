@@ -50,7 +50,9 @@ Route::group(['middleware' => ['auth']], function(){
     Route::get('admin/dashboard', ['as' => 'admin', function(){
         return view('admin/admin');
     }]);
+    Route::get('bidder/user/reports', ['as' => 'user.report.list', 'uses' => 'ReportController@getReports']);
     Route::post('bidder/user/report', ['as' => 'user.report', 'uses' => 'ReportController@getReport']);
+    Route::post('bidder/user/report/update', ['as' => 'user.report.update', 'uses' => 'ReportController@updateReport']);
     Route::get('list/bidder', ['as' => 'bidderAdmin', 'uses' => 'BidderController@getRole']);
     Route::get('list/seeker', ['as' => 'adminSeeker', 'uses' => 'SeekerController@getRole']);
     Route::get('calendar', ['as' => 'calendarAdmin', function(){
@@ -138,10 +140,10 @@ Route::group(['middleware' => ['auth']], function(){
     Route::get('bidder/notifications', ['as' => 'viewBNotification', 'uses' => 'NotificationController@viewBNotification']);
     Route::get('bidder/ratings/{id}', ['as' => 'rate.seeker', 'uses' => 'RatingController@reviewBUser']);
     Route::post('bidder/ratings',['as' => 'rate.postseeker', 'uses' => 'RatingController@postBReview']);
+    Route::post('bidder/project/send-email', ['as' => 'send-email', 'uses' => 'ModuleController@sendMail']);
     // END works    
 
 
     
     Route::post('seeker/report/post',['as' => 'post.seeker', 'uses' => 'ReportController@postReport']);
-  
 });
