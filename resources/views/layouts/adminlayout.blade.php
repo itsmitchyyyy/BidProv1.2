@@ -116,25 +116,56 @@
                     var seeker_name = response.first.firstname +" "+response.first.lastname+ " ";
                     var bidder_name = response.second.firstname +" "+response.second.lastname;
                     var message = data.message;
+                    var report_id = data.report_id;
                     console.log(message);
                     var textarea = document.createElement("textarea");
                     textarea.rows = "4";
                     textarea.cols="50";
-                    textarea.value = "Message: "+message;
+                    textarea.value = "Message: "+message;   
                     textarea.style="border:none";
+                    textarea.disabled = "true";
                     swal({
                         title: "Report",
                         text: ""+seeker_name+ "reported " + bidder_name,
                         icon: "warning",
-                        content: textarea
+                        content: textarea,
+                    }).then(function(value){
+                        $.ajax({
+                            type: "post",
+                            url: "{{ route('user.report.update') }}",
+                            data: {
+                                'report_id': report_id
+                            },
+                            cache:false,
+                            success:function(response){
+                                console.log(response);
+                            }
+                        });
                     });
                 }
             });
         });
     </script>
+    <script>
+        $(function(){
+            $.ajax({
+                type:"get",
+                url: "{{ route('user.report.list') }}",
+                dataType: "json",
+                cache:false,
+                success:function(response){
+                  swal({
+                      title:"Today's Report",
+                      text: "Total Reports: "+response.length,
+                      icon: "warning"
+                  });
+                }
+            });
+        });
+    </script>
     <!-- my own script here!!!-->
-    <!-- <script type="text/javascript">
-        function validation() {
+    <!--  <script type="text/javascript">
+         function validation() {
               swal({   
             title: "Are you sure?",   
             text: "You will not be able to recover this event!",   
@@ -160,9 +191,9 @@
             swal("Deleted!", "Your event has been deleted.", "success"); 
         });
           };
-    </script> -->
-    <!--  <script>
-    $(document).ready(function() {
+    </script>  -->
+      <script>
+   /*  $(document).ready(function() {
         $('#myTable').DataTable();
         $(document).ready(function() {
             var table = $('#example').DataTable({
@@ -193,10 +224,10 @@
                         }
                     });
                 }
-            }); -->
+            }); 
 
             // Order by the grouping
-           /*  $('#example tbody').on('click', 'tr.group', function() {
+            $('#example tbody').on('click', 'tr.group', function() {
                 var currentOrder = table.order()[0];
                 if (currentOrder[0] === 2 && currentOrder[1] === 'asc') {
                     table.order([2, 'desc']).draw();
@@ -205,7 +236,7 @@
                 }
             });
         });
-    }); */
+    });  */
     $('#example23').DataTable({
         dom: 'Bfrtip',
         buttons: [
