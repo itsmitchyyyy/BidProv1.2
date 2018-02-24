@@ -12,7 +12,7 @@
 </style>
 @endpush
 @section('content')
-<div class="modal fade" id="reportModal">
+<!-- <div class="modal fade" id="reportModal">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -34,7 +34,7 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->
   <!-- Page Content -->
             <div id="">
             <div class="container-fluid">
@@ -46,7 +46,7 @@
                 <!-- .row -->
                 <div class="row">
                     <div class="col-md-4 col-xs-12">
-                    <a href="#" data-toggle="modal" data-target="#reportModal" style="color:red"><strong>Report User</strong></a>
+                    <a href="#" id="reportBtn" data-uid="{{ Auth::id() }}" data-sid="{{ $user->id }}" style="color:red"><strong>Report User</strong></a>
                         <div class="white-box">
                             <div class="user-bg"> 
                             <img width="100%" alt="user" src="/uploads/blank.png">
