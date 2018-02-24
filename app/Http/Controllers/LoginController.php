@@ -26,25 +26,34 @@ class LoginController extends Controller
         $password = $request->password;
         if(filter_var($username, FILTER_VALIDATE_EMAIL)){
             if(Auth::attempt(['email' => $username, 'password' => $password])){
+                if(Auth::user()->status == 1){
+                    if($request->user()->hasRoles('admin')){
+                        return redirect()->route('admin');
+                    }elseif ($request->user()->hasRoles('bidder')) {
+                        return redirect()->route('bidder');
+                    }elseif ($request->user()->hasRoles('seeker')) {
+                        return redirect()->route('seeker');
+                    }
+                }
+               else {
+                    return redirect()->route('login')
+                        ->withErrors(['error' => 'Your account has been blocked']);
+                }
+            }
+        }elseif (Auth::attempt(['username' => $username, 'password' => $password])) {
+            if(Auth::user()->status == 1){
                 if($request->user()->hasRoles('admin')){
                     return redirect()->route('admin');
                 }elseif ($request->user()->hasRoles('bidder')) {
                     return redirect()->route('bidder');
                 }elseif ($request->user()->hasRoles('seeker')) {
                     return redirect()->route('seeker');
-                }else {
-                    return redirect()->route('login')
-                        ->withErrors(['error' => 'Invalid Credentials']);
                 }
+            }else{
+                return redirect()->route('login')
+                        ->withErrors(['error' => 'Your account has been blocked']);
             }
-        }elseif (Auth::attempt(['username' => $username, 'password' => $password])) {
-            if($request->user()->hasRoles('admin')){
-                return redirect()->route('admin');
-            }elseif ($request->user()->hasRoles('bidder')) {
-                return redirect()->route('bidder');
-            }elseif ($request->user()->hasRoles('seeker')) {
-                return redirect()->route('seeker');
-            }
+           
         }else {
             return redirect()->route('login')
             ->withErrors(['error' => 'Invalid Credentials']);
