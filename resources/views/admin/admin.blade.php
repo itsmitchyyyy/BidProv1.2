@@ -1,4 +1,13 @@
 @extends('layouts.adminlayout')
+@push('css')
+<style>
+    canvas{
+        -moz-user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+    }
+    </style>
+@endpush
 @section('content')
 @inject('controller', 'App\Http\Controllers\AdminController')
    <!-- Page Content -->
@@ -103,7 +112,10 @@
                            <h5><i class="fa fa-circle m-r-5" style="color: #9675ce;"></i>iPod</h5>
                        </li>
                    </ul> -->
-                   <div id="morris-area-chart" style="height: 340px;"></div>
+                   <!-- <div id="morris-area-chart" style="height: 340px;"></div> -->
+                   <div style="width:100%;">
+                        <canvas id="canvas"></canvas>
+                   </div>
                </div>
            </div>
            <div class="col-md-5 col-lg-3 col-sm-6 col-xs-12">
@@ -113,14 +125,14 @@
                            <div class="row weather p-20">
                                <div class="col-md-6 col-xs-6 col-lg-6 col-sm-6 m-t-40">
                                    <h3>&nbsp;</h3>
-                                   <h1>73<sup>°F</sup></h1>
-                                   <p class="text-white">AHMEDABAD, INDIA</p>
+                                   <h1>31<sup>°C</sup></h1>
+                                   <p class="text-white">Cebu City, Philippines</p>
                                </div>
                                <div class="col-md-6 col-xs-6 col-lg-6 col-sm-6 text-right"> <i class="wi wi-day-cloudy-high"></i>
                                    <br/>
                                    <br/>
-                                   <b class="text-white">SUNNEY DAY</b>
-                                   <p class="w-title-sub">April 14</p>
+                                   <b class="text-white">Partly Sunny</b>
+                                   <p class="w-title-sub">March 1</p>
                                </div>
                            </div>
                        </div>
@@ -131,24 +143,24 @@
                                <!-- Carousel items -->
                                <div class="carousel-inner ">
                                    <div class="active item">
-                                       <h3 class="text-white">My Acting blown <span class="font-bold">Your Mind</span> and you also laugh at the moment</h3>
-                                       <div class="twi-user"><img src="/img/users/hritik.jpg" alt="user" class="img-circle img-responsive pull-left">
-                                           <h4 class="text-white m-b-0">Govinda</h4>
-                                           <p class="text-white">Actor</p>
+                                       <h3 class="text-white">Technology is best when it brings <span class="font-bold">people</span> together</h3>
+                                       <div class="twi-user"><img src="{{ asset('img/matt.jpg') }}" alt="user" class="img-circle img-responsive pull-left">
+                                           <h4 class="text-white m-b-0">Matt Mullenweg</h4>
+                                           <p class="text-white">Developer of WordPress </p>
                                        </div>
                                    </div>
                                    <div class="item">
-                                       <h3 class="text-white">My Acting blown <span class="font-bold">Your Mind</span> and you also laugh at the moment</h3>
-                                       <div class="twi-user"><img src="/img/users/genu.jpg" alt="user" class="img-circle img-responsive pull-left">
-                                           <h4 class="text-white m-b-0">Govinda</h4>
-                                           <p class="text-white">Actor</p>
+                                       <h3 class="text-white">An <span class="font-bold">Entrepreneur </span>is someone who jumps off a cliff, and builds a plane on his way down.</h3>
+                                       <div class="twi-user"><img src="{{ asset('img/reid.png') }}" alt="user" class="img-circle img-responsive pull-left">
+                                           <h4 class="text-white m-b-0">Reid Hoffman</h4>
+                                           <p class="text-white">Executive Chairman, LinkedIn</p>
                                        </div>
                                    </div>
                                    <div class="item">
-                                       <h3 class="text-white">My Acting blown <span class="font-bold">Your Mind</span> and you also laugh at the moment</h3>
-                                       <div class="twi-user"><img src="/img/users/ritesh.jpg" alt="user" class="img-circle img-responsive pull-left">
-                                           <h4 class="text-white m-b-0">Govinda</h4>
-                                           <p class="text-white">Actor</p>
+                                       <h3 class="text-white">The ones who are <span class="font-bold">crazy</span> enough to think that they can change the world, are the ones who do.</h3>
+                                       <div class="twi-user"><img src="{{ asset('img/steve.jpg') }}" alt="user" class="img-circle img-responsive pull-left">
+                                           <h4 class="text-white m-b-0">Steve Jobs</h4>
+                                           <p class="text-white">CEO, Apple</p>
                                        </div>
                                    </div>
                                </div>
@@ -167,5 +179,110 @@
 </div>
 <!-- /#page-wrapper -->
 
+@push('scripts')
+<script src="{{ asset('js/charts/chart.js') }}"></script>
+<script src="{{ asset('js/charts/utils.js') }}"></script>
+<script>
+        $(function(){
+            $.ajax({
+                type:"get",
+                url: "{{ route('user.report.list') }}",
+                dataType: "json",
+                cache:false,
+                success:function(response){
+                  swal({
+                      title:"Today's Report",
+                      text: "Total Reports: "+response.length,
+                      icon: "warning",
+                      timer:2000
+                  });
+                }
+            });
+        });
+    </script>
+<script>
+    $(function(){
+        $.ajax({
+            type: "get",
+            url: "{{ route('admin.commission') }}",
+            dataType: "json",
+            cache:false,
+            success:function(response){
+                var data = [];
+                for(var i = 0; i < response.length; i++){
+                    data.push(response[i].monthly_commission);
+                }
+                var config = {
+            type: 'line',
+            data: {
+                labels: ["January", "February", "March", "April", "May", "June", "July","August","September","October","November","December"],
+                datasets: [{
+                    label: "Commision",
+                    backgroundColor: window.chartColors.red,
+                    borderColor: window.chartColors.red,
+                    data: data,
+                    fill: false,
+                }]
+            },
+            options: {
+                responsive: true,
+                title:{
+                    display:true,
+                    // text:'Min and Max Settings'
+                },
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            min: 1000,
+                            max: 10000
+                        }
+                    }]
+                }
+            }
+        };
 
+        window.onload = function() {
+            var ctx = document.getElementById("canvas").getContext("2d");
+            window.myLine = new Chart(ctx, config);
+        };
+            }
+        });
+    });
+</script>
+<!-- <script>
+ var config = {
+            type: 'line',
+            data: {
+                labels: ["January", "February", "March", "April", "May", "June", "July","August","September","October","November","December"],
+                datasets: [{
+                    label: "Commision per month",
+                    backgroundColor: window.chartColors.red,
+                    borderColor: window.chartColors.red,
+                    data: [10000, 30000, 50000, 20000, 25000, 44440, 35000,25000,14800,32010,17000,-10000],
+                    fill: false,
+                }]
+            },
+            options: {
+                responsive: true,
+                title:{
+                    display:true,
+                    // text:'Min and Max Settings'
+                },
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            min: 10000,
+                            max: 50000
+                        }
+                    }]
+                }
+            }
+        };
+
+        window.onload = function() {
+            var ctx = document.getElementById("canvas").getContext("2d");
+            window.myLine = new Chart(ctx, config);
+        };
+</script> -->
+@endpush
 @endsection
