@@ -12,6 +12,7 @@
     </style>
     <link rel="shortcut icon" href="/img/bidprologo.png" type="image/x-icon">
     <link rel="stylesheet" href="{{ asset('css/admin/admin.css') }}">
+    @stack('css')
     <script src="{{ asset('js/app.js') }}"></script>
     <script>
     (function(i, s, o, g, r, a, m) {
@@ -92,77 +93,61 @@
 
 
     @stack('scripts')
-    <script>
-        var pusher = new Pusher('9ab3129dae2df45ee2fc',{
-            cluster: 'ap1',
-            encrypted: true,
-        });
-        var channel = pusher.subscribe('report-notify');
-        channel.bind('App\\Events\\ReportEvent', function(data){
-            var first = data.seeker_id;
-            console.log(first);
-            var second = data.bidder_id;
-            $.ajax({
-                type: "post",
-                url: "{{ route('user.report') }}",
-                data:{
-                    '_token': "{{ csrf_token() }}",
-                    'seeker_id':first,
-                    'bidder_id':second
-                },
-                dataType:"json",
-                cache:false,
-                success:function(response){
-                    var seeker_name = response.first.firstname +" "+response.first.lastname+ " ";
-                    var bidder_name = response.second.firstname +" "+response.second.lastname;
-                    var message = data.message;
-                    var report_id = data.report_id;
-                    console.log(message);
-                    var textarea = document.createElement("textarea");
-                    textarea.rows = "4";
-                    textarea.cols="50";
-                    textarea.value = "Message: "+message;   
-                    textarea.style="border:none";
-                    textarea.disabled = "true";
-                    swal({
-                        title: "Report",
-                        text: ""+seeker_name+ "reported " + bidder_name,
-                        icon: "warning",
-                        content: textarea,
-                    }).then(function(value){
-                        $.ajax({
-                            type: "post",
-                            url: "{{ route('user.report.update') }}",
-                            data: {
-                                'report_id': report_id
-                            },
-                            cache:false,
-                            success:function(response){
-                                console.log(response);
-                            }
-                        });
+<script>
+    var pusher = new Pusher('9ab3129dae2df45ee2fc',{
+        cluster: 'ap1',
+        encrypted: true,
+    });
+    var channel = pusher.subscribe('report-notify');
+    channel.bind('App\\Events\\ReportEvent', function(data){
+        var first = data.seeker_id;
+        console.log(first);
+        var second = data.bidder_id;
+        $.ajax({
+            type: "post",
+            url: "{{ route('user.report') }}",
+            data:{
+                '_token': "{{ csrf_token() }}",
+                'seeker_id':first,
+                'bidder_id':second
+            },
+            dataType:"json",
+            cache:false,
+            success:function(response){
+                var seeker_name = response.first.firstname +" "+response.first.lastname+ " ";
+                var bidder_name = response.second.firstname +" "+response.second.lastname;
+                var message = data.message;
+                var report_id = data.report_id;
+                console.log(message);
+                var textarea = document.createElement("textarea");
+                textarea.rows = "4";
+                textarea.cols="50";
+                textarea.value = "Message: "+message;   
+                textarea.style="border:none";
+                textarea.disabled = "true";
+                swal({
+                    title: "Report",
+                    text: ""+seeker_name+ "reported " + bidder_name,
+                    icon: "warning",
+                    content: textarea,
+                }).then(function(value){
+                    $.ajax({
+                        type: "post",
+                        url: "{{ route('user.report.update') }}",
+                        data: {
+                            'report_id': report_id
+                        },
+                        cache:false,
+                        success:function(response){
+                            console.log(response);
+                        }
                     });
-                }
-            });
+                });
+            }
         });
+    });
     </script>
-    <script>
-        $(function(){
-            $.ajax({
-                type:"get",
-                url: "{{ route('user.report.list') }}",
-                dataType: "json",
-                cache:false,
-                success:function(response){
-                  swal({
-                      title:"Today's Report",
-                      text: "Total Reports: "+response.length,
-                      icon: "warning"
-                  });
-                }
-            });
-        });
-    </script>
+    
     <!-- my own script here!!!-->
     <!--  <script type="text/javascript">
          function validation() {
@@ -240,7 +225,7 @@
     $('#example23').DataTable({
         dom: 'Bfrtip',
         buttons: [
-            'copy', 'csv', 'excel', 'pdf', 'print'
+            'copy', 'csv', 'excel', 'pdf'
         ]
     });
     </script>
@@ -250,5 +235,5 @@
             $('[data-toggle="tooltip"]').tooltip();
         });
     </script>
-
+@stack('scripts')
 </html>
