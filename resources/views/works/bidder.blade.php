@@ -84,7 +84,7 @@
                        <td>
                            <div class="clearfix">
                                <img src="/{{ $dones->avatar }}" alt="avatar" style="width:70px;height:70px" class="gap-right img-thumbnail pull-left">
-                               <p><a href="">{{ ucfirst($dones->firstname) }} {{ ucfirst($dones->lastname)}}</a>
+                               <p><a href="{{ route('viewBuser',['user_id' => $dones->seeker_id]) }}">{{ ucfirst($dones->firstname) }} {{ ucfirst($dones->lastname)}}</a>
                                <br>
                                <input id="input-1" name="input-1" class="rating rating-loading" data-min="0" data-max="5" data-step="0.1" value="{{ $users->usersReview($dones->seeker_id)->userAverageRating }}" data-size="s" disabled>
                                Reviews: {{ $users->usersReview($dones->seeker_id)->userSumRating }} Reviews
