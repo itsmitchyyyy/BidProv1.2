@@ -92,6 +92,7 @@ Route::group(['middleware' => ['auth']], function(){
     Route::get('seeker/view/bid/module/{module_id}', ['as' => 'viewComments', 'uses' => 'ModuleController@moduleComments']);
     Route::get('seeker/ratings/{id}', ['as' => 'rate.show', 'uses' => 'RatingController@reviewUser']);
     Route::post('seeker/ratings',['as' => 'rate.post', 'uses' => 'RatingController@postReview']);
+    Route::post('seeker/ratings/update', ['as' => 'rate.comment', 'uses' => 'RatingController@updateComment']);
     Route::get('seeker/view/user/profile/{user_id}', ['as' => 'viewUser', 'uses' => 'SeekerController@viewUser']);
     
     // PAYMENT
