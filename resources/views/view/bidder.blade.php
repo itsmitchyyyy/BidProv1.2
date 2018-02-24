@@ -47,6 +47,7 @@
                 <div class="row">
                     <div class="col-md-4 col-xs-12">
                     <a href="#" id="reportBtn" data-uid="{{ Auth::id() }}" data-sid="{{ $user->id }}" style="color:red"><strong>Report User</strong></a>
+                    <a href="{{ route('rate.seeker', ['id' => $user->id]) }}"><strong>Feedback User</strong></a>
                         <div class="white-box">
                             <div class="user-bg"> 
                             <img width="100%" alt="user" src="/uploads/blank.png">
@@ -168,6 +169,42 @@
 <script>
     $(function(){
         $('#projectsDone').DataTable();
+    });
+</script>
+<script>
+    $(function(){
+        $('#reportBtn').click(function(){
+            var uid = $(this).data('uid');
+            var sid = $(this).data('sid');
+            var textarea = document.createElement("textarea");
+            textarea.rows = "4";
+            textarea.cols = "50";
+                swal({
+                    title: "Report",
+                    content: textarea,
+                    buttons:true
+                }).then(function(value){
+                        if(value){
+                            $.ajax({
+                                type: "post",
+                                url: "{{ route('post.seeker') }}",
+                                data:{
+                                    '_token': "{{ csrf_token() }}",
+                                    'seeker_id':uid,
+                                    'bidder_id':sid,
+                                    'message':textarea.value
+                                },
+                                cache: false,
+                                success:function(response){
+                                    console.log(response);
+                                    swal("Report Successful","Thanks for your report","success");
+                                }
+                            });
+                        }else{
+                            swal("Report Cancelled","Error reporting user","error");
+                        }
+                });
+        });
     });
 </script>
 @endsection
