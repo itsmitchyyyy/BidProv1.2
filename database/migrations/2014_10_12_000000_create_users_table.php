@@ -29,6 +29,7 @@ class CreateUsersTable extends Migration
             $table->string('avatar')->nullable();
             $table->string('skills')->nullable();
             $table->string('paypal')->nullable();
+            $table->string('status')->default(1);
             $table->rememberToken();
             $table->timestamps();
         });
