@@ -50,6 +50,7 @@
                 <div class="row">
                     <div class="col-md-4 col-xs-12">
                     <a href="#" id="reportBtn" data-uid="{{ Auth::id() }}" data-sid="{{ $user->id }}" style="color:red"><strong>Report User</strong></a>
+                    <a href="{{ route('rate.show', ['id' => $user->id]) }}"><strong>Feedback User</strong></a>
                         <div class="white-box">
                             <div class="user-bg"> 
                             <img width="100%" alt="user" src="/uploads/blank.png">
