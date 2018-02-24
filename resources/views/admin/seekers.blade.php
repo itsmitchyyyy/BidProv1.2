@@ -21,21 +21,23 @@
                                 <table id="example23" class="display nowrap" cellspacing="0" width="100%">
                                     <thead>
                                         <tr>
-                                            <th>ID</th>
-                                            <th>Name</th>
-                                            <th>Email</th>
-                                            <th>Contact</th>
-                                            <th>Address</th>
-                                            <th >Actions</th>
+                                        <th>USER ID</th>
+                                         <th>Name</th>
+                                         <th>Email</th>
+                                         <th>Contact</th>
+                                          <th>Created At</th>
+                                          <th>Status</th>
+                                          <th>Actions</th>
                                         </tr>
                                     </thead>
                                     <tfoot>
                                         <tr>
-                                          <th>ID</th>
-                                          <th>Name</th>
-                                          <th>Email</th>
-                                          <th>Contact</th>
-                                          <th>Address</th>
+                                        <th>USER ID</th>
+                                         <th>Name</th>
+                                         <th>Email</th>
+                                         <th>Contact</th>
+                                          <th>Created At</th>
+                                          <th>Status</th>
                                           <th>Actions</th>
                                         </tr>
                                     </tfoot>
@@ -43,14 +45,25 @@
                                         @foreach($seekers as $seeker)
                                         <tr>
                                             <td>{{ $seeker->id }}</td>
-                                            <td>{{ $seeker->name }}</td>
+                                            <td>{{ ucfirst($seeker->firstname) }} {{ ucfirst($seeker->lastname) }}</td>
                                             <td>{{ $seeker->email }}</td>
-                                            <td>{{ $seeker->contact }}</td>
-                                            <td>{{ $seeker->address }}</td>
+                                            <td>{{ $seeker->mobile_no }}</td>
+                                            <td>{{ Carbon\Carbon::parse($seeker->created_at)->toDayDateTimeString() }}</td>
+                                            <td>
+                                            @if($seeker->status == 1)
+                                                Active
+                                            @else
+                                                Disabled
+                                            @endif
+                                            </td>
                                             <td class="text-nowrap">
-                                                <a href="edit-profile-seek.html" data-toggle="tooltip" title="Edit" data-original-title="Edit"> <i class="fa fa-pencil text-inverse m-r-10"></i> </a>
-                                                <a href="#" data-toggle="tooltip" tilte="Delete" data-original-title="Close"> <i class="fa fa-trash text-danger m-r-10"></i> </a>
-                                                <a href="view-profile-seek.html" data-toggle="tooltip" data-original-title="View"> <i class="fa fa-eye text-success m-r-10"></i> </a>
+                                                <!-- <a href="#" data-toggle="tooltip" title="Edit"> <i style="font-size:16px" class="fa fa-pencil text-inverse m-r-10"></i> </a> -->
+                                                @if($seeker->status == 1)
+                                                <a href="#" data-tooltip="true" title="Close" onclick="deactivate({{ $seeker->id }})"> <i style="font-size:24px" class="fa fa-ban text-danger m-r-10"></i> </a>
+                                                @else
+                                                <a href="#" data-tooltip="true" title="Close" onclick="activate({{ $seeker->id }})"> <i style="font-size:24px" class="fa fa-check text-blue m-r-10"></i> </a>
+                                                @endif
+                                                <a href="#" onclick="viewProfile({{ $seeker->id }})" title="View"> <i style="font-size:24px"  class="fa fa-eye text-success m-r-10"></i> </a>
                                             </td>
                                         </tr>
                                         @endforeach
@@ -64,5 +77,152 @@
             <footer class="footer text-center"> 2017 &copy; bidpro brought to you by CodeX </footer>
         </div>
         <!-- /#page-wrapper -->
-
+ <!-- MODAL -->
+ <div class="modal" style="mt-5" tabindex="-1" id="viewProfile">
+            <div class="modal-dialog" >
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button class="close" data-dismiss="modal"><span>&times;</span></button>
+                        <h3>User Profile</h3>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="fullname" class="col-2 col-form-label">Fullname</label>
+                            <div class="col-10">
+                                <span id="fullname"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="email" class="col-2 col-form-label">Email</label>
+                            <div class="col-10">
+                                <span id="email"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="mobile" class="col-2 col-form-label">Mobile</label>
+                            <div class="col-10">
+                                <span id="mobile"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="landline" class="col-2 col-form-label">Landline</label>
+                            <div class="col-10">
+                                <span id="landline"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="street" class="col-2 col-form-label">Street</label>
+                            <div class="col-10">
+                                <span id="street"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="city" class="col-2 col-form-label">City</label>
+                            <div class="col-10">
+                                <span id="city"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary wew" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <!-- END MODAL -->
 @endsection
+@push('scripts')
+<script>
+    function viewProfile(user_id){
+        // $('#viewProfile').modal('show');
+        $.ajax({
+            type:"get",
+            url:"{{ route('users.profile') }}",
+            data:{
+                'user_id':user_id
+            },
+            dataType: "json",
+            cache:false,
+            success:function(response){
+                $('#fullname').text(response.firstname + ' ' +response.lastname);
+                $('#email').text(response.email);
+                $('#mobile').text(response.mobile_no);
+                $('#landline').text(response.landline);
+                $('#street').text(response.street_no);
+                $('#city').text(response.city);
+                $('#viewProfile').modal('show');
+            }
+        });
+    }
+</script>
+<script>
+    function activate(user_id){
+            swal({
+                title: "Activate",
+                text: "Are you sure you want to activate this user?",
+                buttons:true,
+                icon: "warning"
+            }).then(function(value){
+                if(value){
+                    $.ajax({
+                    type: "post",
+                    url: "{{ route('user.activate') }}",
+                    data: {
+                        '_token': "{{ csrf_token() }}",
+                        'user_id': user_id
+                    },
+                    cache:false,
+                    success:function(response){
+                       swal({
+                           title: "Success",
+                           text: "This user has been activated successfully",
+                           buttons:false,
+                           icon:"success"
+                       });
+                        setTimeout(function(){
+                            location.reload();
+                        },1000);
+                    }
+                });
+                }else{
+                    swal("Error","Error when activating this user","error");
+                }
+            });
+        }
+</script>
+   <script>
+        function deactivate(user_id){
+            swal({
+                title: "Deactivate",
+                text: "Are you sure you want to deactivate this user?",
+                buttons:true,
+                icon: "warning"
+            }).then(function(value){
+                if(value){
+                    $.ajax({
+                    type: "post",
+                    url: "{{ route('user.deactivate') }}",
+                    data: {
+                        '_token': "{{ csrf_token() }}",
+                        'user_id': user_id
+                    },
+                    cache:false,
+                    success:function(response){
+                       swal({
+                           title: "Success",
+                           text: "This user has been deactivated successfully",
+                           buttons:false,
+                           icon:"success"
+                       });
+                        setTimeout(function(){
+                            location.reload();
+                        },1000);
+                    }
+                });
+                }else{
+                    swal("Error","Error when deactivating this user","error");
+                }
+            });
+        }
+   </script>
+@endpush
