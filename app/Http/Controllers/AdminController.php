@@ -36,6 +36,30 @@ class AdminController extends Controller
         return $reports;
     }
 
+    public function monthlyCommision(){
+        $commisions = DB::table('transactions')
+            ->select(DB::raw('SUM(commission) as monthly_commission, MONTH(created_at) as month'))
+            ->groupBy(DB::raw('MONTH(created_at) ASC'))
+            ->get();
+        echo json_encode($commisions);
+    }
+    
+    public function deactivateUser(){
+        $user_id = $_POST['user_id'];
+        DB::table('users')
+            ->where('id',$user_id)
+            ->update(['status' => 0]);
+    }
+    public function activateUser(){
+        $user_id = $_POST['user_id'];
+        DB::table('users')
+            ->where('id',$user_id)
+            ->update(['status' => 1]);
+    }
 
-
+    public function viewUser(){
+       $user_id = $_GET['user_id'];
+       $users = User::find($user_id);
+       echo json_encode($users); 
+    }
 }
