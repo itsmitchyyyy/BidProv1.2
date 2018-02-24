@@ -19,6 +19,7 @@
 Route::get('/', function () {
     return view('home');
 });
+Route::get('commission', 'AdminController@monthlyCommision')->name('admin.commission');
 /* Route::get('testing', function(){
     return view('ongoing/seeker');
 })->name('testing'); */
@@ -61,6 +62,9 @@ Route::group(['middleware' => ['auth']], function(){
     Route::get('list/post', ['as' => 'postAdmin', function(){
         return view('admin/post');
     }]);
+    Route::post('list/bidder/deactivate',['as' => 'user.deactivate', 'uses' => 'AdminController@deactivateUser']);
+    Route::post('list/bidder/activate',['as' => 'user.activate', 'uses' => 'AdminController@activateUser']);
+    Route::get('list/bidder/users', ['as' => 'users.profile', 'uses' => 'AdminController@viewUser']);
     // end admin
     //seeker
     Route::get('seeker/projects', ['as' => 'projects', 'uses' => 'ProjectController@myProjects']);
