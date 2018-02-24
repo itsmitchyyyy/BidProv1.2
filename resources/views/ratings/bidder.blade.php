@@ -67,12 +67,25 @@
                             <hr style="background-color:rgba(0,0,0,.125)">
                             <div class="comment-center">
                                 @foreach($reviews as $review)
+                                @if($review->comments != '')
                                 <div class="comment-body" style="border-bottom:1px solid rgba(0,0,0,0.125);">
                                     <div class="user-img"> <img src="/{{ $review->avatar }}" alt="user" class="img-circle"></div>
                                     <div class="mail-contnet">
-                                        <h5>{{ ucfirst($review->firstname) }} {{ ucfirst($review->lastname) }}</h5> <span class="mail-desc">{{ $review->comments }}</span><span class="time pull-right">{{ Carbon\Carbon::parse($review->created_at)->diffForHumans() }}</span>
+                                        <h5>{{ ucfirst($review->firstname) }} {{ ucfirst($review->lastname) }}</h5> 
+                                        <span class="mail-desc">
+                                        {{ $review->comments }}
+                                        <a href="#" class="ml-1" data-toggle="collapse" data-target="#commentSettings{{ $review->rating_id }}"><i class="fa fa-ellipsis-h"></i></a>
+                                         <div class="collapse" id="commentSettings{{ $review->rating_id }}">
+                                            <div class="panel-body">
+                                                <a href="javascript:void(0)" class="divSettings" onclick="editComment({{ $review->rating_id }}, '{{ $review->comments }}')">Edit</a> |  
+                                                <a href="javascript:void(0)" onclick="deleteComment({{ $review->rating_id }})">Delete</a>
+                                            </div>
+                                         </div>
+                                        </span>
+                                        <span class="time pull-right">{{ Carbon\Carbon::parse($review->created_at)->diffForHumans() }}</span>
                                     </div>
                                 </div>
+                                @endif
                                 @endforeach
                             </div>
                         </div>
@@ -85,5 +98,79 @@
 <script src="{{ asset('js/star-rating.js') }}"></script>
 <script type="text/javascript">
     $("#input-id").rating();
+</script>
+<script>
+    function deleteComment(rating_id){
+        swal({
+            title: "Delete comment",
+            text: "Are you sure you want to delete this comment?",
+            icon: "warning",
+            buttons:true
+        }).then(function(value){
+            if(value){
+                $.ajax({
+                    type:"post",
+                    url: "{{ route('rate.comment') }}",
+                    data: {
+                        '_token': "{{ csrf_token() }}",
+                        'rating_id': rating_id,
+                        'rating_comment': ''
+                    },
+                    cache:false,
+                    success:function(response){
+                          swal({
+                             title: "Success",
+                             text: "Comment deleted",
+                             icon: "success",
+                             buttons:false
+                         });
+                         setTimeout(function(){
+                             location.reload();
+                         },1000)
+                    }
+                });
+            }
+        });
+    }
+</script>
+<script>
+    function editComment(rating_id, rating_comment){
+        swal({
+            title: "Edit Comment",
+            content: {
+                element: "input",
+                attributes: {
+                    type: "text",
+                    value: rating_comment
+                }
+            },
+            buttons:true
+        }).then(function(value){
+            if(value){
+                $.ajax({
+                    type: "post",
+                    url: "{{ route('rate.comment') }}",
+                    data: {
+                        '_token': "{{ csrf_token() }}",
+                        'rating_id': rating_id,
+                        'rating_comment': value
+                    },
+                    cache: false,
+                    success: function(response){
+                      swal({
+                          title: "Success",
+                          text: "Comment updated",
+                          buttons:false,
+                          icon: "success"
+                      });
+                       setTimeout(function(){
+                        location.reload();
+                       },1000);
+                    }
+                });
+            }
+        });
+        return false;
+    }
 </script>
 @endsection
