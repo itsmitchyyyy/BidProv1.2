@@ -51,6 +51,9 @@ Route::group(['middleware' => ['auth']], function(){
     Route::get('admin/dashboard', ['as' => 'admin', function(){
         return view('admin/admin');
     }]);
+    Route::get('list/projects', ['as' => 'projects.list', function(){
+        return view('admin/projects');
+    }]);
     Route::get('bidder/user/reports', ['as' => 'user.report.list', 'uses' => 'ReportController@getReports']);
     Route::post('bidder/user/report', ['as' => 'user.report', 'uses' => 'ReportController@getReport']);
     Route::post('bidder/user/report/update', ['as' => 'user.report.update', 'uses' => 'ReportController@updateReport']);
@@ -118,6 +121,8 @@ Route::group(['middleware' => ['auth']], function(){
     Route::patch('bidder/skills/{id}', ['as' => 'skills', 'uses' => 'BidderController@addSkills']);
     Route::post('bidder/view/project/bid/comment/post', ['as' => 'postCommentBidder','uses' => 'ModuleController@addCommentBidder']);
     Route::get('bidder/view/user/profile/{user_id}', ['as' => 'viewBuser', 'uses' => 'BidderController@viewUser']);
+    Route::get('bidder/view/proposals/edit/{id}/{proposal_id}',['as' => 'edit.proposal', 'uses' => 'BidderController@showProposals']);
+    Route::patch('bidder/view/proposals/update/{proposal_id}/{project_id}',['as' => 'update.proposal', 'uses' => 'BidderController@updateProposal']);
     // END
     // Route::get('skills',  ['uses' => 'BidderController@getSkills']);
     // Route::get('bidder/inbox', function(){
