@@ -62,4 +62,20 @@ class AdminController extends Controller
        $users = User::find($user_id);
        echo json_encode($users); 
     }
+
+    public function openProjects(){
+        $openProjects = Project::where('status','open')->count();
+        $ongoingProjects = Project::where('status','ongoing')->count();
+        $doneProjects = Project::where('status','done')->count();
+        $totalProjects = Project::all()->count();
+        return view('admin/projects',compact('openProjects','ongoingProjects','doneProjects','totalProjects'));
+    }
+    public function monthlyProjects(){
+        $monthlyProjects = DB::table('projects')
+            ->select(DB::raw('COUNT(id) as monthly_projects, MONTH(created_at) as month'))
+            ->groupBy(DB::raw('MONTH(created_at) ASC'))
+            ->get();
+        echo json_encode($monthlyProjects);
+    }
+
 }
