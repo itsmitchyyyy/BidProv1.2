@@ -131,4 +131,18 @@ class AdminController extends Controller
         return $reports;
     }
 
+    public function getBannedBidders(){
+        $bidders =  User::whereHas('roles', function($q){
+            $q->where('name','bidder');
+        })->where('status',0)
+        ->get();
+        return $bidders;
+    }
+    public function getBannedSeekers(){
+        $seekers =  User::whereHas('roles', function($q){
+            $q->where('name','seeker');
+        })->where('status',0)
+        ->get();
+        return $seekers;
+    }
 }
