@@ -16,9 +16,10 @@ class ProposalController extends Controller
         $proposal = DB::table('proposals')
             ->where('proposals.bidder_id',Auth::user()->id)
             ->join('projects','proposals.project_id','=','projects.id')
-            ->join('modules','modules.proposal_id','=','proposals.id')
+            // ->join('modules','modules.proposal_id','=','proposals.id')
             ->where('proposals.status',1)
-            ->select('*','proposals.id as proposal_id','modules.id as module_id')
+            ->select('*','proposals.id as proposal_id')
+            // ->groupBy('proposals.id')
             ->get();
         return view('bids/bidder')->with(compact('proposal'));
     }
@@ -38,4 +39,9 @@ class ProposalController extends Controller
         $module = Module::where('proposal_id', $proposal_id)->pluck('id')->toArray();
         return $module;
     }
+    public function getModuleID($proposal_id){
+        $module = Module::where('proposal_id', $proposal_id)->first();
+        return $module;
+    }
+    
 }
