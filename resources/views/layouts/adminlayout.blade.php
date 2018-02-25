@@ -31,12 +31,10 @@
 
 </head>
 <body>
-    @if(Auth::user()->hasRoles('admin'))
-    <div id="wrapper">
+@if(Auth::user()->hasRoles('admin'))
         @include('inc.adminNav')
         @include('inc.adminSide')
         @yield('content')
-    </div>
     @else
         <script>
             window.location = "{{ URL::to('/') }}";
