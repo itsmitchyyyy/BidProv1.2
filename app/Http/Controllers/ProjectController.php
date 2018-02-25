@@ -314,7 +314,7 @@ class ProjectController extends Controller
             $proposal->save();
             $proposal_id = $proposal->id;
 
-            $module_name = $request->module_name;
+            $module_name = $request->module_name;    
             $module_description = array_chunk($request->module_description,4,true);
             $id = array();
             foreach($module_name as $name){ 
