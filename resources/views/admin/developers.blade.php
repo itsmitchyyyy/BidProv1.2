@@ -99,10 +99,11 @@
                         <div class="white-box">
                             <!-- <h3 class="box-title m-b-0">Data Export</h3> -->
                             <ol class="breadcrumb">
-                                <li ><a href="#" class="active">All Users</a></li>
-                                <li ><a href="#" class="not-active">Banned Users</a></li>
+                                <li ><a href="#" id="usersAll" class="active">All Users</a></li>
+                                <li ><a href="#" id="usersBanned" class="not-active">Banned Users</a></li>
                             </ol>
-                            <div class="table-responsive">
+                            <!-- ALL USERS -->
+                            <div class="table-responsive" id="allUser">
                                 <table id="example23" class="display nowrap" cellspacing="0" width="100%">
                                     <thead>
                                         <tr>
@@ -159,6 +160,65 @@
                                     </tbody>
                                 </table>
                             </div>
+                            <!-- END OF USERS -->
+                              <!-- BANNED USERS -->
+                              <div class="table-responsive" id="bannedUsers">
+                                <table id="usersTable" class="display nowrap " cellspacing="0" width="100%">
+                                    <thead>
+                                        <tr>
+                                        <th>USER ID</th>
+                                         <th>Name</th>
+                                         <th>Email</th>
+                                         <th>Contact</th>
+                                          <th>Created At</th>
+                                          <th>Total Reports</th>
+                                          <th>Status</th>
+                                          <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tfoot>
+                                        <tr>
+                                        <th>USER ID</th>
+                                         <th>Name</th>
+                                         <th>Email</th>
+                                         <th>Contact</th>
+                                          <th>Created At</th>
+                                          <th>Total Reports</th>
+                                          <th>Status</th>
+                                          <th>Actions</th>
+                                        </tr>
+                                    </tfoot>
+                                    <tbody>
+                                        @foreach($controller->getBannedBidders() as $bidder)
+                                        <tr>
+                                            <td>{{ $bidder->id }}</td>
+                                            <td>{{ ucfirst($bidder->firstname) }} {{ ucfirst($bidder->lastname) }}</td>
+                                            <td>{{ $bidder->email }}</td>
+                                            <td>{{ $bidder->mobile_no }}</td>
+                                            <td>{{ Carbon\Carbon::parse($bidder->created_at)->toDayDateTimeString() }}</td>
+                                            <td>{{ $controller->seekerReports($bidder->id) }}</td>
+                                            <td>
+                                            @if($bidder->status == 1)
+                                                Active
+                                            @else
+                                                Disabled
+                                            @endif
+                                            </td>
+                                            <td class="text-nowrap">
+                                                <!-- <a href="#" data-toggle="tooltip" title="Edit"> <i style="font-size:16px" class="fa fa-pencil text-inverse m-r-10"></i> </a> -->
+                                                @if($bidder->status == 1)
+                                                <a href="#" data-tooltip="true" title="Close" onclick="deactivate({{ $bidder->id }})"> <i style="font-size:24px" class="fa fa-ban text-danger m-r-10"></i> </a>
+                                                @else
+                                                <a href="#" data-tooltip="true" title="Close" onclick="activate({{ $bidder->id }})"> <i style="font-size:24px" class="fa fa-check text-blue m-r-10"></i> </a>
+                                                @endif
+                                                <a href="#" onclick="viewProfile({{ $bidder->id }})" title="View"> <i style="font-size:24px"  class="fa fa-eye text-success m-r-10"></i> </a>
+                                            </td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- END OF BANNED USERS -->
                         </div>
                     </div>
             </div>
@@ -224,6 +284,23 @@
     <!-- END MODAL -->
 @endsection
 @push('scripts')
+<script>
+  $(function(){
+      $('#bannedUsers').hide();
+      $('#usersBanned').click(function(){
+          $('#usersBanned').removeClass('not-active').addClass('active');
+          $('#usersAll').removeClass('active').addClass('not-active');
+          $('#bannedUsers').show();
+          $('#allUser').hide();
+      });
+      $('#usersAll').click(function(){
+          $('#usersAll').removeClass('not-active').addClass('active');
+          $('#usersBanned').removeClass('active').addClass('not-active');
+        $('#bannedUsers').hide();
+          $('#allUser').show();
+      });
+  });
+</script>
 <script>
     $(function(){
         $("[data-tooltip='true']").tooltip();
