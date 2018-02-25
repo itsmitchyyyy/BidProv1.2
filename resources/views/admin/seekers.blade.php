@@ -1,4 +1,14 @@
 @extends('layouts.adminlayout')
+@push('css')
+    <style>
+        .active{
+            color:#ff8400;
+        }
+        .not-active{
+            color:grey;
+        }
+    </style>
+@endpush
 @section('content')
 @inject('controller','App\Http\Controllers\AdminController')
 <div id="page-wrapper">
@@ -87,11 +97,12 @@
                  <div class="col-sm-12">
                         <div class="white-box">
                         <ol class="breadcrumb">
-                                <li ><a href="#" class="active">All Users</a></li>
-                                <li ><a href="#" class="not-active">Banned Users</a></li>
+                                <li ><a href="#" id="usersAll" class="active">All Users</a></li>
+                                <li ><a href="#" id="usersBanned" class="not-active">Banned Users</a></li>
                             </ol>
-                            <div class="table-responsive">
-                                <table id="example23" class="display nowrap" cellspacing="0" width="100%">
+                            <!-- ALL USERS -->
+                            <div class="table-responsive " id="allUser">
+                                <table id="example23" class="display nowrap " cellspacing="0" width="100%">
                                     <thead>
                                         <tr>
                                         <th>USER ID</th>
@@ -146,6 +157,65 @@
                                     </tbody>
                                 </table>
                             </div>
+                            <!-- END OF ALL USERS -->
+                            <!-- BANNED USERS -->
+                            <div class="table-responsive" id="bannedUsers">
+                                <table id="usersTable" class="display nowrap " cellspacing="0" width="100%">
+                                    <thead>
+                                        <tr>
+                                        <th>USER ID</th>
+                                         <th>Name</th>
+                                         <th>Email</th>
+                                         <th>Contact</th>
+                                          <th>Created At</th>
+                                          <th>Total Reports</th>
+                                          <th>Status</th>
+                                          <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tfoot>
+                                        <tr>
+                                        <th>USER ID</th>
+                                         <th>Name</th>
+                                         <th>Email</th>
+                                         <th>Contact</th>
+                                          <th>Created At</th>
+                                          <th>Total Reports</th>
+                                          <th>Status</th>
+                                          <th>Actions</th>
+                                        </tr>
+                                    </tfoot>
+                                    <tbody>
+                                        @foreach($controller->getBannedSeekers() as $seeker)
+                                        <tr>
+                                            <td>{{ $seeker->id }}</td>
+                                            <td>{{ ucfirst($seeker->firstname) }} {{ ucfirst($seeker->lastname) }}</td>
+                                            <td>{{ $seeker->email }}</td>
+                                            <td>{{ $seeker->mobile_no }}</td>
+                                            <td>{{ Carbon\Carbon::parse($seeker->created_at)->toDayDateTimeString() }}</td>
+                                            <td>{{ $controller->seekerReports($seeker->id) }}</td>
+                                            <td>
+                                            @if($seeker->status == 1)
+                                                Active
+                                            @else
+                                                Disabled
+                                            @endif
+                                            </td>
+                                            <td class="text-nowrap">
+                                                <!-- <a href="#" data-toggle="tooltip" title="Edit"> <i style="font-size:16px" class="fa fa-pencil text-inverse m-r-10"></i> </a> -->
+                                                @if($seeker->status == 1)
+                                                <a href="#" data-tooltip="true" title="Close" onclick="deactivate({{ $seeker->id }})"> <i style="font-size:24px" class="fa fa-ban text-danger m-r-10"></i> </a>
+                                                @else
+                                                <a href="#" data-tooltip="true" title="Close" onclick="activate({{ $seeker->id }})"> <i style="font-size:24px" class="fa fa-check text-blue m-r-10"></i> </a>
+                                                @endif
+                                                <a href="#" onclick="viewProfile({{ $seeker->id }})" title="View"> <i style="font-size:24px"  class="fa fa-eye text-success m-r-10"></i> </a>
+                                            </td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- END OF BANNED USERS -->
                         </div>
                     </div>
             </div>
@@ -208,6 +278,23 @@
     <!-- END MODAL -->
 @endsection
 @push('scripts')
+<script>
+  $(function(){
+      $('#bannedUsers').hide();
+      $('#usersBanned').click(function(){
+          $('#usersBanned').removeClass('not-active').addClass('active');
+          $('#usersAll').removeClass('active').addClass('not-active');
+          $('#bannedUsers').show();
+          $('#allUser').hide();
+      });
+      $('#usersAll').click(function(){
+          $('#usersAll').removeClass('not-active').addClass('active');
+          $('#usersBanned').removeClass('active').addClass('not-active');
+        $('#bannedUsers').hide();
+          $('#allUser').show();
+      });
+  });
+</script>
 <script>
     function viewProfile(user_id){
         // $('#viewProfile').modal('show');
