@@ -36,6 +36,7 @@ class AdminController extends Controller
         return $reports;
     }
 
+
     public function monthlyCommision(){
         $commisions = DB::table('transactions')
             ->select(DB::raw('SUM(commission) as monthly_commission, MONTH(created_at) as month'))
@@ -76,6 +77,58 @@ class AdminController extends Controller
             ->groupBy(DB::raw('MONTH(created_at) ASC'))
             ->get();
         echo json_encode($monthlyProjects);
+    }
+
+    public function userSeeker(){
+        $seekers = User::whereHas('roles', function($q){
+            $q->where('name','seeker');
+        })->count();
+      return $seekers;
+    }
+    public function bannedSeekers(){
+        $seekers =  User::whereHas('roles', function($q){
+            $q->where('name','seeker');
+        })->where('status',0)
+        ->count();
+        return $seekers;
+    }
+    public function activeSeekers(){
+        $seekers =  User::whereHas('roles', function($q){
+            $q->where('name','seeker');
+        })->where('status',1)
+        ->count();
+        return $seekers;
+    }
+
+    public function userBidder(){
+        $bidders =  User::whereHas('roles', function($q){
+            $q->where('name','bidder');
+        })->count();
+      return $bidders;
+    }
+    public function bannedBidder(){
+        $bidders =  User::whereHas('roles', function($q){
+            $q->where('name','bidder');
+        })->where('status',0)
+        ->count();
+        return $bidders;
+    }
+    public function activeBidder(){
+        $bidders =  User::whereHas('roles', function($q){
+            $q->where('name','bidder');
+        })->where('status',1)
+        ->count();
+        return $bidders;
+    }
+    
+    public function seekerReports($seeker_id){
+        $reports = Report::where('seeker_id',$seeker_id)->count();
+        return $reports;
+    }
+
+    public function bidderReports($bidder_id){
+        $reports = Report::where('bidder_id',$bidder_id)->count();
+        return $reports;
     }
 
 }
