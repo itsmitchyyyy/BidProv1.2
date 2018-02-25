@@ -5,7 +5,7 @@
 <div class="container-fluid m-t-15">
     @if(session()->has('success'))
         <div class="alert alert-success alert-dismissable fade show" >
-            <button data-dismiss="alert=" class="close"><i class="fa fa-close"></i></button>
+            <button data-dismiss="alert" class="close"><i class="fa fa-close"></i></button>
             {{ session()->get('success') }}
         </div>
     @endif
@@ -22,16 +22,18 @@
         </thead>
         <tbody>
         @foreach($proposal as $propose)
-
         <tr>
-            <td><a href="{{ route('myWorks',['proposal_id' => $propose->id,'bidder_id' => $propose->bidder_id,'project_id' => $propose->project_id]) }}">{{ ucfirst($propose->title) }}</a></td>
+            <td><a href="{{ route('edit.proposal', ['id' => $propose->project_id, 'proposal_id' => $propose->proposal_id]) }}">{{ ucfirst($propose->title) }}</a></td>
             <td><i class="fa fa-trophy"></i> {{ $bids->countBid($propose->project_id) }}</td>
             <td><i class="fa fa-clock-o"></i> {{ Carbon\Carbon::parse($propose->duration)->diffForHumans() }}</td>
             <td><span>&#8369;</span> {{ $propose->min }} - <span>&#8369;</span> {{ $propose->max }}</td>
             <td>
-          <a href="{{ route('myWorks',['proposal_id' => $propose->id,'bidder_id' => $propose->bidder_id,'project_id' => $propose->project_id]) }}"><i class="fa fa-eye text-blue" style="font-size:16px" data-toggle="tooltip" title="View"></i></a>
-            <a href="#" data-toggle="modal" data-target="#cancelModal{{ $propose->id }}" data-tooltip="true" Title="Cancel"><i class="text-danger fa fa-times"></i></a>
+            <!-- <a href="{{ route('myWorks',['proposal_id' => $propose->id,'bidder_id' => $propose->bidder_id,'project_id' => $propose->project_id]) }}"><i class="fa fa-eye text-blue" style="font-size:16px" data-toggle="tooltip" title="View"></i></a> -->
+            <a href="{{ route('edit.proposal', ['id' => $propose->project_id, 'proposal_id' => $propose->proposal_id]) }}"  data-tooltip="true" Title="Edit" class="p-1"><i style="font-size:16px" class="text-info fa fa-pencil-square-o"></i></a>
+            <a href="#" data-toggle="modal" data-target="#cancelModal{{ $propose->id }}" data-tooltip="true" Title="Cancel" class="p-1"><i style="font-size:16px" class="text-danger fa fa-times"></i></a>
             </td>
+           
+            <!-- CANCEL MODAL -->
            <div class="modal fade" tabindex="-1" role="dialog" id="cancelModal{{ $propose->id }}">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
@@ -49,8 +51,8 @@
                         <div class="modal-footer">
                         <form action="{{ route('bids') }}" method="post">
                             {{ csrf_field() }}
-                            <input type="hidden" name="_method" value="DELETE">
-                            <input type="hidden" name="mod_id" value="{{ $propose->module_id }}">
+                            <input type="hidden" name="_method" value="DELETE">`
+                            <input type="hidden" name="mod_id" value="{{ $module->getModuleID($propose->proposal_id)->id }}">
                             <input type="hidden" name="pr_id" value="{{ $propose->proposal_id }}">
                             <button type="submit" class="btn btn-info wew">Yes</button>
                             <button type="button" class="btn btn-secondary wew" data-dismiss="modal">No</button>
