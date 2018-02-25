@@ -30,7 +30,7 @@
         <li> <a href="{{ route('admin') }}" class="waves-effect{{ Request::is('admin') ? ' active' : ''}}"><i class="fa fa-dashboard fa-fw text-danger" ></i> <span class="hide-menu"> Dashboard  </span></a>
         </li>
         <li>
-            <a href="http://" class="waves-effect"><i class="fa fa-sticky-note-o fa-fw text-danger"></i><span class="hide-menu"> Projects</span></a>
+            <a href="{{ route('projects.list') }}" class="waves-effect"><i class="fa fa-sticky-note-o fa-fw text-danger"></i><span class="hide-menu"> Projects</span></a>
         </li>
         <li> <a href="{{ route('bidderAdmin') }}" class="waves-effect{{ Request::is('bidderAdmin') ? ' active' : ''}} "><i class="fa fa-user-o fa-fw  text-danger" ></i> <span class="hide-menu"> Bidders </span></a>
             
