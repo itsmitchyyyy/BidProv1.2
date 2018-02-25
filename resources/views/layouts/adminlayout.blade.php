@@ -226,6 +226,12 @@
             'copy', 'csv', 'excel', 'pdf'
         ]
     });
+    $('#usersTable').DataTable({
+        dom: 'Bfrtip',
+        buttons: [
+            'copy', 'csv', 'excel', 'pdf'
+        ]
+    });
     </script>
 
     <script>
