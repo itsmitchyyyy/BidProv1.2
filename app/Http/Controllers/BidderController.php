@@ -6,6 +6,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\User;
 use App\Role;
+use App\Proposal;
+use App\Module;
+use Carbon\Carbon;
+use DateTimeZone;
+use App\Project;
 use DB;
 class BidderController extends Controller
 {
@@ -235,5 +240,107 @@ class BidderController extends Controller
             ->get();
         return view('view/bidder')
             ->with(compact('user','projects'));
+    }
+
+    public function showProposals($id,$proposal_id){
+        $avg = Proposal::where('project_id' , $id)->avg('price');
+        // $proposals = Project::where(['id' => $id, 'status' => 'open'])->with('proposals')->get();
+        $proposals = DB::table('projects')
+            ->join('proposals','projects.id','=','proposals.project_id')
+            ->where('proposals.id', $proposal_id)
+            ->get();
+        $count_bid = Proposal::where('project_id', $id)->count();
+        $biddings = DB::table('proposals')
+            ->join('users', 'users.id', '=', 'proposals.bidder_id')
+            ->select('*', 'proposals.id as proposal_id')
+            ->orderByRaw('proposals.created_at DESC')
+            ->get();
+
+        $proposal_details = Proposal::find($proposal_id);
+        $module_details = Module::where('proposal_id', $proposal_id)->get();
+        return view('bids/modules')->with(compact('proposals','avg','module_details','proposal_details','count_bid'));
+    }
+
+    public function showProposalModules($module_id){
+        $proposal_modules = DB::table('proposal_modules')
+            ->where('module_id',$module_id)
+            ->get();
+        return $proposal_modules;
+    }
+    public function getModules($proposal_id){
+        $module = Module::find($proposal_id);
+        return $module;
+    }
+    public function updateProposal(Request $request,$proposal_id,$project_id){
+        $regex = '/^\d{0,8}(\.\d{1,2})?$/';
+        $validator = Validator::make($request->all(),[
+            'proposal_price' => 'required|regex:'.$regex,
+            'module_name' => 'required',
+            'module_description' => 'required',
+            'proposal_days' => 'required'
+        ]);
+        if($validator->fails()){
+            return back()
+                ->withInput()
+                ->withErrors($validator);
+        }
+        $proposal = Proposal::find($proposal_id);
+        $proposal->price = $request->proposal_price;
+        $proposal->daysTodo = $request->proposal_days;
+        $proposal->save();
+        // $module_description = array_chunk($request->module_description,4,true);
+        $module_description = $request->module_description;
+        $module_id = $request->module_id;
+        $module_name = $request->module_name;
+        $proposal_moduleID = $request->proposal_moduleID;
+        $last_module = Module::all()->pluck('id')->toArray();
+        $last_proposal_module = DB::table('proposal_modules')
+            ->pluck('id')
+            ->toArray();
+        $id = array();
+        foreach(array_combine($module_id, $module_name) as $id_module => $name_module){
+            if(in_array($id_module,$last_module)){
+                 DB::table('modules')
+                    ->where('id', $id_module)
+                    ->update([
+                        'proposal_id' => $proposal_id,
+                        'module_name' => $name_module,
+                        'updated_at' => Carbon::now(new DateTimeZone('Asia/Manila'))
+                    ]);
+            }else{
+                 DB::table('modules')
+                        ->insertGetId([
+                            'proposal_id' => $proposal_id,
+                            'module_name' => $name_module,
+                            'created_at' => Carbon::now(new DateTimeZone('Asia/Manila')),
+                            'updated_at' => Carbon::now(new DateTimeZone('Asia/Manila'))
+                        ]);
+            }
+        }
+     
+        foreach(array_combine($proposal_moduleID, $module_description) as $module_proposalID => $description_module){
+                $id = Module::all()->last()->id;
+                echo in_array($module_proposalID,$last_proposal_module);
+               if(in_array($module_proposalID, $last_proposal_module)){
+                DB::table('proposal_modules')
+                    ->where('id', $module_proposalID)
+                    ->update([
+                        'description' => $description_module,
+                        'updated_at' => Carbon::now(new DateTimeZone('Asia/Manila'))
+                ]);
+            }else{
+                DB::table('proposal_modules')
+                ->insert([
+                    'module_id' => $id,
+                    'description' => $description_module,
+                    'status' => 'todo',
+                    'created_at' => Carbon::now(new DateTimeZone('Asia/Manila')),
+                    'updated_at' => Carbon::now(new DateTimeZone('Asia/Manila'))
+                ]);
+            }
+        }
+        return redirect()
+        ->route('bids')
+        ->with('success','Module updated successfully');
     }
 }
