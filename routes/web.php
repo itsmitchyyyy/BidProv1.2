@@ -51,9 +51,8 @@ Route::group(['middleware' => ['auth']], function(){
     Route::get('admin/dashboard', ['as' => 'admin', function(){
         return view('admin/admin');
     }]);
-    Route::get('list/projects', ['as' => 'projects.list', function(){
-        return view('admin/projects');
-    }]);
+
+    Route::get('list/projects', ['as' => 'projects.list', 'uses' => 'AdminController@openProjects']);
     Route::get('bidder/user/reports', ['as' => 'user.report.list', 'uses' => 'ReportController@getReports']);
     Route::post('bidder/user/report', ['as' => 'user.report', 'uses' => 'ReportController@getReport']);
     Route::post('bidder/user/report/update', ['as' => 'user.report.update', 'uses' => 'ReportController@updateReport']);
@@ -68,6 +67,7 @@ Route::group(['middleware' => ['auth']], function(){
     Route::post('list/bidder/deactivate',['as' => 'user.deactivate', 'uses' => 'AdminController@deactivateUser']);
     Route::post('list/bidder/activate',['as' => 'user.activate', 'uses' => 'AdminController@activateUser']);
     Route::get('list/bidder/users', ['as' => 'users.profile', 'uses' => 'AdminController@viewUser']);
+    Route::get('lists/projects/monthly', ['as' => 'projects.monthly', 'uses' => 'AdminController@monthlyProjects']);
     // end admin
     //seeker
     Route::get('seeker/projects', ['as' => 'projects', 'uses' => 'ProjectController@myProjects']);
