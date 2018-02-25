@@ -1,5 +1,16 @@
 @extends('layouts.adminlayout')
+@push('css')
+    <style>
+        .active{
+            color:#ff8400;
+        }
+        .not-active{
+            color:grey;
+        }
+    </style>
+@endpush
 @section('content')
+@inject('controller','App\Http\Controllers\AdminController')
  <!-- Page Content -->
  <div id="page-wrapper">
             <div class="container-fluid">
@@ -14,10 +25,83 @@
                     </div>
                     <!-- /.col-lg-12 -->
                 </div>
+                  <!-- /.row -->
+       <div class="row">
+           <div class="col-md-12 col-lg-12 col-sm-12">
+               <div class="white-box">
+                   <div class="row row-in">
+                       <div class="col-lg-3 col-sm-6 row-in-br">
+                           <div class="col-in row">
+                               <div class="col-md-6 col-sm-6 col-xs-6"> <i class="mi-account-box"></i>
+                                   <h5 class="text-muted vb">TOTAL BIDDERS</h5>
+                               </div>
+                               <div class="col-md-6 col-sm-6 col-xs-6">
+                                   <h3 class="counter text-right m-t-15 text-danger">{{ $controller->userBidder()  }}</h3>
+                               </div>
+                               <div class="col-md-12 col-sm-12 col-xs-12">
+                                   <div class="progress">
+                                       <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="{{ $controller->userBidder()  }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ $controller->userBidder()  }}%"> </div>
+                                   </div>
+                               </div>
+                           </div>
+                       </div>
+                       <div class="col-lg-3 col-sm-6 row-in-br  b-r-none">
+                           <div class="col-in row">
+                               <div class="col-md-6 col-sm-6 col-xs-6"> <i class="linea-icon linea-basic" data-icon="&#xe01b;"></i>
+                                   <h5 class="text-muted vb">TOTAL ACTIVE BIDDERS</h5>
+                               </div>
+                               <div class="col-md-6 col-sm-6 col-xs-6">
+                                   <h3 class="counter text-right m-t-15 text-megna">{{ $controller->activeBidder() }}</h3>
+                               </div>
+                               <div class="col-md-12 col-sm-12 col-xs-12">
+                                   <div class="progress">
+                                       <div class="progress-bar progress-bar-megna" role="progressbar" aria-valuenow="{{ $controller->activeBidder() }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ $controller->activeBidder() }}%">  </div>
+                                   </div>
+                               </div>
+                           </div>
+                       </div>
+                       <div class="col-lg-3 col-sm-6 row-in-br">
+                           <div class="col-in row">
+                               <div class="col-md-6 col-sm-6 col-xs-6"> <i class="linea-icon linea-basic" data-icon="&#xe00b;"></i>
+                                   <h5 class="text-muted vb">TOTAL BANNED BIDDERS</h5>
+                               </div>
+                               <div class="col-md-6 col-sm-6 col-xs-6">
+                                   <h3 class="counter text-right m-t-15 text-primary">{{ $controller->bannedBidder() }}</h3>
+                               </div>
+                               <div class="col-md-12 col-sm-12 col-xs-12">
+                                   <div class="progress">
+                                       <div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="{{ $controller->bannedBidder() }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ $controller->bannedBidder() }}%"> </div>
+                                   </div>
+                               </div>
+                           </div>
+                       </div>
+                       <!-- <div class="col-lg-3 col-sm-6  b-0">
+                           <div class="col-in row">
+                               <div class="col-md-6 col-sm-6 col-xs-6"> <i class="linea-icon linea-basic" data-icon="&#xe016;"></i>
+                                   <h5 class="text-muted vb">Reports</h5>
+                               </div>
+                               <div class="col-md-6 col-sm-6 col-xs-6">
+                                   <h3 class="counter text-right m-t-15 text-success">{{ $controller->userSeeker() }}</h3>
+                               </div>
+                               <div class="col-md-12 col-sm-12 col-xs-12">
+                                   <div class="progress">
+                                       <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{ $controller->userSeeker() }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ $controller->userSeeker() }}%">  </div>
+                                   </div>
+                               </div>
+                           </div>
+                       </div> -->
+                   </div>
+               </div>
+           </div>
+       </div>
+       <!--row -->
                  <div class="col-sm-12">
                         <div class="white-box">
-                            <h3 class="box-title m-b-0">Data Export</h3>
-                            <p class="text-muted m-b-30">Export data to Copy, CSV, Excel, PDF & Print</p>
+                            <!-- <h3 class="box-title m-b-0">Data Export</h3> -->
+                            <ol class="breadcrumb">
+                                <li ><a href="#" class="active">All Users</a></li>
+                                <li ><a href="#" class="not-active">Banned Users</a></li>
+                            </ol>
                             <div class="table-responsive">
                                 <table id="example23" class="display nowrap" cellspacing="0" width="100%">
                                     <thead>
@@ -27,6 +111,7 @@
                                             <th>Email</th>
                                             <th>Contact</th>
                                             <th>Created At</th>
+                                            <th>Total Reports</th>
                                             <th>Status</th>
                                             <th class="uniqye">Actions</th>
                                         </tr>
@@ -38,6 +123,7 @@
                                          <th>Email</th>
                                          <th>Contact</th>
                                           <th>Created At</th>
+                                          <th>TOtal Reports</th>
                                           <th>Status</th>
                                           <th>Actions</th>
                                         </tr>
@@ -51,6 +137,7 @@
                                             <td>{{ $user->email }}</td>
                                             <td>{{ $user->mobile_no }}</td>
                                             <td>{{ Carbon\Carbon::parse($user->created_at)->toDayDateTimeString() }}</td>
+                                            <td>{{ $controller->bidderReports($user->id) }}</td>
                                             <td>
                                             @if($user->status == 1)
                                                 Active
