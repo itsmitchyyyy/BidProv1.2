@@ -239,5 +239,14 @@
             $('[data-toggle="tooltip"]').tooltip();
         });
     </script>
+    <script type="text/javascript">
+        // $('#clock').fitText(1.3);
+
+        function update(){
+            $('#clock').text(moment().format('D. MMMM YYYY H:mm:ss'));
+        }
+
+        setInterval(update,1000);
+</script>
 @stack('scripts')
 </html>
