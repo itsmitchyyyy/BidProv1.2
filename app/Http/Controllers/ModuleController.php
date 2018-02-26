@@ -129,12 +129,15 @@ class ModuleController extends Controller
             ->select('*','projects.id as project_id')
             ->first();
        
+        $module = Module::where(['proposal_id' => $proposal_id, 'status' => 'doing'])
+        ->count();
+
           $proposal = DB::table('proposals')
             ->join('users','proposals.bidder_id','=','users.id')
             ->where('proposals.id',$proposal_id)
             ->first();
             return view('ongoing/bidder')
-            ->with(compact('todo','doing','done','project','proposal'));
+            ->with(compact('todo','doing','done','project','proposal','module'));
     }
     public function proposalModules(){
         $module_id = $_GET['module_id'];

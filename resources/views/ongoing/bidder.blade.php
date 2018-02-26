@@ -87,6 +87,9 @@
     }
   }
 }
+.presentation{
+    border:1px solid rgba(0,0,0,.25);
+}
     </style>
 @endpush
 @section('content')
@@ -221,6 +224,18 @@
                 <div class="modal-body" onload="uploadFiles()">
                  <form action="{{ route('moduleFiles') }}" enctype="multipart/form-data" method="post">
                  {{ csrf_field() }}
+                @if($module == 1)
+                <h3>Presentation</h3>
+                 <div class="form-group">
+                    <input type="text" placeholder="Date" name="module_date" id="module_date" class="presentation form-control" required>
+                 </div>
+                 <div class="form-group">
+                    <input type="text" placeholder="Time" name="module_time" id="module_time" class="presentation form-control" required>
+                 </div>
+                 <div class="form-group">
+                <input type="text" placeholder="Place" name="module_place" id="module_place" class="presentation form-control" required>
+                 </div>
+                 @endif
                  <div class="form-group{{ $errors->has('upload_file') ? ' has-error' : ''}}">
                     <input type="file" name="upload_file[]" id="myUpload" onchange="uploadFiles()" multiple>
                     <input type="hidden" id="module_id" name="module_id" value="">
@@ -247,9 +262,14 @@
 @push('scripts')
 <script src="{{ asset('js/momment.js') }}"></script>
 <script>
+    $('#module_date').datepicker({
+        startDate: new Date()
+    });
+</script>
+<script>
         $('#commentDiv').hide();
         $('#addComment').click(function(){
-            $('#commentDiv').show();
+            $('#commentDiv').show();    
            
         });
         $('#toggleModal').on('hidden.bs.modal', function(){
@@ -408,8 +428,11 @@ function toggleComment(id){
     });
 </script>
 <script>
-    function finishModule(id){
+    function finishModule(id,proposal_id,client_id,project_id){
         $('#module_id').val(id);
+        $('#proposal_id').val(proposal_id);
+        $('#client_id').val(client_id);
+        $('#project_id').val(project_id);
         $('#modalUpload').modal('show');
         $('#toggleModal').modal('hide');
     }

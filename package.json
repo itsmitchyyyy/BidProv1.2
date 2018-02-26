@@ -20,7 +20,10 @@
     },
     "dependencies": {
         "bootstrap": "^4.0.0-beta.2",
+        "bootstrap-datepicker": "^1.7.1",
         "font-awesome": "^4.7.0",
+        "jquery-datepicker": "^1.11.5",
+        "jquery-ui": "^1.12.1",
         "material-design-icons": "^3.0.1",
         "moment": "^2.20.1",
         "popper.js": "^1.12.9",

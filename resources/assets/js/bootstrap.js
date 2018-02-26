@@ -46,7 +46,10 @@ if (token) {
 // import Echo from 'laravel-echo'
 import Pusher from 'pusher-js';
 import swal from 'sweetalert';
-// import Moment from 'moment';
+import datepicker from 'bootstrap-datepicker';
+// import datepicker from 'jquery-datepicker';
+// import ui from 'jquery-ui';
+import Moment from 'moment';
 // window.Pusher = require('pusher-js');
 
 // window.Echo = new Echo({
