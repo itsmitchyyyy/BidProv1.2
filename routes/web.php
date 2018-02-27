@@ -16,7 +16,36 @@
 //     return 'Notified';
 // });
 // MOBILE
-
+ // MOBILE
+ Route::get('mobilelogin', function(){
+    return view('mobile/login');
+})->name('mobile.login');
+Route::post('mobilelogin', 'MobileController@login');
+Route::get('mobilelogout', 'MobileController@logout')->name('mobile.logout');
+Route::get('seekerhome', 'MobileController@seekerHome')->name('seeker.home');
+Route::get('bidderhome', 'MobileController@bidderHome')->name('bidder.home');
+/* Route::get('bidderprofile', ['as' => 'bidder.profile', function(){
+    return view('mobile/bidder/profile');
+}]); */
+Route::get('bidderprofile', function(){
+    return view('mobile/bidder/profile');
+})->name('bidder.profile');
+Route::get('seekerprofile', function(){
+    return view('mobile/seeker/profile');
+})->name('seeker.profile');
+/* Route::get('seekerprofile', ['as' => 'seeker.profile', function(){
+    return view('mobile/seeker/profile');
+}]); */
+Route::get('seekerprojects', 'MobileController@getProjects')->name('seeker.projects');
+/* Route::get('seekerprojects', function(){
+    return view('mobile/seeker/project');
+})->name('seeker.projects'); */
+/* Route::get('seekerprojects',['as' => 'seeker.projects', function(){
+    return view('mobile/seeker/projects');
+}]); */
+Route::get('bidderprojects', 'MobileController@getBProjects')->name('bidder.projects');
+Route::patch('bidderprofile/update/avatar/{id}', ['as' => 'bidder.profile.avatar', 'uses' => 'MobileController@updateBAvatar']);
+// END OF MOBILE
 // END MOBILE
 
 
@@ -166,16 +195,5 @@ Route::group(['middleware' => ['auth']], function(){
     
     Route::post('seeker/report/post',['as' => 'post.seeker', 'uses' => 'ReportController@postReport']);
 
-    // MOBILE
-    Route::get('mobilelogin', function(){
-        return view('mobile/login');
-    })->name('mobile.login');
-    Route::post('mobilelogin', 'MobileController@login');
-    Route::get('seekerhome', 'MobileController@seekerHome')->name('seeker.home');
-    Route::get('bidderhome', 'MobileController@bidderHome')->name('bidder.home');
-    Route::get('bidderprofile', ['as' => 'bidder.profile', function(){
-        return view('mobile/bidder/profile');
-    }]);
-    Route::patch('bidderprofile/update/avatar/{id}', ['as' => 'bidder.profile.avatar', 'uses' => 'MobileController@updateBAvatar']);
-    // END OF MOBILE
+   
 });
