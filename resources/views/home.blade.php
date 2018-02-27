@@ -5,7 +5,7 @@
         <div class="row">
           <div class="col-lg-10 mx-auto">
             <h1 class="text-uppercase">
-              <strong>IDEAL.MARKET.SOLUTION.  </strong>
+              <strong>WHERE GEEKS FIND JOBS</strong>
             </h1>
             <hr>
           </div>
@@ -19,14 +19,20 @@
 
 
     <section class="bg-primary" id="about">
-      <div class="container">
+      <div class="container" >
         <div class="row">
-          <div class="col-lg-8 mx-auto text-center">
-            <h2 class="section-heading text-white">We've got what you need!</h2>
-            <hr class="light my-4">
-            <p class="text-faded mb-4">Start Bootstrap has everything you need to get your new website up and running in no time! All of the templates and themes on Start Bootstrap are open source, free to download, and easy to use. No strings attached!</p>
-            <a class="btn btn-light btn-xl js-scroll-trigger" href="#services">Get Started!</a>
+          <div class="col-sm-4 text-center">
+            <img src="/uploads/ray.png" alt="avatar" style="height:300px;width:300px">
+            <p class="text-white" style="font-size:24px;font-family:century gothic"><strong >Ray Robinson Gonzaga</strong><br><b>Hipster</b></p>
           </div>
+          <div class="col-sm-4 text-center">
+              <img src="/uploads/argene.jpg" alt="avatar" style="height:300px;width:300px">
+              <p class="text-white" style="font-size:24px;font-family:century gothic"><strong class="text-white">Argene Goboy</strong><br><b>Hustler</b></p>
+            </div>
+            <div class="col-sm-4 text-center">
+                <img src="/uploads/mitch.jpg" alt="avatar" style="height:300px;width:300px">
+                <p class="text-white" style="font-size:24px;font-family:century gothic"><strong class="text-white">Mitch Alforque</strong><br><b>Hacker</b></p>
+              </div>
         </div>
       </div>
     </section>
@@ -35,7 +41,7 @@
       <div class="container">
         <div class="row">
           <div class="col-lg-12 text-center">
-            <h2 class="section-heading">At Your Service</h2>
+            <h2 class="section-heading">How it works</h2>
             <hr class="my-4">
           </div>
         </div>
@@ -75,7 +81,7 @@
       </div>
     </section>
 
-    <section class="p-0" id="portfolio">
+    <!-- <section class="p-0" id="portfolio">
        <div class="col-lg-12 text-center">
             <h2 class="section-heading">Portfolio</h2>
             <hr class="my-4">
@@ -174,7 +180,7 @@
           </div>
         </div>
       </div>
-    </section>
+    </section> -->
 
     <section class="bg-dark text-white">
       <div class="container text-center">
