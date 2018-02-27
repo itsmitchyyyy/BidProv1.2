@@ -1,6 +1,8 @@
 @extends('layouts.bidderapp')
 @push('css')
 <link rel="stylesheet" href="{{ asset('css/bidder/fileupload.css') }}">
+<link rel="stylesheet" href="{{ asset('js/bower_components/bootstrap-datepicker/bootstrap-datepicker.min.css') }} ">
+<link rel="stylesheet" href="{{ asset('js/bower_components/jquery-timepicker/timepicker.css') }}">  
     <style>
         #board {
             display: table;
@@ -229,6 +231,10 @@
                  <div class="form-group">
                     <input type="text" placeholder="Date" name="module_date" id="module_date" class="presentation form-control" required>
                  </div>
+                 <!-- <div class="input-group bootstrap-timepicker timepicker">
+            <input id="module_time" type="text" class="form-control input-small">
+            <span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
+        </div> -->
                  <div class="form-group">
                     <input type="text" placeholder="Time" name="module_time" id="module_time" class="presentation form-control" required>
                  </div>
@@ -261,10 +267,16 @@
 
 @push('scripts')
 <script src="{{ asset('js/momment.js') }}"></script>
+<script src="{{ asset('js/bower_components/bootstrap-datepicker/bootstrap-datepicker.min.js') }}"></script>
+<script src="{{ asset('js/bower_components/jquery-timepicker/timepicker.js') }}"></script>
 <script>
     $('#module_date').datepicker({
-        startDate: new Date()
+        startDate: new Date(),
     });
+    $('#module_time').timepicker({
+        'timeFormat': 'g:i A'
+    });
+  
 </script>
 <script>
         $('#commentDiv').hide();
@@ -281,8 +293,6 @@
 </script>
 <script>
 function toggleComment(id){
-    
-
         $.ajax({
         type: "get",
         url: "{{ route('viewComments', ['module_id']) }}",
@@ -334,7 +344,7 @@ function toggleComment(id){
       $(function(){
         // var proposal_id = $(event).data('proposal');
         var client_id = $(event).data('email');
-        var project_id = $(event).data('prname');
+        // var project_id = $(event).data('prname');
         var dataID = $(event).data('mode');  
         var dataStatus = $(event).data('status');
         var tableName = $(event).data('name');
@@ -378,7 +388,7 @@ function toggleComment(id){
 
                      if(dataStatus == 'doing'){
                          if(dataValue.every(checkDoing)){
-                             options =  `<a onclick="finishModule(`+id+`,`+proposalComment+`,`+client_id+`,`+project_id+`)" class="pull-right"><button class="btn btn-info wew">Finish</button></a>`;
+                             options =  `<a onclick="finishModule(`+id+`,`+proposalComment+`,`+client_id+`,`+projectComment+`)" class="pull-right"><button class="btn btn-info wew">Finish</button></a>`;
                          }
                      }
                      if(dataStatus == 'done'){

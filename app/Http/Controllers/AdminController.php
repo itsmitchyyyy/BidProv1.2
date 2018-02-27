@@ -145,4 +145,41 @@ class AdminController extends Controller
         ->get();
         return $seekers;
     }
+
+    public function presentationReports(){
+        $reports = DB::table('presentation_reports')
+            ->get();
+        return view('admin/presentation', compact('reports'));
+    }
+
+    public function getUser($user_id){
+        $user = User::find($user_id);
+        return $user;
+    }
+    public function getProject($project_id){
+        $project = Project::find($project_id);
+        return $project;
+    }
+
+    public function pendingPresentation(){
+        $pending = DB::table('presentation_reports')
+                    ->where('seeker_status',0)
+                    ->where('bidder_status',0)
+                    ->count();
+        return $pending;
+    }
+
+    public function donePresentation(){
+        $done = DB::table('presentation_reports')
+                    ->where('seeker_status',1)
+                    ->where('bidder_status',1)
+                    ->count();
+        return $done;
+    }
+
+    public function totalPresentation(){
+        $total = DB::table('presentation_reports')
+            ->count();
+        return $total;
+    }
 }
