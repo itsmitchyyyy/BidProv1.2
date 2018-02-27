@@ -7,12 +7,13 @@
     <title>Mobile</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="{{ asset('mobile/materialize/css/materialize.min.css') }}">
+    <script src="{{ asset('mobile/materialize/js/jquery.js') }}"></script>
+    <script src="{{ asset('mobile/materialize/js/materialize.min.js') }}"></script>
     @stack('css')
 </head>
-<body>
+<body style="background:#ccc">
     @yield('content')
 </body>
-<script src="{{ asset('mobile/materialize/js/jquery.js') }}"></script>
-    <script src="{{ asset('mobile/materialize/js/materialize.min.js') }}"></script>
+
     @stack('scripts')
 </html>

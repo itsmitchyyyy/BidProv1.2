@@ -7,6 +7,7 @@ use App\User;
 use DB;
 use Auth;
 use App\Role;
+use App\Project;
 use Illuminate\Support\Facades\Validator;
 class MobileController extends Controller
 {
@@ -61,7 +62,7 @@ class MobileController extends Controller
         return view('mobile/bidder/home');
     }
 
-    public function updateBAvatar(Request $request){
+    public function updateBAvatar(Request $request,$id){
         $validator = Validator::make($request->all(), [
             'image_avatar' => 'image',
         ]);
@@ -79,5 +80,29 @@ class MobileController extends Controller
             return back()
                 ->with('success','Profile updated');
         }
+    }
+
+    public function getProjects(){
+        $projects = Project::where(['user_id' => Auth::user()->id])
+            ->whereIn('status',['ongoing','done'])
+        ->get();
+        return view('mobile/seeker/project')->with(compact('projects')); 
+    }
+
+    public function getBProjects(){
+        $projects = Project::where('status','open')->get();
+        return view('mobile/bidder/project')->with(compact('projects')); 
+    }
+
+    public function logout(Request $request){
+        $this->guard()->logout();
+        $request->session()->flush();
+        $request->session()->regenerate();
+
+        return redirect()->route('mobile.login');
+    }
+
+    public function guard(){
+        return Auth::guard();
     }
 }
