@@ -38,6 +38,9 @@
         <li><a href="{{ route('adminSeeker') }}" class="waves-effect "><i class="fa fa-user-o  fa-fw text-danger"></i> <span class="hide-menu">Seekers</span></a>
         
         </li>
+        <li>
+            <a href="{{ route('presentation.lists') }}" class="waves-effect"><i class="fa fa-sticky-note fa-fw text-danger"></i>Presentation Reports</a>
+        </li>
         <li class="nav-small-cap m-l-10">
             CLOCK
         <div id="clock"></div>

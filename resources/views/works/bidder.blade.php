@@ -18,6 +18,13 @@
 <div class="container-fluid">
     <h3>My Works</h3>
     @inject('users','App\Http\Controllers\RatingController')
+    @inject('presentation','App\Http\Controllers\PresentationController')
+    @if(session()->get('success'))
+                                            <div class="alert alert-success alert-dismissable fade show">
+                                                <button type="button" class="close" data-dismiss="alert"><i class="fa fa-close"></i></button>
+                                                {{ session()->get('success') }}
+                                            </div>
+    @endif
     <ul class="nav customtab nav-tabs m-t-15 m-b-30" id="tabMenu" role="tablist">
         <li class="nav-item" role="presentation">
             <a href="#ongoing" class="nav-link active" role="tab" data-toggle="tab">Ongoing Projects</a>
@@ -95,10 +102,18 @@
                            <span>&#8369;</span> {{ $dones->min }} - <span>&#8369;</span> {{ $dones->max }}
                        </td>
                        <td>
-                           {{ ucfirst($dones->status) }}(Paid)
+                       @if($presentation->checkBidPresentation($dones->id,Auth::id())->bidder_status == 0)
+                           Waiting for presentation (Paid)
+                        @else
+                            Presented
+                        @endif
                        </td>
                        <td>
-                           <a href="{{ route('rate.seeker', ['user_id' => $dones->seeker_id])}}">Add Review</a>
+                           <a href="{{ route('rate.seeker', ['user_id' => $dones->seeker_id])}}">Review User</a> 
+                           @if($presentation->checkBidPresentation($dones->id,Auth::id())->bidder_status == 0)
+                           |
+                           <a href="{{ route('presentation.update',['status' => 1, 'project_id' => $dones->id, 'user_id' => Auth::id(), 'price' => $dones->price]) }}">Presented</a>
+                            @endif
                        </td>
                    </tr>
                    @endforeach

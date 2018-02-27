@@ -129,12 +129,16 @@ class ModuleController extends Controller
             ->select('*','projects.id as project_id')
             ->first();
        
+        $module = Module::where('proposal_id', $proposal_id)
+            ->whereIn('status',['doing','todo'])
+        ->count();
+
           $proposal = DB::table('proposals')
             ->join('users','proposals.bidder_id','=','users.id')
             ->where('proposals.id',$proposal_id)
             ->first();
             return view('ongoing/bidder')
-            ->with(compact('todo','doing','done','project','proposal'));
+            ->with(compact('todo','doing','done','project','proposal','module'));
     }
     public function proposalModules(){
         $module_id = $_GET['module_id'];
@@ -216,9 +220,17 @@ class ModuleController extends Controller
           
      }
 
-     public function sendMail($receiver,$project_name,$client_email){
+     public function sendMail($receiver,$project_name,$client_email,$location,$time,$date,$developer_name,$proposal_price,$award_date,$developer_email,$developer_contact){
         $data['receiver'] = $receiver;
         $data['project_name'] = $project_name;
+        $data['location'] = $location;
+        $data['time'] = $time;
+        $data['date'] = $date;
+        $data['developer'] = $developer_name;
+        $data['price'] = $proposal_price;
+        $data['award'] = $award_date;
+        $data['email'] = $developer_email;
+        $data['contact'] = $developer_contact;
         $client_mail = $client_email;
         $to_receiver = $receiver;
         \Mail::send('email/seeker',  $data, function($message) use($client_mail,$to_receiver){
@@ -246,6 +258,33 @@ class ModuleController extends Controller
     }
 
     public function addFiles(Request $request){
+        $project = $request->project_id;
+        $client = $request->client_id;
+        $proposal_id = $request->proposal_id;
+        $project_name = Project::find($project);
+        $client_name = User::find($client);
+        // dd(Carbon::parse($request->module_date)->toFormattedDateString());
+        // PROPOSAL PRICE
+        $proposal = Proposal::where(['id' => $proposal_id, 'bidder_id' => Auth::id()])->first(['price']);
+        $proposal_price = $proposal->price;
+        // DEVELOPER NAME
+        $developer = User::where('id',Auth::id())->first(['firstname','lastname','email','mobile_no']);
+        $developer_name = ucfirst($developer->firstname).' '.ucfirst($developer->lastname);
+        $developer_email = $developer->email;
+        $developer_contact = $developer->mobile_no;
+        // RECIVER
+        $receiver = ucfirst($client_name->firstname).' '.ucfirst($client_name->lastname);
+        // PROJECT TITLE
+        $project_title = strtoupper($project_name->title);
+        // CLIENT EMAIL
+        $client_email = $client_name->email;
+        // MODULE STATUS 
+        
+            // MODULE CREATED
+        $award = Bid::where('proposal_id', $proposal_id)
+            ->first(['created_at']);
+        $award_date = Carbon::parse($award->created_at)->toFormattedDateString();
+        // MAIN FUNCTIONS
         $message = ['required' => 'You must upload a file'];
         $validator = Validator::make($request->all(),[
             'upload_file' => 'required'
@@ -270,20 +309,23 @@ class ModuleController extends Controller
                 'status' => 'done',
                 'files' => $file_list
             ]);
-        $project = $request->project_id;
-        $client = $request->client_id;
-        $project_name = Project::find($project);
-        $client_name = User::find($client);
-        $receiver = ucfirst($client_name->firstname).' '.ucfirst($client_name->lastname);
-        $project_title = strtoupper($project_name->title);
-        $client_email = $client_name->email;
-        $proposal_id = $request->proposal_id;
         $module = Module::where('proposal_id', $proposal_id)
             ->pluck('status')
             ->toArray();
-        if(count(array_unique($module)) === 1 && end($module) === 'done'){
-            $this->sendMail($receiver,$project_title,$client_email);
-        }
+        if($request->module_date != ''){
+            $meetup_date = Carbon::parse($request->module_date)->toFormattedDateString();
+                 if(count(array_unique($module)) === 1 && end($module) === 'done'){      
+                     DB::table('presentation_reports')
+                        ->insert([
+                            'seeker_id' => $client,
+                            'bidder_id' => Auth::id(),
+                            'project_id' => $project,
+                            'created_at' => Carbon::now(new DateTimeZone('Asia/Manila')),
+                            'updated_at' => Carbon::now(new DateTimeZone('Asia/Manila'))
+                        ]);             
+                $this->sendMail($receiver,$project_title,$client_email,$request->module_place,$request->module_time,$meetup_date,$developer_name,$proposal_price,$award_date,$developer_email,$developer_contact);
+                }
+            }
         return back()
                 ->with('success','Module updated');
     }
@@ -342,7 +384,7 @@ class ModuleController extends Controller
         $item_1->setName($item_name)
             ->setCurrency('PHP')
             ->setQuantity(1)
-            ->setPrice($total);
+            ->setPrice($toPay);
         
         $item_list = new ItemList();
         $item_list->setItems(array($item_1));
@@ -355,17 +397,17 @@ class ModuleController extends Controller
 
         $amount = new Amount();
         $amount->setCurrency('PHP')
-            ->setTotal($total);
+            ->setTotal($toPay);
             // ->setDetails($details);
 
-        $payee = new Payee();
-        $payee->setEmail($user_paypal);
+        /* $payee = new Payee();
+        $payee->setEmail($user_paypal); */
 
         $transaction = new Transaction();
         $transaction->setAmount($amount)
             ->setItemList($item_list)
-            ->setPayee($payee)
-            ->setDescription('Amount sent to the bidder, The 5% is sent to bidpro')
+            // ->setPayee($payee)
+            ->setDescription('The amount is partially directed to admin accounts after the presentation of the bidder the admin will pay the bidder with a commission of 5%')
             ->setInvoiceNumber(uniqid());
 
         $redirect_urls = new RedirectUrls();
@@ -428,7 +470,7 @@ class ModuleController extends Controller
         $execution->setPayerId(Input::get('PayerID'));
         $result = $payment->execute($execution, $this->_api_context);
         if($result->getState() == 'approved'){
-            $payouts = new Payout();
+            /* $payouts = new Payout();
             $senderBatchHeader = new PayoutSenderBatchHeader();
             $senderBatchHeader->setSenderBatchId(uniqid())
                 ->setEmailSubject("You have a payment");
@@ -446,7 +488,7 @@ class ModuleController extends Controller
         );
         $payouts->setSenderBatchHeader($senderBatchHeader)
             ->addItem($senderItem1);
-        $output = $payouts->create(null,$this->_api_context);
+        $output = $payouts->create(null,$this->_api_context); */
             DB::table('bids')->where('id',$bid_id)->update(['status'=>'done']);
             DB::table('projects')->where('id',$project_id)->update(['status'=>'done']);
             $transaction = array(
@@ -457,7 +499,7 @@ class ModuleController extends Controller
                 'amount' => $amount_pay,
                 'commission' => $percent_commision,
                 'total' => $total,
-                'status' => 'Paid',
+                'status' => 'Pending',
                 'created_at' => Carbon::now(new DateTimeZone('Asia/Manila')),
                 'updated_at' => Carbon::now(new DateTimeZone('Asia/Manila'))
             );

@@ -18,6 +18,7 @@
 </style>
 @endpush
 @section('content')
+@inject('presentation', 'App\Http\Controllers\PresentationController')
 <!--<div class="clearfix">
 <img src="/uploads/blank.png" alt="" class=" rounded-circle float-left gap-right" style="width:100px;height:100px;margin-left:50px;">
 <strong style="margin-left:15px;color:212834">Dr. Psych</strong>
@@ -449,6 +450,7 @@
         <th>Developer</th>
         <th>Bid</th>
         <th>Status</th>
+        <th>Action</th>
       </tr>
     </thead>
     <tbody>
@@ -469,7 +471,17 @@
         </td>
         <td><span>&#8369;</span>{{ $dones->price }} <br> in {{ $dones->daysTodo }} days</td>
         <td>
-          {{ ucfirst($dones->status) }}(Paid)
+        @if($presentation->checkSeekPresentation($dones->id,Auth::id())->seeker_status == 0)
+          Waiting for presentation (Paid)
+        @else
+          Presented
+        @endif
+        </td>
+        <td>
+        <a href="{{ route('rate.show', ['id' => $dones->bidder_id]) }}">Review User</strong></a>
+        @if($presentation->checkSeekPresentation($dones->id,Auth::id())->seeker_status == 0)
+          | <a href="{{ route('presentation.update.seeker', ['status' => 1, 'project_id' => $dones->id, 'user_id' => $dones->bidder_id, 'price' => $dones->price]) }}">Presented</a>
+          @endif
         </td>
       </tr>
     @endforeach

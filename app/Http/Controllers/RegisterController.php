@@ -15,11 +15,12 @@ class RegisterController extends Controller
     }
 
     public function register(Request $request){
+        $regex = '/^\S*$/u';
         $validator = Validator::make($request->all(), [
             'firstname' => 'required|string|max:255',
             'lastname' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:users',
-            'username' => 'required|min:6|unique:users',
+            'username' => 'required|min:6|unique:users|regex:'.$regex,
             'password' => 'required|min:6|confirmed',
             'type' => 'required|min:bidder,seeker'
         ]);

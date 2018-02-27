@@ -89,5 +89,15 @@
             $('[data-toggle="tooltip"]').tooltip();
         });
     </script>
-  
+    <script>
+    var pusher = new Pusher('9ab3129dae2df45ee2fc',{
+        cluster: 'ap1',
+        encrypted: true,
+      });
+
+    var payment = pusher.subscribe('payment-notify');
+        payment.bind('App\\Events\\PaymentEvent', function(data){
+            swal("You have a payment",""+data.message)
+        });
+    </script>
 </html>

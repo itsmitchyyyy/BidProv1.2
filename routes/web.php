@@ -64,6 +64,7 @@ Route::group(['middleware' => ['auth']], function(){
     Route::get('list/post', ['as' => 'postAdmin', function(){
         return view('admin/post');
     }]);
+    Route::get('lists/presentation', ['as' => 'presentation.lists', 'uses' => 'AdminController@presentationReports']);
     Route::post('list/bidder/deactivate',['as' => 'user.deactivate', 'uses' => 'AdminController@deactivateUser']);
     Route::post('list/bidder/activate',['as' => 'user.activate', 'uses' => 'AdminController@activateUser']);
     Route::get('list/bidder/users', ['as' => 'users.profile', 'uses' => 'AdminController@viewUser']);
@@ -101,7 +102,7 @@ Route::group(['middleware' => ['auth']], function(){
     Route::post('seeker/ratings',['as' => 'rate.post', 'uses' => 'RatingController@postReview']);
     Route::post('seeker/ratings/update', ['as' => 'rate.comment', 'uses' => 'RatingController@updateComment']);
     Route::get('seeker/view/user/profile/{user_id}', ['as' => 'viewUser', 'uses' => 'SeekerController@viewUser']);
-    
+    Route::get('seeker/presentation/update/{status}/{project_id}/{user_id}/{price}', ['as' => 'presentation.update.seeker', 'uses' => 'PresentationController@seekerUpdate']);
     // PAYMENT
     Route::patch('seeker/view/project/bid/paypal/{id}/{bid_id}/{project_name}/{user_paypal}/{amount}/{user_id}', ['as' => 'payment', 'uses' => 'ModuleController@payProject']);
     Route::get('seeker/view/project/bid/paypal', ['as' => 'payment.status','uses' => 'ModuleController@paymentStatus']);
@@ -123,6 +124,7 @@ Route::group(['middleware' => ['auth']], function(){
     Route::get('bidder/view/user/profile/{user_id}', ['as' => 'viewBuser', 'uses' => 'BidderController@viewUser']);
     Route::get('bidder/view/proposals/edit/{id}/{proposal_id}',['as' => 'edit.proposal', 'uses' => 'BidderController@showProposals']);
     Route::patch('bidder/view/proposals/update/{proposal_id}/{project_id}',['as' => 'update.proposal', 'uses' => 'BidderController@updateProposal']);
+    // Route::get('bidder/notify/payment/{bidder_id}', ['as' => 'notify.bidder.payment', 'uses' => 'PresentationController@notifyBidder']);
     // END
     // Route::get('skills',  ['uses' => 'BidderController@getSkills']);
     // Route::get('bidder/inbox', function(){
@@ -151,8 +153,11 @@ Route::group(['middleware' => ['auth']], function(){
     Route::get('bidder/ratings/{id}', ['as' => 'rate.seeker', 'uses' => 'RatingController@reviewBUser']);
     Route::post('bidder/ratings',['as' => 'rate.postseeker', 'uses' => 'RatingController@postBReview']);
     Route::post('bidder/project/send-email', ['as' => 'send-email', 'uses' => 'ModuleController@sendMail']);
+    Route::get('bidder/presentation/update/{status}/{project_id}/{user_id}/{price}', ['as' => 'presentation.update', 'uses' => 'PresentationController@bidderUpdate']);
     // END works    
-
+    /* Route::get('view-email', function(){
+        return view('email/seeker');
+    }); */
 
     
     Route::post('seeker/report/post',['as' => 'post.seeker', 'uses' => 'ReportController@postReport']);
