@@ -8,6 +8,7 @@
     </div>
    @endif
  <h3>Project List</h3>
+ <div id="myDiv">
  <table id="myTable" class="table-striped table-bordered table" width="100%" cellspacing="0">
   <thead>
   <tr>
@@ -38,6 +39,7 @@
     @endforeach
   </tbody>
  </table>
+</div>
 <!-- END TABLE -->
  </div>
 @endsection

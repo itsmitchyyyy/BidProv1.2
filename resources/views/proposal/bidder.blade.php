@@ -51,10 +51,18 @@
         @if($proposal->duration < Carbon\Carbon::now())
         <button disabled class="btn btn-info wew">Bid</button>
         @else
+        @if(Auth::user()->paypal == '' && Auth::user()->skills == '')
+        Please set your skills and paypal email in your profile
+        @else
+        @if(Auth::user()->skills == '')
+        Please set skills first
+        @else
         @if(Auth::user()->paypal == '')
-        Set paypal email first in your profile 
+        Please set your paypal email in your profile
         @else
         <a href="{{ route('proposal', ['project_id' => $proposal->id]) }}"><button  class="btn btn-info wew">Bid</button></a>
+        @endif
+        @endif
         @endif
         @endif
         </div>
@@ -75,9 +83,9 @@
 <tr>
 <td>
 <div class="clearfix">
-<a href=""><img src="/{{ $bidding->avatar }}" alt="" style="width:100px;height:100px" class="img-thumbnail pull-left gap-right"></a>
+<a href="{{ route('viewBuser',['user_id' => $bidding->bidder_id]) }}"><img src="/{{ $bidding->avatar }}" alt="" style="width:100px;height:100px" class="img-thumbnail pull-left gap-right"></a>
 <p class="text-muted">
-<a href="">{{ $bidding->firstname }} {{ $bidding->lastname }}</a>
+<a href="{{ route('viewBuser',['user_id' => $bidding->bidder_id]) }}">{{ $bidding->firstname }} {{ $bidding->lastname }}</a>
 <br><small>@foreach($controller->getCreatedAt($bidding->proposal_id) as $date)  {{ Carbon\Carbon::parse($date->created_at)->diffForHumans() }} @endforeach</small>
 </p>
 </div>

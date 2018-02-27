@@ -7,9 +7,13 @@
         </svg>
     </div>
 -->
-    <section id="wrapper" class="login-register">
+    <section id="wrapper" class="login-register" style="overflow:auto">
+           
         <div class="login-box">
             <div class="white-box">
+                <div class="text-center">
+                 <a href="{{ route('landing') }}"><img src="/img/bidprologo.png" alt="logo" style="height:150;width:150px"></a>
+                </div>
                 <form class="floating-labels" method="POST" id="loginform" action="{{ route('login') }}">
                     {{ csrf_field() }}    
                 <h3 class="box-title m-b-20">Sign In</h3>

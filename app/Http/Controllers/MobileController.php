@@ -7,46 +7,77 @@ use App\User;
 use DB;
 use Auth;
 use App\Role;
+use Illuminate\Support\Facades\Validator;
 class MobileController extends Controller
 {
     public function login(Request $request){
+        $validator = Validator::make($request->all(), [
+            'username' => 'required',
+            'password' => 'required|min:6'
+        ]);
+        if($validator->fails()){
+            return redirect()->route('mobile.login')
+                ->withErrors($validator);
+        }
         $username = $request->username;
         $password = $request->password;
-        $userdata = array(
-            'username' => $username,
-            'password' => $password
-        );
-        if(Auth::attempt($userdata)){
-            $user = Auth::user();
-            $role = DB::table('role_user')
-                ->join('roles','role_user.role_id','=','roles.id')
-                ->join('users','users.id','=','role_user.user_id')
-                ->where('users.id',$user->id)
-                ->get();
-             echo json_encode(array("data"=>$role));
-        }else{
-            $error = array(
-                'result' => 'Invalid Credentials'
-            );
-            echo json_encode($error);
-        }    
-        
+        if(filter_var($username, FILTER_VALIDATE_EMAIL)){
+            if(Auth::attempt(['email' => $username, 'password' => $password])){
+                if(Auth::user()->status == 1){
+                    $user = Auth::user()->toArray();
+                   if ($request->user()->hasRoles('bidder')) {
+                        return redirect()->route('bidder.home');
+                    }elseif ($request->user()->hasRoles('seeker')) {
+                        return redirect()->route('seeker.home');
+                    }
+                }
+               else {
+                    return redirect()->route('mobile.login')
+                        ->withErrors(['error' => 'Your account has been blocked']);
+                }
+            }
+        }elseif (Auth::attempt(['username' => $username, 'password' => $password])) {
+            if(Auth::user()->status == 1){
+                if ($request->user()->hasRoles('bidder')) {
+                    return redirect()->route('bidder.home');
+                }elseif ($request->user()->hasRoles('seeker')) {
+                    return redirect()->route('seeker.home');
+                }
+            }else{
+                return redirect()->route('mobile.login')
+                        ->withErrors(['error' => 'Your account has been blocked']);
+            }
+           
+        }else {
+            return redirect()->route('mobile.login')
+            ->withErrors(['error' => 'Invalid Credentials']);
+        }
     }
 
-    public function userRatings(Request $request){
-        $ratings = DB::table('ratings')
-                ->where('rateable_id',$request->id)
-                ->avg('rating');
-        if($ratings == null){
-            $rate = array(
-                'rating' => 0
-            );
-        }else{
-            $rate = array(
-                'rating' => $ratings
-            );
-        }        
-        echo json_encode($rate);
+    public function seekerHome(){
+        return view('mobile/seeker/home');
+    }
+    public function bidderHome(){
+        return view('mobile/bidder/home');
     }
 
+    public function updateBAvatar(Request $request){
+        $validator = Validator::make($request->all(), [
+            'image_avatar' => 'image',
+        ]);
+        if($validator->fails()){
+            return back()
+                ->withErrors($validator);
+        }
+        if($request->hasFile('image_avatar')){
+            $user = User::find($id);
+            $file = $request->file('image_avatar');
+            $file->move('uploads', $file->getClientOriginalName());
+            $image_path = "uploads/". $file->getClientOriginalName();
+            $user->avatar = $image_path;
+            $user->save();
+            return back()
+                ->with('success','Profile updated');
+        }
+    }
 }

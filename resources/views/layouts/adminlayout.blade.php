@@ -121,7 +121,7 @@
                 textarea.rows = "4";
                 textarea.cols="50";
                 textarea.value = "Message: "+message;   
-                textarea.style="border:none";
+                textarea.style="border:none;padding:10px";
                 textarea.disabled = "true";
                 swal({
                     title: "Report",

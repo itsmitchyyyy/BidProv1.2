@@ -68,7 +68,7 @@ class SeekerController extends Controller
     public function updateProfile(Request $request, $id){
      // $user =  User::find($id)->update($request->all());
      $validator = Validator::make($request->all(), [
-        'email' => 'required|string|email',
+        'email' => 'required|string|email|unique:users',
         'firstname' => 'required|max:255',
         'lastname' => 'required|max:255',
         'mobile_no' => 'sometimes|nullable|phone:PH,mobile',
@@ -126,13 +126,33 @@ class SeekerController extends Controller
     }
 
     public function viewUser($id){
+        $skill = array();
+       $proficiency = array();
         $user = User::find($id);
         $projects = DB::table('projects')
             ->join('proposals','projects.id','=','proposals.project_id')
             ->join('users','users.id','=','projects.user_id')
             ->where(['proposals.status' => 0, 'proposals.bidder_id' => $id])
             ->get();
+            $skiller  = User::find($id);
+        $skills[] = $skiller->skills;
+            // dd($skills);
+            foreach($skills as $index => $value){
+                if(strpos($value,":") !== false){
+                    $data = explode(",",$value);
+                    foreach($data as $val){
+                        if(strpos($val,"skills") !== false){
+                            $check = explode(":",$val);
+                            $skill[] = $check[1];
+                        }
+                        if(strpos($val,"proficiency") !== false){
+                            $get = explode(":",$val);
+                            $proficiency[] =  $get[1];
+                        }
+                    }
+                }
+            }
         return view('view/seeker')
-            ->with(compact('user','projects'));
+            ->with(compact('user','projects','skill','proficiency'));
     }
 }

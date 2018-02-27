@@ -15,10 +15,14 @@
       
 //     return 'Notified';
 // });
+// MOBILE
+
+// END MOBILE
+
 
 Route::get('/', function () {
     return view('home');
-});
+})->name('landing');
 Route::get('commission', 'AdminController@monthlyCommision')->name('admin.commission');
 /* Route::get('testing', function(){
     return view('ongoing/seeker');
@@ -29,8 +33,8 @@ Route::get('commission', 'AdminController@monthlyCommision')->name('admin.commis
 // });
 // Route::get('ratings', 'RatingController@viewUser')->name('rate');
 // MOBILE
-Route::post('loginmobile', 'MobileController@login')->name('mobile.login');
-Route::post('ratingmobile', 'MobileController@userRatings')->name('mobile.ratings');
+// Route::post('loginmobile', 'MobileController@login')->name('mobile.login');
+// Route::post('ratingmobile', 'MobileController@userRatings')->name('mobile.ratings');
 // END OF MOBILE
 Route::get('seeker/400', function(){
     return view('page/seeker');
@@ -161,4 +165,17 @@ Route::group(['middleware' => ['auth']], function(){
 
     
     Route::post('seeker/report/post',['as' => 'post.seeker', 'uses' => 'ReportController@postReport']);
+
+    // MOBILE
+    Route::get('mobilelogin', function(){
+        return view('mobile/login');
+    })->name('mobile.login');
+    Route::post('mobilelogin', 'MobileController@login');
+    Route::get('seekerhome', 'MobileController@seekerHome')->name('seeker.home');
+    Route::get('bidderhome', 'MobileController@bidderHome')->name('bidder.home');
+    Route::get('bidderprofile', ['as' => 'bidder.profile', function(){
+        return view('mobile/bidder/profile');
+    }]);
+    Route::patch('bidderprofile/update/avatar/{id}', ['as' => 'bidder.profile.avatar', 'uses' => 'MobileController@updateBAvatar']);
+    // END OF MOBILE
 });

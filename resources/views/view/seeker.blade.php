@@ -116,6 +116,15 @@
                                             <p class="text-muted">{{ $user->zip_code }}</p>
                                         </div>
                                     </div>
+                                    <h4 class="font-bold m-t-30">Skill Set</h4>
+                                    <hr>
+                                    @foreach(array_combine($skill,$proficiency) as $skills => $proficiencys)
+                                    <?php $percent = explode("%",$proficiencys); ?>
+                                    <h5>{{ $skills }}<span class="pull-right">{{ $proficiencys }}</span></h5>
+                                    <div class="progress">
+                                        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{ $percent[0] }}" aria-valuemin="0" aria-valuemax="100" style="width:{{ $proficiencys}};"> <span class="sr-only">50% Complete</span> </div>
+                                    </div>
+                                    @endforeach
                                 </div>
                             </div>
                         </div>

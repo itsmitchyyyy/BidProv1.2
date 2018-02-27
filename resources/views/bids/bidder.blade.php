@@ -23,7 +23,7 @@
         <tbody>
         @foreach($proposal as $propose)
         <tr>
-            <td><a href="{{ route('edit.proposal', ['id' => $propose->project_id, 'proposal_id' => $propose->proposal_id]) }}">{{ ucfirst($propose->title) }}</a></td>
+            <td><a href="{{ route('viewProject', ['id' => $propose->project_id]) }}">{{ ucfirst($propose->title) }}</a></td>
             <td><i class="fa fa-trophy"></i> {{ $bids->countBid($propose->project_id) }}</td>
             <td><i class="fa fa-clock-o"></i> {{ Carbon\Carbon::parse($propose->duration)->diffForHumans() }}</td>
             <td><span>&#8369;</span> {{ $propose->min }} - <span>&#8369;</span> {{ $propose->max }}</td>

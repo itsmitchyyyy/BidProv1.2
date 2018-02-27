@@ -69,7 +69,7 @@
                    <div style="border:1px solid rgba(0,0,0,.25)" class="p-10">
                    <div class="floating-labels">
                     <div class="form-group mt-3" id="price_div">
-                        <input type="text" name="proposal_price" id="proposal_price" class="form-control" required>
+                        <input type="number" name="proposal_price" id="proposal_price" class="form-control" required>
                         <span class="highlight"></span><span class="bar"></span>
                         <label for="proposal_price">Price</label>
                         <div id="price_error"></div>
@@ -151,15 +151,17 @@ $(function(){
             var max = {{$proposal->max}}
             var current = $(this).val();
             var days = $('#proposal_days').val();
-            if(current < min){
+            if(parseInt(current) < parseInt(min)){
                 console.log('greater than');
                 $('#price_div').addClass("has-error");    
                 $('#price_error').html('<p style="color:red">Must be in between the given price</p>');
+                $('#btnSubmit').prop('disabled',true);
             }
             else if(current > max){
-                console.log('lesser than');
+                $('#price_div').addClass("has-error");    
+                $('#price_error').html('<p style="color:red">Must be in between the given price</p>');
+                $('#btnSubmit').prop('disabled',true);
             }
-
             else{
                 $('#btnSubmit').prop('disabled','');
                 $('#price_div').removeClass("has-error");    

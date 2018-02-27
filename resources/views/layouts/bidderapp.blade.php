@@ -33,9 +33,21 @@
     </style>
 </head>
 <body>
+@if(Auth::user()->status == 1)
     @include('inc.bidderNav')
     @yield('content')
-    
+    @else
+    <script>
+            "{{ session()->flush() }}";
+            swal({
+                title: "Notification",
+                text: "Your account has been blocked by the admin",
+                icon: "warning"
+            }).then(function(value){
+                window.location = "{{ URL::to('/') }}";
+            });
+    </script>
+    @endif
 </body>
 <script src="{{ asset('js/bower_components/datatables/jquery.dataTables.min.js') }}"></script>
 @yield('scripts')

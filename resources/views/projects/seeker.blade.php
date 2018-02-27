@@ -317,13 +317,13 @@
                 <div id="rmw">
         <div class="form-group m-b-30 m-t-15">
         <select name="type" id="rtype" class="form-control">
-        <?php $category = array('IOS' => 'IOS', 'Android' => 'Android'); ?>
+        <?php $category = array('IOS' => 'IOS', 'Android' => 'Android', 'IAA' => 'IOS and Android'); ?>
         <option value="" disabled selected></option>
                     @foreach($category as $categor => $val)
-                      @if($val == $project->type)
-                        <option value="{{ $val }}" selected>{{ $categor }}</option>
+                      @if($categor == $project->type)
+                        <option value="{{ $categor }}" selected>{{ $val }}</option>
                       @else
-                      <option value="{{ $val }}">{{ $categor }}</option>
+                      <option value="{{ $categor }}">{{ $val }}</option>
                       @endif
                     @endforeach
           </select>
@@ -350,20 +350,21 @@
         </div>
                 <!--  -->
                 <div class="form-group m-b-40 m-t-15">
-                  <input type="number" name="min" value="{{ $project->min }}" id="min" class="form-control" step="any" required>
+                  <input type="number" name="min" value="{{ $project->min }}" id="rmin" class="form-control" step="any" required>
                   <span class="highlight"></span><span class="bar"></span>
                   <label for="min" class="text-dark">Min Cost</label>
                 </div>
                 <div class="form-group m-b-40 m-t-15">
-                  <input type="number" name="max" value="{{ $project->max }}" id="max" class="form-control" step="any" required>
+                  <input type="number" name="max" value="{{ $project->max }}" id="rmax" class="form-control" step="any" required>
                   <span class="highlight"></span><span class="bar"></span>
                   <label for="max" class="text-dark">Max Cost</label>
+                  <div id="rmax_error"></div>
                 </div>
               </div>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary wew" data-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary wew" style="background-color:#ee4b28;border:1px solid #ee4b28;">Repost</button>
+            <button type="submit" id="btnRepost" class="btn btn-primary wew" style="background-color:#ee4b28;border:1px solid #ee4b28;">Repost</button>
             </form>
           </div>
         </div>
@@ -471,7 +472,7 @@
         </td>
         <td><span>&#8369;</span>{{ $dones->price }} <br> in {{ $dones->daysTodo }} days</td>
         <td>
-        @if($presentation->checkSeekPresentation($dones->id,Auth::id())->seeker_status == 0)
+        @if($presentation->checkSeekPresentation($dones->project_id,Auth::id())->seeker_status == 0)
           Waiting for presentation (Paid)
         @else
           Presented
@@ -479,8 +480,8 @@
         </td>
         <td>
         <a href="{{ route('rate.show', ['id' => $dones->bidder_id]) }}">Review User</strong></a>
-        @if($presentation->checkSeekPresentation($dones->id,Auth::id())->seeker_status == 0)
-          | <a href="{{ route('presentation.update.seeker', ['status' => 1, 'project_id' => $dones->id, 'user_id' => $dones->bidder_id, 'price' => $dones->price]) }}">Presented</a>
+        @if($presentation->checkSeekPresentation($dones->project_id,Auth::id())->seeker_status == 0)
+          | <a href="{{ route('presentation.update.seeker', ['status' => 1, 'project_id' => $dones->project_id, 'user_id' => $dones->bidder_id, 'price' => $dones->price]) }}">Presented</a>
           @endif
         </td>
       </tr>
@@ -491,7 +492,7 @@
 </div>
 <!-- ADD PROject -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-md" role="document">
+  <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -607,6 +608,21 @@
      });
     </script>
     <script>
+        $('#rmax').keyup(function(){
+          var min = $('#rmin').val();
+          var max = $(this).val();
+          var error = '';
+          if(max < min){
+            error = `<p style="color:red">Max price must be greater than minumum price</p>`; 
+            $('#btnRepost').prop('disabled',true);
+          }
+          else{
+            $('#btnRepost').prop('disabled','');
+          }
+          $('#rmax_error').html(error);
+        });
+    </script>
+    <script>
       $('#myModal').on('shown.bs.modal', function(){
         $('#max').keyup(function(){
           var min = $('#min').val();
@@ -629,14 +645,20 @@
         $('#myProjectClose').DataTable();
         $('#myOngoingProject').DataTable();
         $('#doneProjects').DataTable();
-        
     });
 </script>
+
 <script>
         $('#min').change(function(){
             this.value = parseFloat(this.value).toFixed(2);
         });
         $('#max').change(function(){
+            this.value = parseFloat(this.value).toFixed(2);
+        });
+        $('#rmin').change(function(){
+            this.value = parseFloat(this.value).toFixed(2);
+        });
+        $('#rmax').change(function(){
             this.value = parseFloat(this.value).toFixed(2);
         });
     </script>

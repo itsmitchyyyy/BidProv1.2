@@ -102,7 +102,7 @@
                            <span>&#8369;</span> {{ $dones->min }} - <span>&#8369;</span> {{ $dones->max }}
                        </td>
                        <td>
-                       @if($presentation->checkBidPresentation($dones->id,Auth::id())->bidder_status == 0)
+                       @if($presentation->checkBidPresentation($dones->project_id,Auth::id())->bidder_status == 0)
                            Waiting for presentation (Paid)
                         @else
                             Presented
@@ -110,9 +110,9 @@
                        </td>
                        <td>
                            <a href="{{ route('rate.seeker', ['user_id' => $dones->seeker_id])}}">Review User</a> 
-                           @if($presentation->checkBidPresentation($dones->id,Auth::id())->bidder_status == 0)
+                           @if($presentation->checkBidPresentation($dones->project_id,Auth::id())->bidder_status == 0)
                            |
-                           <a href="{{ route('presentation.update',['status' => 1, 'project_id' => $dones->id, 'user_id' => Auth::id(), 'price' => $dones->price]) }}">Presented</a>
+                           <a href="{{ route('presentation.update',['status' => 1, 'project_id' => $dones->project_id, 'user_id' => Auth::id(), 'price' => $dones->price]) }}">Presented</a>
                             @endif
                        </td>
                    </tr>

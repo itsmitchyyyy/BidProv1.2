@@ -1,8 +1,11 @@
 @extends('layouts.loginapp')
 @section('content')
-<section id="wrapper" class="login-register">
-        <div class="login-box" style="margin-top:3%">
+<section id="wrapper" class="login-register" style="overflow:auto">
+        <div class="login-box" style="margin-top:3%;width:30%">
             <div class="white-box">
+            <div class="text-center">
+                 <a href="{{ route('landing') }}"><img src="/img/bidprologo.png" alt="logo" style="height:150;width:150px"></a>
+                </div>
                 <form class="form-horizontal" method="POST" id="loginform" action="{{ route('register') }}">
                     {{ csrf_field() }}
                     

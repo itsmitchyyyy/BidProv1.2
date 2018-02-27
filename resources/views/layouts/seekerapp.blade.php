@@ -36,9 +36,21 @@
     <script src="{{ asset('js/app.js') }}"></script>
 </head>
 <body>
+@if(Auth::user()->status == 1)
     @include('inc.seekerNav')
     @yield('content')
-    
+    @else
+    <script>
+            "{{ session()->flush() }}";
+            swal({
+                title: "Notification",
+                text: "Your account has been blocked by the admin",
+                icon: "warning"
+            }).then(function(value){
+                window.location = "{{ URL::to('/') }}";
+            });
+    </script>
+    @endif
 </body>
 @stack('scripts')
 <script src="{{ asset('js/bower_components/datatables/jquery.dataTables.min.js') }}"></script>
