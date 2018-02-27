@@ -68,7 +68,7 @@ class SeekerController extends Controller
     public function updateProfile(Request $request, $id){
      // $user =  User::find($id)->update($request->all());
      $validator = Validator::make($request->all(), [
-        'email' => 'required|string|email|unique:users',
+        'email' => 'required|string|email|unique:users,email,'.$id.',id',
         'firstname' => 'required|max:255',
         'lastname' => 'required|max:255',
         'mobile_no' => 'sometimes|nullable|phone:PH,mobile',
