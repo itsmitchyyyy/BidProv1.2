@@ -86,7 +86,7 @@ class BidderController extends Controller
     public function updateProfile(Request $request, $id)
     {
         $validator = Validator::make($request->all(),[
-            'email' => 'required|string|email',
+        'email' => 'required|string|email|unique:users,email,'.$id.',id',
         'firstname' => 'required|max:255',
         'lastname' => 'required|max:255',
         'mobile_no' => 'sometimes|nullable|phone:PH,mobile',
