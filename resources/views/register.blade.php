@@ -78,11 +78,18 @@
                         @endif
                     </div>
                 </div>
-                    <div class="form-group text-center m-t-20">
-                        <div class="col-xs-12">
-                            <button class="btn btn-info btn-lg btn-block text-uppercase waves-effect waves-light" type="submit" style="background-color:#ee4b28;border:2px solid #ee4b28">Sign Up</button>
+                <div class="form-group">
+                        <div class="col-xs-12 text-center">
+                           <input type="checkbox" name="terms" id="terms" class="m-r-5 p-5"><a href="#" data-toggle="modal" data-target="#tandc">Terms and conditions</a> 
                         </div>
                     </div>
+                    <div class="form-group text-center m-t-20">
+                        <div class="col-xs-12">
+                            <p id="message"></p>
+                            <button class="btn btn-info btn-lg btn-block text-uppercase waves-effect waves-light" type="submit" id="btnSubmit" style="background-color:#ee4b28;border:2px solid #ee4b28">Sign Up</button>
+                        </div>
+                    </div>
+                    
                     <div class="form-group m-b-0">
                         <div class="col-sm-12 text-center">
                             <p>Already have an account? <a href="{{ route('login') }}" class="text-primary m-l-5"><b>Sign In</b></a></p>
@@ -92,6 +99,52 @@
             </div>
         </div>
     </section>
+    <div class="modal fade" id="tandc">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button class="close" data-dismiss="modal"><span>&times;</span></button>
+                    <h3>Terms and Conditions</h3>
+                </div>
+                <div class="modal-body">
+                    <p >
+                  <strong> The proposed system has the following rules and policies:</strong> 
+</p>
+
+
+<p class="text-justify">
+    By accessing the Website, you agree to the following terms with Bidpro.<br>
+    We may amend this User Agreement and any linked information from time to time by posting amended terms on the Website, without notice to you. 
+    </p>
+    <p>
+Bidpro is a venue where Users post and bid Seller Services and projects. Bidders and Seekers must register for an Account in order to bid or post Seller Services and/or projects. Bidpro enables Users to work together online to complete and pay for Projects, post and bid projects and to use the services that we provide. We are not a party to any contractual agreements between Buyer and Seller in the online venue, we merely facilitate connections between the parties. 
+We may, from time to time, and without notice, change or add to the system or the information, products or services described in it. However, we do not undertake to keep the system updated. We are not liable to you or anyone else if any error occurs in the information on the system or if that information is not current. 
+</p>
+<strong>Rules and Policies</strong>
+<br><br>
+•	Bidder can bid only once for every project created by SDPSeeker.<br>
+•	Seeker must submit complete details of the project.<br>
+•	Bidder should submit a proper proposal to seeker/ clients.<br>
+•	Every project is available only 6 days after posted it to system.<br>
+•	Seeker has the right, suggest or add comment about the system progress.<br>
+•	User will use one and only account e.g gmail address.<br>
+•	Paypal Account are existing in Seeker and Bidder accounts for transaction.<br>
+•	Any outdoor presentations of the project <br>
+•	Our system doesn’t support Auto-bidding.<br>
+•	SDP Bidders are freelancers. Actual corporate IT organizations will not be allowed to create accounts.<br>
+•	The system will not be held responsible if the users will not commit to agreement of both parties (outside the system).<br>
+•	User must agree the terms and conditions.<br>
+•	Bidder will proper schedule for presentation of the system.<br>
+<!-- •	If the project closed or done and not completely presented by the bidder , admin automatically refund thru admin system. <br> -->
+•   The project will be posted for a span of 6 days, if there will be no bidder, the project will be deleted
+
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
     @endsection
     @section('scripts')
     <script src="{{ asset('js/bootstrap/dist/js/tether.min.js') }}"></script>
@@ -101,5 +154,19 @@
     <script src="{{ asset('js/waves.js') }}"></script>
     <script src="{{ asset('js/custom.min.js') }}"></script>
     <script src="{{ asset('js/bower_components/styleswitcher/jQuery.style.switcher.js') }}"></script>
-    
+    <script>    
+        $(function(){
+            $('#btnSubmit').prop('disabled',true);
+                $('#message').text('Accept terms and conditions before signing up');
+            $('#terms').change(function(){
+                if($('#terms').is(':checked')){
+                $('#btnSubmit').prop('disabled',false);
+                $('#message').text('');
+            }else{
+                $('#btnSubmit').prop('disabled',true);
+                $('#message').text('Accept terms and conditions before signing up');
+            }
+            });
+        });
+    </script>
     @endsection
