@@ -311,6 +311,8 @@ class ProjectController extends Controller
             $proposal->project_id = $project_id;
             $proposal->price = $request->proposal_price;
             $proposal->daysTodo = $request->proposal_days;
+            $proposal->created_at = Carbon::now(new DateTimeZone('Asia/Manila'));
+            $proposal->updated_at = Carbon::now(new DateTimeZone('Asia/Manila'));
             $proposal->save();
             $proposal_id = $proposal->id;
 
