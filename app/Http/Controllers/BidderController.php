@@ -231,6 +231,17 @@ class BidderController extends Controller
             ->with(compact('works','done'));
     }
 
+    public function countWorks($status){
+        $count = DB::table('bids')
+            ->join('users','bids.seeker_id','=','users.id')
+            ->join('proposals','proposals.id','=','bids.proposal_id')
+            ->join('projects','projects.id','=','proposals.project_id')
+            ->where('bids.bidder_id',Auth::user()->id)
+            ->where('bids.status',$status)
+            ->count();
+        return $count;
+    }
+
     public function viewUser($id){
         $skill = array();
        $proficiency = array();
