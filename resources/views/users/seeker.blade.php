@@ -133,7 +133,10 @@
               <h3 class="card-title"><b>{{ ucwords($project->title) }}</b></h3>
             </div>
             <div class="card-body">
-              <h3 class="card-title">Test</h3>
+              <!-- <h3 class="card-title p-2">Details</h3> -->
+              <p class="card-text p-4">
+                {{ $project->details }}
+              </p>
             </div>
           </div>
       @endforeach
