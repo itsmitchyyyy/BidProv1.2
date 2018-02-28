@@ -139,6 +139,7 @@ Route::group(['middleware' => ['auth']], function(){
     // PAYMENT
     Route::patch('seeker/view/project/bid/paypal/{id}/{bid_id}/{project_name}/{user_paypal}/{amount}/{user_id}', ['as' => 'payment', 'uses' => 'ModuleController@payProject']);
     Route::get('seeker/view/project/bid/paypal', ['as' => 'payment.status','uses' => 'ModuleController@paymentStatus']);
+    Route::post('seeker/projects/refund', ['as' => 'request.refund', 'uses' => 'SeekerController@requestRefund']);
     // END
     Route::post('seeker/view/project/bid/transaction/{project_id}', ['as' => 'transaction.status', 'uses' => 'ModuleController@checkPayment']);
     // end seeker

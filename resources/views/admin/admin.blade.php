@@ -82,7 +82,7 @@
                                    <h5 class="text-muted vb">Reports</h5>
                                </div>
                                <div class="col-md-6 col-sm-6 col-xs-6">
-                                   <h3 class="counter text-right m-t-15 text-success">{{ $controller->totalReports() }}</h3>
+                                   <h3  class="counter text-right m-t-15 text-success">{{ $controller->totalReports() }}</h3>
                                </div>
                                <div class="col-md-12 col-sm-12 col-xs-12">
                                    <div class="progress">
@@ -101,6 +101,7 @@
            <div class="col-md-7 col-lg-9 col-sm-12 col-xs-12">
                <div class="white-box">
                    <h3 class="box-title">Monthly Commision</h3>
+                   <h4 class="float-right">Total: <span>&#8369;</span> {{ number_format($controller->totalCommision(),2) }}</h4>
                   <!--  <ul class="list-inline text-right">
                        <li>
                            <h5><i class="fa fa-circle m-r-5" style="color: #00bfc7;"></i>iPhone</h5>

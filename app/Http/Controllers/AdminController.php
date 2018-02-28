@@ -182,4 +182,9 @@ class AdminController extends Controller
             ->count();
         return $total;
     }
+
+    public function totalCommision(){
+        $total = Transaction::all()->sum('commission');
+        return $total;
+    }
 }

@@ -162,4 +162,17 @@ class SeekerController extends Controller
             ->count();
         return $count;
     }
+    
+    public function requestRefund(){
+        $user_id = $_POST['user_id'];
+        $project_id = $_POST['project_id'];
+        DB::table('presentation_reports')
+            ->where([
+                'seeker_id' => $user_id, 
+                'project_id' => $project_id
+                ])
+            ->update([
+                'seeker_status' => 2
+            ]);
+    }
 }

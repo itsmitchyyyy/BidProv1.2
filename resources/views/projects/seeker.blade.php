@@ -479,13 +479,18 @@
         @if($presentation->checkSeekPresentation($dones->project_id,Auth::id())->seeker_status == 0)
           Waiting for presentation (Paid)
         @else
+        @if($presentation->checkSeekPresentation($dones->project_id,Auth::id())->seeker_status == 2)
+          Refund request sent
+        @else
           Presented
+        @endif
         @endif
         </td>
         <td>
         <a href="{{ route('rate.show', ['id' => $dones->bidder_id]) }}">Review User</strong></a>
         @if($presentation->checkSeekPresentation($dones->project_id,Auth::id())->seeker_status == 0)
-          | <a href="{{ route('presentation.update.seeker', ['status' => 1, 'project_id' => $dones->project_id, 'user_id' => $dones->bidder_id, 'price' => $dones->price]) }}">Presented</a>
+          |  <a href="{{ route('presentation.update.seeker', ['status' => 1, 'project_id' => $dones->project_id, 'user_id' => $dones->bidder_id, 'price' => $dones->price]) }}">Presented</a>
+          |  <a href="#" onclick="requestRefund({{ $dones->project_id }},{{ $dones->seeker_id }})">Request Refund</a>
           @endif
         </td>
       </tr>
@@ -611,6 +616,32 @@
      $(document).ready(function(){
          $('#tabMenu a[href="#{{ old('tab') }}"]').tab('show');
      });
+    </script>
+    <script>
+      function requestRefund(project_id,user_id){
+        swal({
+          title: "Request",
+          text: "Are you sure you want to request a refund?",
+          icon: "warning",
+          buttons: true
+        }).then(function(value){
+          if(value){
+            $.ajax({
+          type: "post",
+          url: "{{ route('request.refund') }}",
+          data: {
+            '_token': "{{ csrf_token() }}",
+            'user_id': user_id,
+            'project_id': project_id
+          },
+          cache:false,
+          success:function(response){
+            swal("Success","Request sent","success");
+          }
+        }); 
+          }
+        });
+      }
     </script>
     <script>
         $('#emin').keyup(function(){
