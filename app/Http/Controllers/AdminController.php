@@ -7,11 +7,41 @@ use App\User;
 use App\Project;
 use App\Role;
 use Carbon\Carbon;
-use App\Transaction;
+// use App\Transaction;
 use App\Report;
+use App\Proposal;
+use App\Module;
 use DB;
+use PayPal\Api\Payout;
+use PayPal\Api\PayoutSenderBatchHeader;
+use PayPal\Api\PayoutItem;
+// PAYPAL\
+use PayPal\Rest\ApiContext;
+use PayPal\Auth\OAuthTokenCredential;
+use PayPal\Api\Amount;
+use PayPal\Api\Details;
+use PayPal\Api\Item;
+use PayPal\Api\ItemList;
+use PayPal\Api\Payer;
+use PayPal\Api\Payee;
+use PayPal\Api\Payment;
+use PayPal\Api\RedirectUrls;
+use PayPal\Api\ExecutePayment;
+use PayPal\Api\PaymentExecution;
+use PayPal\Api\Transaction;
+// SALE
+use PayPal\Api\Sale;
+use PayPal\Api\Refund;
+use PayPal\Api\RefundRequest;
 class AdminController extends Controller
 {
+    private $_api_context;
+    public function __construct(){
+        $paypal_conf = \Config::get('paypal');
+        $this->_api_context = new ApiContext(new OAuthTokenCredential($paypal_conf['client_id'], $paypal_conf['secret']));
+        $this->_api_context->setConfig($paypal_conf['settings']);
+    }
+
     public function totalUsers(){
         $users = DB::table('users')
             ->join('role_user','role_user.user_id','=','users.id')
@@ -184,7 +214,66 @@ class AdminController extends Controller
     }
 
     public function totalCommision(){
-        $total = Transaction::all()->sum('commission');
+        $total = DB::table('transactions')->sum('commission');
         return $total;
+    }
+
+    public function checkRefund($project_id){
+        $status = DB::table('transactions')
+            ->join('presentation_reports','transactions.project_id','=','presentation_reports.project_id')
+            ->where('presentation_reports.project_id',$project_id)
+            ->select('*','transactions.id as transact_id')
+            ->first();
+        return $status;
+    }
+
+    public function sendRefund(){
+        $transact_id = $_POST['transact_id'];
+        $project_id = $_POST['project_id'];
+        $payment_id = $_POST['payment_id'];
+        $php_amount = $_POST['refund_amount'];
+        $payment = Payment::get($payment_id, $this->_api_context);
+        $payment->getTransactions();
+        $obj = $payment->toJSON();
+        $paypal_obj = json_decode($obj);
+        $transaction_id = $paypal_obj->transactions[0]->related_resources[0]->sale->id;
+        $sale = Sale::get($transaction_id, $this->_api_context);
+        $test =  $sale->getId();
+        $refund_amount = round($php_amount / 50,2);
+        $amount = new Amount();
+        $amount->setCurrency('PHP')
+            ->setTotal($refund_amount);
+        $refundRequest = new RefundRequest();
+        $refundRequest->setAmount($amount);
+        $sale = new Sale();
+        $sale->setId($transaction_id);
+        $output = $sale->refundSale($refundRequest, $this->_api_context);
+        if($output){
+              DB::table('transactions')
+            ->where('id',$transact_id)
+            ->update([
+                'status' => 'Refunded'
+            ]);
+        $proposal_id = Proposal::where('project_id', $project_id)->first();
+        $module_id = DB::table('modules')
+                ->where('proposal_id', $proposal_id->id)
+                ->pluck('id')
+                ->toArray();
+        foreach($module_id as $module){
+             DB::table('module_comments')
+                ->where('module_id', $module)
+                ->delete();
+            DB::table('proposal_modules')
+                ->where('module_id', $module)
+                ->delete();
+            Module::find($module)->delete();
+            
+        }
+        Proposal::where('project_id', $proposal_id)->delete();
+        Project::where('id',$project_id)->update(['status'=>'refunded']);
+        event(new \App\Events\RefundEvent('A refund has been sent to your paypal'));
+        }else{
+            echo 'error';
+        }
     }
 }

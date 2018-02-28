@@ -115,4 +115,16 @@
             window.location = $notif_link;
         }
   </script>
+  <script>
+    var pusher = new Pusher('9ab3129dae2df45ee2fc',{
+        cluster: 'ap1',
+        encrypted: true,
+      });
+
+    var payment = pusher.subscribe('refund-notify');
+        payment.bind('App\\Events\\RefundEvent', function(data){
+            swal("You have a message",""+data.message)
+        });
+    </script>
+  </script>
 </html>

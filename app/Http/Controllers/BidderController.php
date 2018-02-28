@@ -374,4 +374,26 @@ class BidderController extends Controller
         ->route('bids')
         ->with('success','Module updated successfully');
     }
+
+    public function approvedRefund(){
+        $project_id = $_POST['project_id'];
+        $user_id = $_POST['user_id'];
+        $proposal_id = $_POST['proposal_id'];
+        DB::table('presentation_reports')
+            ->where([
+                'project_id' => $project_id,
+                'bidder_id' => $user_id
+            ])
+            ->update([
+                'bidder_status' => 2
+            ]);
+        DB::table('bids')
+                ->where('proposal_id', $proposal_id)
+                ->update([
+                    'status' => 'closed'
+                ]);
+        Project::where('id',$project_id)->update([
+            'status' => 'pending'
+        ]);
+    }
 }

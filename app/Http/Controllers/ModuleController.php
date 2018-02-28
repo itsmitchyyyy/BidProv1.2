@@ -390,9 +390,7 @@ class ModuleController extends Controller
         $item_list->setItems(array($item_1));
 
         /* $details = new Details();
-        $details->setShipping($tax)
-            ->setTax($tax)
-            ->setSubtotal($amount); */
+        $details->setFee($total_tax); */
         
 
         $amount = new Amount();

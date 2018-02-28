@@ -103,17 +103,26 @@
                            <span>&#8369;</span> {{ $dones->min }} - <span>&#8369;</span> {{ $dones->max }}
                        </td>
                        <td>
-                       @if($presentation->checkBidPresentation($dones->project_id,Auth::id())->bidder_status == 0)
+                       @if($presentation->checkBidPresentation($dones->project_id,Auth::id())->bidder_status == 0 && $presentation->checkBidPresentation($dones->project_id,Auth::id())->seeker_status == 0)
                            Waiting for presentation (Paid)
                         @else
+                        @if($presentation->checkBidPresentation($dones->project_id,Auth::id())->seeker_status == 2)
+                            Seeker requested a refund
+                        @else
                             Presented
+                        @endif
                         @endif
                        </td>
                        <td>
                            <a href="{{ route('rate.seeker', ['user_id' => $dones->seeker_id])}}">Review User</a> 
-                           @if($presentation->checkBidPresentation($dones->project_id,Auth::id())->bidder_status == 0)
+                           @if($presentation->checkBidPresentation($dones->project_id,Auth::id())->bidder_status == 0 && $presentation->checkBidPresentation($dones->project_id,Auth::id())->seeker_status == 0)
                            |
                            <a href="{{ route('presentation.update',['status' => 1, 'project_id' => $dones->project_id, 'user_id' => Auth::id(), 'price' => $dones->price]) }}">Presented</a>
+                           @else
+                           @if($presentation->checkBidPresentation($dones->project_id,Auth::id())->seeker_status == 2 && $presentation->checkBidPresentation($dones->project_id,Auth::id())->bidder_status == 0)
+                           |
+                           <a onclick="approveRefund({{ $dones->project_id}}, {{ $dones->bidder_id }}, {{ $dones->proposal_id }})" href="#!">Approve Request</a>
+                            @endif
                             @endif
                        </td>
                    </tr>
@@ -126,6 +135,41 @@
 @endsection
 @push('scripts')
 <script src="{{ asset('js/star-rating.js') }}"></script>
+<script>
+    function approveRefund(project_id,user_id, proposal_id){
+        swal({
+            title: "Confirm refund request",
+            text: "Are you sure?",
+            icon: "warning",
+            buttons:true
+        }).then(function(value){
+           if(value){
+            $.ajax({
+                type: "post",
+                url: "{{ route('approve.refund') }}",
+                data:{
+                    '_token': "{{ csrf_token() }}",
+                    'project_id': project_id,
+                    'user_id': user_id,
+                    'proposal_id': proposal_id
+                },
+                cache:false,
+                success:function(response){
+                    swal({
+                        title: "Success",
+                        text: "Confirmation success",
+                        buttons:false,
+                        icon: "success",
+                        timer: 2000
+                    }).then(function(){
+                        location.reload();
+                    });
+                }
+            })
+           }
+        });
+    }
+</script>
 <script>
     $(document).ready(function(){
         $("[data-tooltip='true']").tooltip();

@@ -10,6 +10,7 @@ use Hash;
 use Image;
 use DB;
 use App\Project;
+use App\Transaction;
 //use Illuminate\Support\Facades\Redirect;
 use App\User;
 class SeekerController extends Controller
@@ -159,6 +160,13 @@ class SeekerController extends Controller
 
     public function countProjects($status){
         $count = Project::where(['user_id' => Auth::user()->id, 'status' => $status])
+            ->count();
+        return $count;
+    }
+    public function countRefunded($status){
+        $count = DB::table('projects')
+            ->join('transactions','transactions.project_id','=','projects.id')
+            ->where('projects.status','refunded')
             ->count();
         return $count;
     }

@@ -103,6 +103,7 @@
                                             <th>Seeker Status</th>
                                             <th>Bidder Status</th>
                                             <th>Presentation Status</th>
+                                            <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tfoot>
@@ -114,6 +115,7 @@
                                             <th>Seeker Status</th>
                                             <th>Bidder Status</th>
                                             <th>Presentation Status</th>
+                                            <th>Action</th>
                                         </tr>
                                     </tfoot>
                                     <tbody>
@@ -127,23 +129,36 @@
                                                 @if($report->seeker_status == 1)
                                                     Presented
                                                 @else
+                                                @if($report->seeker_status == 2)
+                                                    Requested a refund
+                                                @else
                                                     Waiting for presentation
+                                                @endif
                                                 @endif
                                             </td>
                                             <td>
                                             @if($report->bidder_status == 1)
                                                     Presented
                                                 @else
+                                                @if($report->bidder_status == 2)
+                                                    Approved the refund
+                                                @else
                                                     Waiting for presentation
+                                                    @endif
                                                 @endif
                                             </td>
                                            <td>
-                                           @if($report->seeker_status == 1 && $report->bidder_status == 1)
-                                                     Done
-                                                @else
-                                                    Pending
-                                                @endif
+                                            {{ $controller->checkRefund($report->project_id)->status }}
                                            </td>
+                                           @if($report->seeker_status == 2 && $report->bidder_status == 2 &&   $controller->checkRefund($report->project_id)->status !== 'Refunded')
+                                           <td>
+                                            <a href="#" onclick="sendRefund({{ $controller->checkRefund($report->project_id)->transact_id }}, {{ $report->project_id }}, '{{  $controller->checkRefund($report->project_id)->payment_id  }}', '{{  $controller->checkRefund($report->project_id)->amount  }}')"><button class="btn btn-info wew">Send Refund</button></a>
+                                           </td>
+                                           @else
+                                           <td>
+                                            <a href="#"><button  disabled  class="btn btn-info wew">Send Refund</button></a>
+                                           </td>
+                                           @endif
                                         </tr>
                                         @endforeach
                                     </tbody>
@@ -155,3 +170,43 @@
        </div>
 </div>
 @endsection
+@push('scripts')
+    <script>
+        function sendRefund(transact_id,project_id,payment_id,refund_amount){
+            swal({
+                title: "Confirm",
+                text: "Are you sure?",
+                icon: "warning",
+                buttons: true
+            }).then(function(value){
+                if(value){
+                    $.ajax({
+                        type: "post",
+                        url: "{{ route('presentation.refund') }}",
+                        data: {
+                            '_token': "{{ csrf_token() }}",
+                            'transact_id': transact_id,
+                            'project_id': project_id,
+                            'payment_id': payment_id,
+                            'refund_amount': refund_amount
+                        },
+                        dataType: "json",
+                        cache:false,
+                        success:function(response){
+                            console.log(response);
+                            swal({
+                                title: "Success",
+                                text: "Refund success",
+                                icon: "success",
+                                button: false,
+                                timer: 2000
+                            }).then(function(){
+                                location.reload();
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    </script>
+@endpush

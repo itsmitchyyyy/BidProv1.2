@@ -516,7 +516,7 @@ function toggleComment(id){
                         var status_check = $(card).data('status');
                         var proposal_id = $(card).data('proposal');
                         var client_id = $(card).data('email');
-                        var project_id = $(card).data('prname');
+                        var project_id = $(card).data('project');
                         var module_status = '';
                         if(section.id == 'done'){
                         var percent = $(card).data('percent');

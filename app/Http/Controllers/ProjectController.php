@@ -69,7 +69,7 @@ class ProjectController extends Controller
         $projects->category = $request->category;
         $projects->min = $request->min;
         $projects->max = $request->max;
-        $projects->duration = $current->addDays(6);
+        $projects->duration = $current->addDays(7);
         $projects->save();
 
         return redirect()->route('projects')->with('success','Data added');
@@ -94,9 +94,9 @@ class ProjectController extends Controller
             ->with('repost_error',$id)
             ->withErrors($validator);
         }
-        $closed = Project::find($id)->delete();
+        $projects = Project::find($id);
         $current = Carbon::now(new DateTimeZone('Asia/Manila'));
-        $projects = new Project();
+        // $projects = new Project();
         $projects->user_id = Auth::id();
         $projects->title = $request->title;
         $projects->details = $request->details;
@@ -106,6 +106,7 @@ class ProjectController extends Controller
         $projects->min = $request->min;
         $projects->max = $request->max;
         $projects->duration = $current->addDays(7);
+        $projects->status = 'open';
         $projects->save();
 
         return redirect()->route('projects')->with('success','Data Reposted');
@@ -164,7 +165,7 @@ class ProjectController extends Controller
     }
 
     public function getProposal($id){
-        $proposal = Proposal::where('project_id', $id)->count();
+        $proposal = Proposal::where(['project_id' => $id, 'status' => 1])->count();
         return $proposal;
     }
     public function getPrice($id){
@@ -186,6 +187,15 @@ class ProjectController extends Controller
             ->orderByRaw('created_at DESC')
             ->get();
 
+      $refundedprojects = DB::table('projects')
+            ->join('transactions','transactions.project_id','=','projects.id')
+            ->where([
+            'projects.user_id' => Auth::user()->id,
+            'projects.status' => 'refunded',
+            'transactions.status' => 'Refunded'
+            ])
+            ->get();      
+
      $ongoingprojects = DB::table('projects')
             ->join('proposals','proposals.project_id', '=', 'projects.id')
             ->join('bids','bids.proposal_id','=','proposals.id')
@@ -205,7 +215,7 @@ class ProjectController extends Controller
             ->orderByRaw('projects.created_at DESC')
             ->get();
             return view('projects/seeker')
-                ->with(compact('projects','closedprojects','ongoingprojects','doneprojects'));
+                ->with(compact('projects','closedprojects','ongoingprojects','doneprojects','refundedprojects'));
     }
     public function getProjects(){
         $projects = DB::table('projects')

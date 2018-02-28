@@ -41,6 +41,9 @@
     <li class="nav-item" role="presentation">
       <a href="#done" class="nav-link" role="tab" data-toggle="tab">Done Projects <span class="badge badge-success">{{ $countprojects->countProjects('done') }}</span></a>
     </li>
+    <li class="nav-item" role="presentation">
+      <a href="#refund" class="nav-link" role="tab" data-toggle="tab">Refunded Projects <span class="badge badge-inverse">{{ $countprojects->countRefunded('refunded') }}</span></a>
+    </li>
   </ul>
     @if(session()->has('error'))
     <div class="alert alert-danger alert-dismissable fade show">
@@ -498,6 +501,152 @@
     </tbody>
   </table>
 </div>
+<!-- REFUNDED -->
+<div class="tab-pane" id="refund">
+<!-- TABLE -->
+<table id="myProjectrefunded" class="table table-bordered table-striped" width="100%" cellspacing="0">
+  <thead>
+    <tr>
+      <th>Project Name</th>
+      <th>Bidded Price</th>
+      <th>Amount Refunded</th>
+      <th>Status</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tfoot>
+  <tr>
+      <th>Project Name</th>
+      <th>Bidded Price</th>
+      <th>Amount Refunded</th>
+      <th>Status</th>
+      <th>Action</th>
+    </tr>
+  </tfoot>
+  <tbody>
+  @foreach($refundedprojects as $project)
+  @inject('proposals', 'App\Http\Controllers\ProjectController') 
+  <tr>
+    <td><b>{{ ucwords($project->title) }}</b></td>
+    <td><span>&#8369;</span> {{ number_format($project->total,2) }}</td>
+    <td><span>&#8369;</span> {{ number_format($project->amount,2) }}</td>
+    <td>Refunded</td>
+    <td>
+      <button class="btn btn-link wew " title="Repost" data-tooltip="true" data-toggle="modal" data-target="#refundModal{{ $project->id }}"><i class="fa fa-pencil-square-o"></i></button>
+    </td>
+  <!-- EditMODAL -->
+    <div class="modal fade" id="refundModal{{ $project->id }}" tabindex="-1" role="dialog" aria-labelledby="refundModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+           <button type="button" class="close" data-dismiss="modal">
+            <span aria-hidden="true">&times;</span>
+          </button>
+            <h3 class="modal-title" id="refundModalLabel">Repost Project</h3>
+          </div>
+          <div class="modal-body">
+            <form action="{{ route('repostproject', ['id' => $project->id]) }}" class="form-horizontal" method="POST">
+               {{ csrf_field() }}
+              <div class="floating-labels">
+                <div class="form-group{{ $errors->has('title') ? ' has-error' : ''}} m-b-40 m-t-15">
+                  <input type="text" name="title" id="title" class="form-control" value="{{ $project->title }}" required>
+                  <span class="highlight"></span><span class="bar"></span>
+                  <label for="titles" class="text-dark">Title</label>
+                  @if($errors->has('title'))
+                    <p>{{ $errors->first('title') }}</p>
+                  @endif
+                </div>
+                <div class="form-group{{ $errors->has('details') ? ' has-error' : ''}} m-b-40 m-t-15">
+                  <textarea name="details" id="details" class="form-control" rows="4" style="height:auto" required>{{ $project->details}}</textarea>
+                  <span class="highlight"></span><span class="bar"></span>
+                  <label for="details" class="text-dark">Details</label>
+                  @if($errors->has('details'))
+                    <p>{{ $errors->first('details') }}</p>
+                  @endif
+                </div>
+                <div class="form-group{{ $errors->has('category') ? ' has-error' : ''}} m-b-40 m-t-15">
+                  <select name="category" id="categoryr" class="form-control">
+                    <?php  $category = $category = array('Mobile Development' => 'Mobile', 'Web Development' => 'Web', 'Mobile and Web Development' => 'MobileWeb', 'Desktop Application' => 'Desktop'); ?>
+                    @foreach($category as $categor => $val)
+                      @if($val == $project->category)
+                        <option value="{{ $val }}" selected>{{ $categor }}</option>
+                      @else
+                      <option value="{{ $val }}">{{ $categor }}</option>
+                      @endif
+                    @endforeach
+                 </select>
+                 <span class="highlight"></span><span class="bar"></span>
+                 <label for="categoryr" class="text-dark">Category</label>
+                 @if($errors->has('category'))
+                    <p>{{ $errors->first('category') }}</p>
+                 @endif
+                </div>
+                <!-- -->
+                <div id="rmw">
+        <div class="form-group m-b-30 m-t-15">
+        <select name="type" id="rtype" class="form-control">
+        <?php $category = array('IOS' => 'IOS', 'Android' => 'Android', 'IAA' => 'IOS and Android'); ?>
+        <option value="" disabled selected></option>
+                    @foreach($category as $categor => $val)
+                      @if($categor == $project->type)
+                        <option value="{{ $categor }}" selected>{{ $val }}</option>
+                      @else
+                      <option value="{{ $categor }}">{{ $val }}</option>
+                      @endif
+                    @endforeach
+          </select>
+          <span class="highlight"></span><span class="bar"></span>
+          <label for="type" class="text-dark">Mobile Type</label>
+        </div>
+        </div>
+        <div id="ros">
+        <div class="form-group m-b-30 m-t-15">
+        <select name="os" id="rostype" class="form-control">
+        <?php $category = array('Linux' => 'Linux', 'Windows' => 'Windows', 'Mac' => 'Mac'); ?>
+                  <option value="" disabled selected></option>
+                    @foreach($category as $categor => $val)
+                      @if($val == $project->os)
+                        <option value="{{ $val }}" selected>{{ $categor }}</option>
+                      @else
+                      <option value="{{ $val }}">{{ $categor }}</option>
+                      @endif
+                    @endforeach
+          </select>
+          <span class="highlight"></span><span class="bar"></span>
+          <label class="text-dark" for="type">Os Type</label>
+        </div>
+        </div>
+                <!--  -->
+                <div class="form-group m-b-40 m-t-15">
+                  <input type="number" name="min" value="{{ $project->min }}" id="remin" class="form-control" step="any" required>
+                  <span class="highlight"></span><span class="bar"></span>
+                  <label for="remin" class="text-dark">Min Cost</label>
+                  <div id="remin_error"></div>
+                </div>
+                <div class="form-group m-b-40 m-t-15">
+                  <input type="number" name="max" value="{{ $project->max }}" id="remax" class="form-control" step="any" required>
+                  <span class="highlight"></span><span class="bar"></span>
+                  <label for="remax" class="text-dark">Max Cost</label>
+                  <div id="remax_error"></div>
+                </div>
+              </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary wew" data-dismiss="modal">Close</button>
+            <button type="submit" id="btnRefund" class="btn btn-primary wew" style="background-color:#ee4b28;border:1px solid #ee4b28;">Repost</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  <!-- END OF REPOST MODAL -->
+  </tr>
+  @endforeach
+  </tbody>
+</table>
+<!-- END OF TABLE -->
+</div>
+<!-- END REFUNDED -->
 </div>
 <!-- ADD PROject -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -636,8 +785,16 @@
           },
           cache:false,
           success:function(response){
-            swal("Success","Request sent","success");
-          }
+            swal({
+              title: "Success",
+              text: "Your request has been sent",
+              icon: "success",
+              buttons:false,
+              timer:2000
+            }).then(function(){
+              location.reload();
+            });
+          },
         }); 
           }
         });
@@ -717,6 +874,36 @@
           $('#rmax_error').html(error);
         });
     </script>
+     <script>
+      $('#remin').keyup(function(){
+        var min = $(this).val();
+        var max = $('#remax').val();
+        var error = '';
+        if(parseInt(min) > parseInt(max)){
+          error = `<p style="color:red">Min price must be lesser than maximum price</p>`; 
+          $('#btnRepost').prop('disabled',true);
+        }else{
+          $('#btnRepost').prop('disabled','');
+        }
+        $('#remin_error').html(error);
+      });
+    </script>
+    <script>
+        $('#remax').keyup(function(){
+          var min = $('#remin').val();
+          var max = $(this).val();
+          var error = '';
+          if(parseInt(max) < parseInt(min)){
+            error = `<p style="color:red">Max price must be greater than minumum price</p>`; 
+            $('#btnRefund').prop('disabled',true);
+          }
+          else{
+            $('#remin_error').html('');
+            $('#btnRefund').prop('disabled','');
+          }
+          $('#remax_error').html(error);
+        });
+    </script>
     <script>
       $('#myModal').on('shown.bs.modal', function(){
         $('#max').keyup(function(){
@@ -741,6 +928,7 @@
         $('#myProjectClose').DataTable();
         $('#myOngoingProject').DataTable();
         $('#doneProjects').DataTable();
+        $('#myProjectrefunded').DataTable();
     });
 </script>
 

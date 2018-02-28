@@ -102,6 +102,7 @@ Route::group(['middleware' => ['auth']], function(){
     Route::post('list/bidder/activate',['as' => 'user.activate', 'uses' => 'AdminController@activateUser']);
     Route::get('list/bidder/users', ['as' => 'users.profile', 'uses' => 'AdminController@viewUser']);
     Route::get('lists/projects/monthly', ['as' => 'projects.monthly', 'uses' => 'AdminController@monthlyProjects']);
+    Route::post('lists/presentation/refund', ['as' => 'presentation.refund', 'uses' => 'AdminController@sendRefund']);
     // end admin
     //seeker
     Route::get('seeker/projects', ['as' => 'projects', 'uses' => 'ProjectController@myProjects']);
@@ -158,6 +159,7 @@ Route::group(['middleware' => ['auth']], function(){
     Route::get('bidder/view/user/profile/{user_id}', ['as' => 'viewBuser', 'uses' => 'BidderController@viewUser']);
     Route::get('bidder/view/proposals/edit/{id}/{proposal_id}',['as' => 'edit.proposal', 'uses' => 'BidderController@showProposals']);
     Route::patch('bidder/view/proposals/update/{proposal_id}/{project_id}',['as' => 'update.proposal', 'uses' => 'BidderController@updateProposal']);
+    Route::post('bidder/works/refund/approve', ['as' => 'approve.refund', 'uses' => 'BidderController@approvedRefund']);
     // Route::get('bidder/notify/payment/{bidder_id}', ['as' => 'notify.bidder.payment', 'uses' => 'PresentationController@notifyBidder']);
     // END
     // Route::get('skills',  ['uses' => 'BidderController@getSkills']);
