@@ -179,14 +179,16 @@
         </div>
         </div>
         <div class="form-group m-b-40 m-t-15">
-                  <input type="number" name="min" value="{{ $project->min }}" id="min" class="form-control" step="any" required>
+                  <input type="number" name="min" value="{{ $project->min }}" id="emin" class="form-control" step="any" required>
                   <span class="highlight"></span><span class="bar"></span>
-                  <label for="min" class="text-dark">Min Cost</label>
+                  <label for="emin" class="text-dark">Min Cost</label>
+                  <div id="emin_error"></div>
                 </div>
                 <div class="form-group m-b-40 m-t-15">
-                  <input type="number" name="max" value="{{ $project->max }}" id="max" class="form-control" step="any" required>
+                  <input type="number" name="max" value="{{ $project->max }}" id="emax" class="form-control" step="any" required>
                   <span class="highlight"></span><span class="bar"></span>
-                  <label for="max" class="text-dark">Max Cost</label>
+                  <label for="emax" class="text-dark">Max Cost</label>
+                  <div id="emax_error"></div>
                 </div>
               </div>
           </div>
@@ -609,6 +611,36 @@
      $(document).ready(function(){
          $('#tabMenu a[href="#{{ old('tab') }}"]').tab('show');
      });
+    </script>
+    <script>
+        $('#emin').keyup(function(){
+        var min = $(this).val();
+        var max = $('#emax').val();
+        var error = '';
+        if(parseInt(min) > parseInt(max)){
+          error = `<p style="color:red">Min price must be lesser than maximum price</p>`; 
+          $('#projectUpdate').prop('disabled',true);
+        }else{
+          $('#projectUpdate').prop('disabled','');
+        }
+        $('#emin_error').html(error);
+      });
+    </script>
+     <script>
+        $('#emax').keyup(function(){
+          var min = $('#emin').val();
+          var max = $(this).val();
+          var error = '';
+          if(parseInt(max) < parseInt(min)){
+            error = `<p style="color:red">Max price must be greater than minumum price</p>`; 
+            $('#projectUpdate').prop('disabled',true);
+          }
+          else{
+            $('#emin_error').html('');
+            $('#projectUpdate').prop('disabled','');
+          }
+          $('#emax_error').html(error);
+        });
     </script>
     <script>
       $('#min').keyup(function(){
