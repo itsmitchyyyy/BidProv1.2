@@ -43,7 +43,9 @@
     </div>
     <div class="card m-t-15 mb-5">
         <div class="card-block">
-            <small class="float-right">{{ Carbon\Carbon::parse($modules[0]->created_at)->diffForHumans() }}</small>
+        <?php $date = Carbon\Carbon::parse($modules[0]->created_at)->format('h');
+        ?>
+            <small class="float-right">{{ Carbon\Carbon::parse($modules[0]->created_at)->subHours($date)->diffForHumans() }}</small>
             <h3 class="card-title">Proposal</h3>
             <hr>
             <small><b>Proposal ID: {{ $modules[0]->proposal_id }}</b></small>
