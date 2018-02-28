@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Hash;
 use Image;
 use DB;
+use App\Project;
 //use Illuminate\Support\Facades\Redirect;
 use App\User;
 class SeekerController extends Controller
@@ -154,5 +155,11 @@ class SeekerController extends Controller
             }
         return view('view/seeker')
             ->with(compact('user','projects','skill','proficiency'));
+    }
+
+    public function countProjects($status){
+        $count = Project::where(['user_id' => Auth::user()->id, 'status' => $status])
+            ->count();
+        return $count;
     }
 }
