@@ -89,6 +89,7 @@
             @if($errors->has('min'))
               <p class="help-block">{{ $errors->first('min') }}</p>
             @endif
+            <div id="min_error"></div>
         </div>
         <div class="form-group m-b-30 m-t-15{{ $errors->has('max') ? ' has-error' : ''}}">
           
@@ -98,7 +99,7 @@
           @if($errors->has('max'))
             <p class="help-block">{{ $errors->first('max') }}</p>
           @endif
-          <div id="error"></div>
+          <div id="max_error"></div>
         </div>
         </div>
         </div>
@@ -196,6 +197,20 @@
         });
     </script>
     <script>
+      $('#min').keyup(function(){
+        var min = $(this).val();
+        var max = $('#max').val();
+        var error = '';
+        if(parseInt(min) > parseInt(max)){
+          error = `<p style="color:red">Min Price must be lesser than maximum price</p>`;
+          $('#addBtn').prop('disabled',true);
+        }else{
+          $('#addBtn').prop('disabled','');
+        }
+        $('#min_error').html(error);
+      });
+    </script>
+    <script>
       $('#myModal').on('shown.bs.modal', function(){
         $('#max').keyup(function(){
           var min = $('#min').val();
@@ -206,10 +221,10 @@
             error = `<p style="color:red">Max Price must be greater than minimum price</p>`;
             $('#addBtn').prop('disabled',true);
           }else{
+            $('#min_error').html('');
             $('#addBtn').prop('disabled','');
           }
-       
-          $('#error').html(error);
+          $('#max_error').html(error);
         });
       });
     </script>
