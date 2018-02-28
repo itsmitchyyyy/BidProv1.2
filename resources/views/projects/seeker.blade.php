@@ -19,6 +19,7 @@
 @endpush
 @section('content')
 @inject('presentation', 'App\Http\Controllers\PresentationController')
+@inject('countprojects', 'App\Http\Controllers\SeekerController')
 <!--<div class="clearfix">
 <img src="/uploads/blank.png" alt="" class=" rounded-circle float-left gap-right" style="width:100px;height:100px;margin-left:50px;">
 <strong style="margin-left:15px;color:212834">Dr. Psych</strong>
@@ -29,16 +30,16 @@
 
   <ul class="nav customtab nav-tabs m-t-15 m-b-30" id="tabMenu" role="tablist">
     <li class="nav-item" role="presentation">
-      <a href="#open" class="nav-link active" aria-controls="open" role="tab" data-toggle="tab" aria-expanded="true">Open Projects</a>
+      <a href="#open" class="nav-link active" aria-controls="open" role="tab" data-toggle="tab" aria-expanded="true">Open Projects <span class="badge badge-default">{{ $countprojects->countProjects('open') }}</span></a>
     </li>
     <li class="nav-item" role="presentation">
-      <a href="#closed" class="nav-link" aria-controls="closed" role="tab" data-toggle="tab" aria-expanded="false">Closed Projects</a>
+      <a href="#closed" class="nav-link" aria-controls="closed" role="tab" data-toggle="tab" aria-expanded="false">Closed Projects <span class="badge badge-danger">{{ $countprojects->countProjects('closed') }}</span></a>
     </li>
     <li class="nav-item" role="presentation">
-      <a href="#ongoing" class="nav-link" aria-controls="ongoing" role="tab" data-toggle="tab">Ongoing Projects</a>
+      <a href="#ongoing" class="nav-link" aria-controls="ongoing" role="tab" data-toggle="tab">Ongoing Projects <span class="badge badge-info">{{ $countprojects->countProjects('ongoing') }}</span></a>
     </li>
     <li class="nav-item" role="presentation">
-      <a href="#done" class="nav-link" role="tab" data-toggle="tab">Done Projects</a>
+      <a href="#done" class="nav-link" role="tab" data-toggle="tab">Done Projects <span class="badge badge-success">{{ $countprojects->countProjects('done') }}</span></a>
     </li>
   </ul>
     @if(session()->has('error'))
@@ -353,6 +354,7 @@
                   <input type="number" name="min" value="{{ $project->min }}" id="rmin" class="form-control" step="any" required>
                   <span class="highlight"></span><span class="bar"></span>
                   <label for="min" class="text-dark">Min Cost</label>
+                  <div id="rmin_error"></div>
                 </div>
                 <div class="form-group m-b-40 m-t-15">
                   <input type="number" name="max" value="{{ $project->max }}" id="rmax" class="form-control" step="any" required>
@@ -570,6 +572,7 @@
             @if($errors->has('min'))
               <p class="help-block">{{ $errors->first('min') }}</p>
             @endif
+            <div id="min_error"></div>
         </div>
         <div class="form-group m-b-30 m-t-15{{ $errors->has('max') ? ' has-error' : ''}}">
           
@@ -608,15 +611,44 @@
      });
     </script>
     <script>
+      $('#min').keyup(function(){
+        var min = $(this).val();
+        var max = $('#max').val();
+        var error = '';
+        if(parseInt(min) > parseInt(max)){
+          error = `<p style="color:red">Min price must be lesser than maximum price</p>`; 
+          $('#addBtn').prop('disabled',true);
+        }else{
+          $('#addBtn').prop('disabled','');
+        }
+        $('#min_error').html(error);
+      });
+    </script>
+    <script>
+      $('#rmin').keyup(function(){
+        var min = $(this).val();
+        var max = $('#rmax').val();
+        var error = '';
+        if(parseInt(min) > parseInt(max)){
+          error = `<p style="color:red">Min price must be lesser than maximum price</p>`; 
+          $('#btnRepost').prop('disabled',true);
+        }else{
+          $('#btnRepost').prop('disabled','');
+        }
+        $('#rmin_error').html(error);
+      });
+    </script>
+    <script>
         $('#rmax').keyup(function(){
           var min = $('#rmin').val();
           var max = $(this).val();
           var error = '';
-          if(max < min){
+          if(parseInt(max) < parseInt(min)){
             error = `<p style="color:red">Max price must be greater than minumum price</p>`; 
             $('#btnRepost').prop('disabled',true);
           }
           else{
+            $('#rmin_error').html('');
             $('#btnRepost').prop('disabled','');
           }
           $('#rmax_error').html(error);
@@ -628,11 +660,12 @@
           var min = $('#min').val();
           var max = $(this).val();
           var error = '';
-          if(max < min){
+          if(parseInt(max) < parseInt(min)){
             error = `<p style="color:red">Max price must be greater than minumum price</p>`; 
             $('#addBtn').prop('disabled',true);
           }
           else{
+            $('#min_error').html('');
             $('#addBtn').prop('disabled','');
           }
           $('#max_error').html(error);
