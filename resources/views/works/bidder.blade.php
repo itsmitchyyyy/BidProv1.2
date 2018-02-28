@@ -17,6 +17,7 @@
 @section('content')
 <div class="container-fluid">
     <h3>My Works</h3>
+    @inject('countworks', 'App\Http\Controllers\BidderController')
     @inject('users','App\Http\Controllers\RatingController')
     @inject('presentation','App\Http\Controllers\PresentationController')
     @if(session()->get('success'))
@@ -27,10 +28,10 @@
     @endif
     <ul class="nav customtab nav-tabs m-t-15 m-b-30" id="tabMenu" role="tablist">
         <li class="nav-item" role="presentation">
-            <a href="#ongoing" class="nav-link active" role="tab" data-toggle="tab">Ongoing Projects</a>
+            <a href="#ongoing" class="nav-link active" role="tab" data-toggle="tab">Ongoing Projects <span class="badge badge-info"> {{ $countworks->countWorks('ongoing') }}</span></a>
         </li>
         <li class="nav-item" role="presentation">
-            <a href="#done" class="nav-link" role="tab" data-toggle="tab">Done Projects</a>
+            <a href="#done" class="nav-link" role="tab" data-toggle="tab">Done Projects <span class="badge badge-success"> {{ $countworks->countWorks('done') }}</span></a>
         </li>
     </ul>
     <div class="tab-content">
