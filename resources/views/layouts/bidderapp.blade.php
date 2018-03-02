@@ -69,6 +69,7 @@
         console.log(data.avatar);
     console.log(data.link);
         var existing = notifications.html();
+
         var newnotifications = `
         <a href="`+data.link+`">
           <div class="message-center">

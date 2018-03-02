@@ -239,10 +239,10 @@ class AdminController extends Controller
         $transaction_id = $paypal_obj->transactions[0]->related_resources[0]->sale->id;
         $sale = Sale::get($transaction_id, $this->_api_context);
         $test =  $sale->getId();
-        $refund_amount = round($php_amount / 50,2);
+        // $refund_amount = round($php_amount / 50,2);
         $amount = new Amount();
         $amount->setCurrency('PHP')
-            ->setTotal($refund_amount);
+            ->setTotal($php_amount);
         $refundRequest = new RefundRequest();
         $refundRequest->setAmount($amount);
         $sale = new Sale();
@@ -269,7 +269,7 @@ class AdminController extends Controller
             Module::find($module)->delete();
             
         }
-        Proposal::where('project_id', $proposal_id)->delete();
+        Proposal::where('id', $proposal_id->id)->delete();
         Project::where('id',$project_id)->update(['status'=>'refunded']);
         event(new \App\Events\RefundEvent('A refund has been sent to your paypal'));
         }else{

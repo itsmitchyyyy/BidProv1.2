@@ -279,7 +279,7 @@ class ProjectController extends Controller
     }
 
     public function countBid($id){
-        $proposal = Proposal::where('project_id', $id)->count();
+        $proposal = Proposal::where(['project_id' => $id, 'status' => 1])->count();
         return $proposal;
        // return view('users/bidder')->with(compact('proposal'));
     }

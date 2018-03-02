@@ -190,4 +190,15 @@
         return false;
     }
 </script>
+<script>
+    @if(!empty(Session::get('success')))
+        swal({
+            title: "success",
+            text: "Your payment has been temporarily sent to admin paypal account",
+            icon: "success",
+            timer: 3000,
+            buttons:false
+        });
+    @endif
+</script>
 @endsection

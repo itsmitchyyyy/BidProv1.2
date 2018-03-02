@@ -18,6 +18,7 @@ class ProposalController extends Controller
             ->join('projects','proposals.project_id','=','projects.id')
             // ->join('modules','modules.proposal_id','=','proposals.id')
             ->where('proposals.status',1)
+            ->where('projects.status','open')
             ->select('*','proposals.id as proposal_id')
             // ->groupBy('proposals.id')
             ->get();

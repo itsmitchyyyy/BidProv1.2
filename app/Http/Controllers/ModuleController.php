@@ -126,6 +126,7 @@ class ModuleController extends Controller
         
           $project = DB::table('projects')
             ->join('users','projects.user_id','=','users.id')
+            ->where('projects.id', $project_id)
             ->select('*','projects.id as project_id')
             ->first();
        

@@ -139,8 +139,7 @@ We may, from time to time, and without notice, change or add to the system or th
 •	User must agree the terms and conditions.<br>
 •	Bidder will proper schedule for presentation of the system.<br>
 <!-- •	If the project closed or done and not completely presented by the bidder , admin automatically refund thru admin system. <br> -->
-•   The project will be posted for a span of 6 days, if there will be no bidder, the project will be deleted
-
+•   The project will be posted for a span of 6 days, if there will be no bidder, the project will be deleted   
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" data-dismiss="modal">Close</button>

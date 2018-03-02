@@ -150,7 +150,7 @@
                                            <td>
                                             {{ $controller->checkRefund($report->project_id)->status }}
                                            </td>
-                                           @if($report->seeker_status == 2 && $report->bidder_status == 2 &&   $controller->checkRefund($report->project_id)->status !== 'Refunded')
+                                           @if($controller->checkRefund($report->project_id)->status !== 'Refunded' && $controller->checkRefund($report->project_id)->status !== 'Paid' )
                                            <td>
                                             <a href="#" onclick="sendRefund({{ $controller->checkRefund($report->project_id)->transact_id }}, {{ $report->project_id }}, '{{  $controller->checkRefund($report->project_id)->payment_id  }}', '{{  $controller->checkRefund($report->project_id)->amount  }}')"><button class="btn btn-info wew">Send Refund</button></a>
                                            </td>
