@@ -247,7 +247,8 @@ class ModuleController extends Controller
         DB::table('proposal_modules')
             ->where('id',$propose_moduleID)
             ->update([
-                'status' => $propose_moduleStatus
+                'status' => $propose_moduleStatus,
+                'updated_at' => Carbon::now(new DateTimeZone('Asia/Manila'))
             ]);
         $module = Module::find($module_id);
         $percent = $module->percentDone;

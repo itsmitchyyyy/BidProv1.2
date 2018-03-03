@@ -373,7 +373,7 @@ function toggleComment(id){
                         if(response[i].status == 'todo'){
                             myData +=  `<td><a onclick="moduleUpdate(`+response[i].id+`,'done','25',`+id+`)"><button class="btn btn-info wew">Done</button></a></tr></tr>`;
                         }else{
-                            myData += `<td>Done</tr></tr>`;
+                            myData += `<td>Date Finished: `+moment(response[i].updated_at).format('LLL')+`</tr></tr>`;
                         }
                 }
                      dataValue[i] = value;

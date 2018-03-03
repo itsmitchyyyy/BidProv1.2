@@ -290,9 +290,13 @@ function toggleComment(id){
                     myData += '<tr><td>'+ value +'</td>';
                 }
                 if(key == 'status' ){
+                    if(response[i].status == 'todo'){
                     myData += `<td>
                        `+value+`
                     </td></tr>`;
+                }else{
+                    myData += `<td>Done at: `+moment(response[i].updated_at).format('lll')+`</td></tr>`;
+                }
                 }
                 });
                  }
