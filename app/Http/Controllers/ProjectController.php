@@ -42,7 +42,6 @@ class ProjectController extends Controller
 
 // SEEKER
     public function create(Request $request){
-        
         $regex = '/^\d{0,8}(\.\d{1,2})?$/';
         $validator = Validator::make($request->all(), [
             'title' => 'required|string|max:255',
@@ -59,6 +58,7 @@ class ProjectController extends Controller
                 ->with('adding_error',5)
                 ->withErrors($validator);
         }
+       
         $current = Carbon::now(new DateTimeZone('Asia/Manila'));
         $projects = new Project();
         $projects->user_id = Auth::id();
@@ -70,8 +70,11 @@ class ProjectController extends Controller
         $projects->min = $request->min;
         $projects->max = $request->max;
         $projects->duration = $current->addDays(6);
+        if($request->preferred_skills != null){
+            $preferred_skills = implode(",",$request->preferred_skills);
+            $projects->preffered_skills = $preferred_skills;
+        }
         $projects->save();
-
         return redirect()->route('projects')->with('success','Data added');
 
     }

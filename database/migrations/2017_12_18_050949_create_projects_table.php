@@ -22,6 +22,7 @@ class CreateProjectsTable extends Migration
             $table->string('type')->nullable();
             $table->string('os')->nullable();
             $table->string('category');
+            $table->String('preffered_skills')->nullable();
             $table->decimal('min', 11,2);
             $table->decimal('max', 11,2);
             $table->string('status')->default('open');

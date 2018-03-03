@@ -567,6 +567,43 @@
         </div>
         </div>
         <!--  -->
+         
+        <?php 
+         $skill_list = array(
+          'PHP' => 'PHP',
+          'AngularJS' => 'AngularJS',
+          'ReactJS' => 'ReactJS',
+          'Ionic' => 'Ionic',
+          'Java' => 'Java',
+          'Javascript' => 'Javascript',
+          'JQuery' => 'JQuery',
+          'CSS3' => 'CSS3',
+          'HTML5' => 'HTML5',
+          'Laravel' => 'Laravel',
+          'Codeigniter' => 'Codeigniter',
+          'TypeScript' => 'TypeScript',
+          'Python' => 'Python',
+          'Elixer' => 'Elixer',
+          'Rust' => 'Rust',
+          'Go' => 'Go',
+          'Ruby on Rails' => 'Ruby on Rails',
+          'Swift' => 'Swift',
+          'SQL' => 'SQL',
+          'C#' => 'C#',
+          'C++' => 'C++',
+          'C' => 'C',
+          'Ruby' => 'Ruby'
+      );
+      ?>
+       <div class="form-group m-b-40 m-t-15">
+         <strong>Preffered Skills(Optional)</strong>
+          <select name="preferred_skills[]" id="preferred_skills" class="form-control" style="height:200px" multiple>
+          @foreach($skill_list as $index => $skills)
+            <option value="{{ $skills }}">{{ $skills }}</option>
+          @endforeach
+          </select>
+          <small>Hold down the Ctrl (windows) / Command (Mac) button to select multiple options.</small>
+        </div>
         <div class="form-group m-b-30 m-t-15{{ $errors->has('min') ? ' has-error' : ''}}">
             <input type="number" step="any"  name="min" id="min" class="form-control" required>
             <span class="highlight"></span><span class="bar"></span>

@@ -152,7 +152,8 @@ class BidderController extends Controller
             'SQL',
             'C#',
             'C++',
-            'C'
+            'C',
+            'Ruby'
         );
         foreach(array_combine($request->skills, $request->proficiency) as $rskills => $rproficiency){
             if($rproficiency == '%'){
