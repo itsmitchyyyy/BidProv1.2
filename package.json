@@ -32,6 +32,7 @@
         "pusher": "^1.5.1",
         "pusher-js": "^4.2.2",
         "simple-line-icons": "^2.4.1",
-        "sweetalert": "^2.1.0"
+        "sweetalert": "^2.1.0",
+        "toastr": "^2.1.4"
     }
 }

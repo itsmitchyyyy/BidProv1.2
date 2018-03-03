@@ -53,12 +53,14 @@
         }
         
     </style>
+    <link rel="stylesheet" href="{{ asset('js/toastr/toastr.css') }}">
 @endpush
 @section('content')
 @inject('modules','App\Http\Controllers\ModuleController')
 @inject('users','App\Http\Controllers\RatingController')
 
 <div class="container-fluid">
+<!-- <a class="btn btn-info btn-lg" id="alert-target" >Click me!</a> -->
 @if(session()->has('error'))
     <div class="alert alert-danger alert-dismissable fade show">
       <button type="button" data-dismiss="alert" class="close"><i class="fa fa-close"></i></button>
@@ -343,6 +345,7 @@ function toggleComment(id){
             swal("Report","Pay first before downloading the files","error");
    }
 </script>
+<script src="{{ asset('js/toastr/toastr.js') }}"></script>
 <script>
     $("#collapseComment[data-toggle='collapse']").click(function(){
         if($(this).text() == 'Hide comments'){
@@ -351,5 +354,13 @@ function toggleComment(id){
             $(this).text('Hide comments');
         }
     });
+ /*    $(function(){
+        toastr.options = {
+  "positionClass": "toast-bottom-left",
+        }
+        });
+$("#alert-target").click(function () {
+    toastr.info("<a href='iondex.php'>Hi</a>")
+}); */
 </script>
 @endpush

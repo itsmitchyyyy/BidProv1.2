@@ -49,6 +49,7 @@ import swal from 'sweetalert';
 // import datepicker from 'bootstrap-datepicker';
 // import timepicker from 'jquery-timepicker'; 
 import Moment from 'moment';
+import Toastr from 'toastr';
 // window.Pusher = require('pusher-js');
 
 // window.Echo = new Echo({
