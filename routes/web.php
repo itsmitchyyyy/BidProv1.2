@@ -191,9 +191,10 @@ Route::group(['middleware' => ['auth']], function(){
     /* Route::get('view-email', function(){
         return view('email/seeker');
     }); */
-
-    
     Route::post('seeker/report/post',['as' => 'post.seeker', 'uses' => 'ReportController@postReport']);
-
-   
+    //REVISED
+    Route::post('bidder/work', ['as' => 'work.post', 'uses' => 'ResumeController@addWork']);
+    Route::post('bidder/education/university', ['as' => 'education.post', 'uses' => 'ResumeController@addUniversity']);
+    Route::post('bidder/education/highschool', ['as' => 'highschool.post', 'uses' => 'ResumeController@addHighschool']);
+    Route::post('bidder/delete/workandeducation', ['as' => 'works.delete', 'uses' => 'ResumeController@deleteData']);
 });

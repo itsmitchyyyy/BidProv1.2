@@ -19,6 +19,7 @@
         <link rel="stylesheet" href="{{ asset('js/bower_components/bootstrap-datepicker/bootstrap-datepicker.min.css') }} ">
         @endpush
         @section('content')
+        @inject('works', 'App\Http\Controllers\ResumeController')
         <div class="modal fade" id="profileImage" tabindex="-1" role="dialog" aria-labelledby="profileImage" aria-hidden="true">
         <div class="modal-dialog">
         <div class="modal-content">
@@ -65,9 +66,25 @@
         <div class="white-box">
         <div class="user-bg"> 
         <img width="100%" alt="user" src="/uploads/blank.png">
-        
         <div class="overlay-box">
+        @if($data->userSumRating <= 50 && $data->userSumRating >= 0)
+        <span class="badge badge-default float-right mr-1 mt-2">Novice</span>
+        @else
+        @if($data->userSumRating <= 100 && $data->userSumRating >= 51)
+        <span class="badge badge-red float-right mr-1 mt-2">Expert</span>
+        @else
+        @if($data->userSumRating <= 150 && $data->userSumRating >= 101)
+        <span class="badge badge-info float-right mr-1 mt-2">Professional</span>
+        @else
+        @if($data->userSumRating >= 151)
+        <span class="badge badge-success float-right mr-1 mt-2">Master</span>
+        @endif
+        @endif
+        @endif
+        @endif
         <div class="user-content">
+       
+        
         @if($data->avatar == null)
         <a href="javascript:void(0)" id="newDP" data-toggle="tooltip" title="Update profile picture"><img src="/uploads/blank.png" id="imageSrc" class="thumb-lg img-circle" alt="img"></a>
         @else
@@ -337,72 +354,380 @@
         <div id="workContainer" class="container hidden">
         <a href="#" class="float-right" id="cancelworkplace">Cancel</a>
         <div class="clearfix"></div>
-        <form action="" class="form-horizontal">
+        <form action="{{ route('work.post') }}" method="post" class="form-horizontal">
+        {{ csrf_field() }}
             <div class="form-group row">
                 <label for="firstname" class="col-2 col-form-label">Company</label>
             <div class="col-10">
-                <input type="text" name="firstname" id="firstname" style="width:50%"  class="form-control input-border">
+                <input type="text" name="work_company" id="work_company" style="width:50%" placeholder="Where have you worked?"  class="form-control input-border">
             </div>
             </div>
             <div class="form-group row">
                 <label for="firstname" class="col-2 col-form-label">Position</label>
             <div class="col-10">
-                <input type="text" name="firstname" id="firstname" style="width:50%"  class="form-control input-border">
+                <input type="text" name="work_position" id="work_position" placeholder="What is your job title?" style="width:50%"  class="form-control input-border">
             </div>
             </div>
             <div class="form-group row">
                 <label for="firstname" class="col-2 col-form-label">City/Town</label>
             <div class="col-10">
-                <input type="text" name="firstname" id="firstname" style="width:50%"  class="form-control input-border">
+                <input type="text" name="work_city" id="work_city" style="width:50%"  class="form-control input-border">
             </div>
             </div>
             <div class="form-group row">
                 <label for="firstname" class="col-2 col-form-label">Description</label>
             <div class="col-10">
-                <textarea name="" id="" rows="4" style="height:auto;width:50%" class="form-control input-border"></textarea>
+                <textarea name="work_description" id="" rows="4" style="height:auto;width:50%" class="form-control input-border"></textarea>
             </div>
             </div>
             <div class="form-group row">
                 <label for="firstname" class="col-2 col-form-label">Time Period</label>
             <div class="col-10">
             <?php  $i = 0; ?>
-                <select name="work_year" id="">
+                <select name="work_year_started" id="">
+                <option value="" disabled selected>Year</option>
                     @for($i = 2018; $i > 1969; $i--)
-                        <option value="">{{ $i }}</option>
+                        <option value="{{ $i }}">{{ $i }}</option>
                     @endfor
                 </select>
-                <select name="work_month" id="">
+                <select name="work_month_started" id="">
+                <option value="" disabled selected>Month</option>
                     <?php 
                     $work_month = array(
-                        'January',
-                        'February',
-                        'March',
-                        'April',
-                        'May',
-                        'June',
-                        'July',
-                        'August',
-                        'September',
-                        'October',
-                        'November',
-                        'December'
+                        '1' => 'January',
+                        '2' => 'February',
+                        '3' => 'March',
+                        '4' => 'April',
+                        '5' => 'May',
+                        '6' => 'June',
+                        '7' => 'July',
+                        '8' => 'August',
+                        '9' => 'September',
+                        '10' => 'October',
+                        '11' => 'November',
+                        '12' => 'December'
                     );
                     ?>
-                    @foreach($work_month as $months)
-                    <option value="">{{ $months }}</option>
+                    @foreach($work_month as $value => $months)
+                    <option value="{{ $value }}">{{ $months }}</option>
                     @endforeach
                 </select>
-                <select name="work_day" id="">
+                <select name="work_day_started" id="">
+                <option value="" disabled selected>Day</option>
                     <?php $j = 0; ?>
                     @for($j = 1; $j <= 31; $j++)
-                    <option value="">{{ $j }}</option>   
+                    <option value="{{ $j }}">{{ $j }}</option>   
                     @endfor
                 </select>
-                to present
+                to 
+                <select name="work_year_ended" id="">
+                <option value="" disabled selected>Year</option>
+                    @for($i = 2018; $i > 1969; $i--)
+                        <option value="{{ $i }}">{{ $i }}</option>
+                    @endfor
+                </select>
+                <select name="work_month_ended" id="">
+                <option value="" disabled selected>Month</option>
+                    <?php 
+                    $work_month = array(
+                        '1' => 'January',
+                        '2' => 'February',
+                        '3' => 'March',
+                        '4' => 'April',
+                        '5' => 'May',
+                        '6' => 'June',
+                        '7' => 'July',
+                        '8' => 'August',
+                        '9' => 'September',
+                        '10' => 'October',
+                        '11' => 'November',
+                        '12' => 'December'
+                    );
+                    ?>
+                    @foreach($work_month as $value => $months)
+                    <option value="{{ $value }}">{{ $months }}</option>
+                    @endforeach
+                </select>
+                <select name="work_day_ended" id="">
+                <option value="" disabled selected>Day</option>
+                    <?php $j = 0; ?>
+                    @for($j = 1; $j <= 31; $j++)
+                    <option value="{{ $j }}">{{ $j }}</option>   
+                    @endfor
+                </select>
             </div>
+            </div>
+            <div class="form-group text-center">
+                    <button class="btn btn-info wew" type="submit">Save changes</button>
+                    <button class="btn btn-secondary wew" id="cancelBtnWork">Cancel</button>
             </div>
         </form>
         </div>
+        <div class="container m-t-15">
+            @foreach($works->showWork(Auth::user()->id) as $details)
+                 @if($details->work_company != null)
+                <a href="#">{{ $details->work_company }}</a><br>
+                @endif
+                @if($details->work_position != null)
+                <small>{{ $details->work_position }} •</small>
+                @endif
+                @if($details->work_started != null)
+                <small> {{ Carbon\Carbon::parse($details->work_started)->toFormattedDateString() }}</small>
+                @endif
+                @if($details->work_ended != null)
+                <small>to {{ Carbon\Carbon::parse($details->work_ended)->toFormattedDateString() }}</small>
+                @endif
+                @if($details->work_city != null)
+                <small>• {{ $details->work_city }}</small>
+                <br><small><a href="#" onclick="deleteData({{ $details->id }})">Delete</a></small><br>
+                @endif
+            @endforeach
+        </div>
+        <hr>
+        <h4>Education</h4>
+        <hr>
+        <small>University</small>
+        <hr>
+        <a href="#" id="showUniversity">Add University</a>
+        <div id="universityContainer" class="container hidden">
+        <a href="#" class="float-right" id="canceluniversity">Cancel</a>
+        <div class="clearfix"></div>
+            <form action="{{ route('education.post') }}" method="post" class="form-horizontal">
+                {{ csrf_field() }}
+                <div class="form-group row">
+                    <label for="firstname" class="col-2 col-form-label">School/University</label>
+                <div class="col-10">
+                    <input type="text" name="education_university" id="education_university" style="width:50%"  class="form-control input-border">
+                </div>
+                </div>
+                <div class="form-group row">
+                <label for="firstname" class="col-2 col-form-label">Time Period</label>
+            <div class="col-10">
+            <?php  $i = 0; ?>
+                <select name="attend_year_started" id="">
+                <option value="" disabled selected>Year</option>
+                    @for($i = 2018; $i > 1969; $i--)
+                        <option value="{{ $i }}">{{ $i }}</option>
+                    @endfor
+                </select>
+                <select name="attend_month_started" id="">
+                <option value="" disabled selected>Month</option>
+                    <?php 
+                    $attend_month = array(
+                        '1' => 'January',
+                        '2' => 'February',
+                        '3' => 'March',
+                        '4' => 'April',
+                        '5' => 'May',
+                        '6' => 'June',
+                        '7' => 'July',
+                        '8' => 'August',
+                        '9' => 'September',
+                        '10' => 'October',
+                        '11' => 'November',
+                        '12' => 'December'
+                    );
+                    ?>
+                    @foreach($attend_month as $value => $months)
+                    <option value="{{ $value }}">{{ $months }}</option>
+                    @endforeach
+                </select>
+                <select name="attend_day_started" id="">
+                <option value="" disabled selected>Day</option>
+                    <?php $j = 0; ?>
+                    @for($j = 1; $j <= 31; $j++)
+                    <option value="{{ $j }}">{{ $j }}</option>   
+                    @endfor
+                </select>
+                to
+                <?php  $i = 0; ?>
+                <select name="end_year_started" id="">
+                <option value="" disabled selected>Year</option>
+                    @for($i = 2018; $i > 1969; $i--)
+                        <option value="{{ $i }}">{{ $i }}</option>
+                    @endfor
+                </select>
+                <select name="end_month_started" id="">
+                    <?php 
+                    $end_month = array(
+                        '1' => 'January',
+                        '2' => 'February',
+                        '3' => 'March',
+                        '4' => 'April',
+                        '5' => 'May',
+                        '6' => 'June',
+                        '7' => 'July',
+                        '8' => 'August',
+                        '9' => 'September',
+                        '10' => 'October',
+                        '11' => 'November',
+                        '12' => 'December'
+                    );
+                    ?>
+                    <option value="" disabled selected>Month</option>
+                    @foreach($end_month as $value => $months)
+                    <option value="{{ $value }}">{{ $months }}</option>
+                    @endforeach
+                </select>
+                <select name="end_day_started" id="">
+                <option value="" disabled selected>Day</option>
+                    <?php $j = 0; ?>
+                    @for($j = 1; $j <= 31; $j++)
+                    <option value="{{ $j }}">{{ $j }}</option>   
+                    @endfor
+                </select>
+            </div>
+            </div>
+            <div class="form-group row">
+                    <label for="firstname" class="col-2 col-form-label">Description</label>
+                <div class="col-10">
+                <textarea name="education_university_description" id="" rows="4" style="height:auto;width:50%" class="form-control input-border"></textarea>
+                </div>
+                </div>
+                <div class="form-group row">
+                    <label for="firstname" class="col-2 col-form-label">Degree</label>
+                <div class="col-10">
+                <input name="education_university_degree" id="" style="width:50%"  class="form-control input-border"></textarea>
+                </div>
+                </div>
+                <div class="form-group text-center">
+                    <button class="btn btn-info wew" type="submit">Save changes</button>
+                    <button class="btn btn-secondary wew" id="cancelBtnUniversity">Cancel</button>
+            </div>
+            </form>
+        </div>
+        <div class="container m-t-15">
+            @foreach($works->showUniversity(Auth::user()->id) as $university)
+                    <a href="#">{{ $university->university_school }}</a><br>
+                    <small>{{ $university->university_degree }}</small><br>
+                    @if($university->university_started != null)
+                    <small>{{ Carbon\Carbon::parse($university->university_started)->toFormattedDateString() }}</small>
+                    @endif
+                    @if($university->university_ended != null)
+                    <small>to {{ Carbon\Carbon::parse($university->university_ended)->toFormattedDateString() }}</small>
+                    <br><small><a href="#" onclick="deleteData({{ $university->id }})">Delete</a></small>
+                    @endif
+            @endforeach
+        </div>
+        <hr>
+        <small>High School</small>
+        <hr>
+        <a href="#" id="showHighschool">Add a high school</a>
+        <div id="highSchoolContainer" class="container hidden">
+        <a href="#" class="float-right" id="cancelhighschool">Cancel</a>
+        <div class="clearfix"></div>
+                <form action="{{ route('highschool.post') }}" method="post" class="form-horizontal">
+                {{ csrf_field() }}
+                <div class="form-group row">
+                    <label for="firstname" class="col-2 col-form-label">School/University</label>
+                <div class="col-10">
+                    <input type="text" name="education_highschool" id="education_highschool" style="width:50%"  class="form-control input-border">
+                </div>
+                </div>
+                <div class="form-group row">
+                <label for="firstname" class="col-2 col-form-label">Time Period</label>
+            <div class="col-10">
+            <?php  $i = 0; ?>
+                <select name="hsattend_year_started" id="">
+                <option value="" disabled selected>Year</option>
+                    @for($i = 2018; $i > 1969; $i--)
+                        <option value="{{ $i }}">{{ $i }}</option>
+                    @endfor
+                </select>
+                <select name="hsattend_month_started" id="">
+                <option value="" disabled selected>Month</option>
+                    <?php 
+                    $attend_month = array(
+                        '1' => 'January',
+                        '2' => 'February',
+                        '3' => 'March',
+                        '4' => 'April',
+                        '5' => 'May',
+                        '6' => 'June',
+                        '7' => 'July',
+                        '8' => 'August',
+                        '9' => 'September',
+                        '10' => 'October',
+                        '11' => 'November',
+                        '12' => 'December'
+                    );
+                    ?>
+                    @foreach($attend_month as $value => $months)
+                    <option value="{{ $value }}">{{ $months }}</option>
+                    @endforeach
+                </select>
+                <select name="hsattend_day_started" id="">
+                <option value="" disabled selected>Day</option>
+                    <?php $j = 0; ?>
+                    @for($j = 1; $j <= 31; $j++)
+                    <option value="{{ $j }}">{{ $j }}</option>   
+                    @endfor
+                </select>
+                to
+                <?php  $i = 0; ?>
+                <select name="hsend_year_started" id="">
+                <option value="" disabled selected>Year</option>
+                    @for($i = 2018; $i > 1969; $i--)
+                        <option value="{{ $i }}">{{ $i }}</option>
+                    @endfor
+                </select>
+                <select name="hsend_month_started" id="">
+                    <?php 
+                    $end_month = array(
+                        '1' => 'January',
+                        '2' => 'February',
+                        '3' => 'March',
+                        '4' => 'April',
+                        '5' => 'May',
+                        '6' => 'June',
+                        '7' => 'July',
+                        '8' => 'August',
+                        '9' => 'September',
+                        '10' => 'October',
+                        '11' => 'November',
+                        '12' => 'December'
+                    );
+                    ?>
+                    <option value="" disabled selected>Month</option>
+                    @foreach($end_month as $value => $months)
+                    <option value="{{ $value }}">{{ $months }}</option>
+                    @endforeach
+                </select>
+                <select name="hsend_day_started" id="">
+                <option value="" disabled selected>Day</option>
+                    <?php $j = 0; ?>
+                    @for($j = 1; $j <= 31; $j++)
+                    <option value="{{ $j }}">{{ $j }}</option>   
+                    @endfor
+                </select>
+            </div>
+            </div>
+            <div class="form-group row">
+                    <label for="firstname" class="col-2 col-form-label">Description</label>
+                <div class="col-10">
+                <textarea name="" id="education_highschool_description" rows="4" style="height:auto;width:50%" class="form-control input-border"></textarea>
+                </div>
+                </div>
+                <div class="form-group text-center">
+                    <button class="btn btn-info wew" type="submit">Save changes</button>
+                    <button class="btn btn-secondary wew" id="cancelBtnHighschool">Cancel</button>
+            </div>
+            </form>
+                </form>
+        </div>
+        <div class="container m-t-15">
+            @foreach($works->showHighschool(Auth::user()->id) as $highschool)
+                    <a href="#">{{ $highschool->highschool_school }}</a><br>
+                    @if($highschool->highschool_started != null)
+                    <small>{{ Carbon\Carbon::parse($highschool->highschool_started)->toFormattedDateString() }}</small>
+                    @endif
+                    @if($highschool->highschool_ended != null)
+                    <small>to {{ Carbon\Carbon::parse($highschool->highschool_ended)->toFormattedDateString() }}</small><br>
+                    <small><a href="#" onclick="deleteData({{ $highschool->id }})">Delete</a></small>
+                    @endif
+            @endforeach
+        </div>
+        <br>
         </div>
         <!-- END -->
         </div>
@@ -450,6 +775,10 @@
                     $('#workplace').hide();
                 });
                 $('#cancelworkplace').click(function(){
+                    $('#workContainer').hide();
+                    $('#workplace').show();
+                });
+                $('#cancelBtnWork').click(function(){
                     $('#workContainer').hide();
                     $('#workplace').show();
                 });
@@ -584,5 +913,62 @@
         }).on('change input', function(){
             $(this).find('#updateProfile').prop('disabled', $(this).serialize() == $(this).data('serialized'));
         }).find('#updateProfile').prop('disabled',true);
+        </script>
+        <script>
+            $(function(){
+                $('#showUniversity').click(function(){
+                    $('#universityContainer').show();
+                    $('#showUniversity').hide();
+                });
+                $('#canceluniversity').click(function(){
+                    $('#universityContainer').hide();
+                    $('#showUniversity').show();
+                });
+                $('#cancelBtnUniversity').click(function(){
+                    $('#universityContainer').hide();
+                    $('#showUniversity').show();
+                });
+            });
+        </script>
+        <script>
+            $(function(){
+                $('#showHighschool').click(function(){
+                    $('#highSchoolContainer').show();
+                    $('#showHighschool').hide();
+                });
+                $('#cancelhighschool').click(function(){
+                    $('#highSchoolContainer').hide();
+                    $('#showHighschool').show();
+                });
+                $('#cancelBtnHighschool').click(function(){
+                    $('#highSchoolContainer').hide();
+                    $('#showHighschool').show();
+                });
+            });
+        </script>
+        <script>
+            function deleteData(id){
+                $.ajax({
+                    type: "post",
+                    url: "{{ route('works.delete') }}",
+                    data:{
+                        '_token': "{{ csrf_token() }}",
+                        'id': id
+                    },
+                    cache:false,
+                    success:function(response){
+                        swal({
+                            title: "Success",
+                            text: "Deletion success",
+                            icon: "success",
+                            timer:2000,
+                            buttons:false
+                        }).then(function(){
+                            location.reload();
+                        });
+                    }
+                });
+                return false;
+            }
         </script>
         @endsection

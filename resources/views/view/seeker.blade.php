@@ -15,6 +15,7 @@
 </style>
 @endpush
 @section('content')
+@inject('works', 'App\Http\Controllers\ResumeController')
 <!-- <div class="modal fade" id="reportModal">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -55,6 +56,21 @@
                             <div class="user-bg"> 
                             <img width="100%" alt="user" src="/uploads/blank.png">
                                 <div class="overlay-box">
+                                @if($user->userSumRating <= 50 && $user->userSumRating >= 0)
+                                <span class="badge badge-default float-right mr-1 mt-2">Novice</span>
+                                @else
+                                @if($user->userSumRating <= 100 && $user->userSumRating >= 51)
+                                <span class="badge badge-red float-right mr-1 mt-2">Expert</span>
+                                @else
+                                @if($user->userSumRating <= 150 && $user->userSumRating >= 101)
+                                <span class="badge badge-info float-right mr-1 mt-2">Professional</span>
+                                @else
+                                @if($user->userSumRating >= 151)
+                                <span class="badge badge-success float-right mr-1 mt-2">Master</span>
+                                @endif
+                                @endif
+                                @endif
+                                @endif
                                     <div class="user-content">
                                         @if($user->avatar == null)
                                         <a href="javascript:void(0)" id="newDP" data-tooltip="true" title="Profile"><img src="/uploads/blank.png" id="imageSrc" class="thumb-lg img-circle" alt="img"></a>
@@ -76,9 +92,9 @@
                         <div class="white-box">
                             <ul class="nav customtab nav-tabs" id="tabMenu" role="tablist">
                                 <li role="presentation" class="nav-item"><a href="#profile" class="nav-link active" aria-controls="profile" role="tab" data-toggle="tab" aria-expanded="false"><span class="visible-xs"><i class="fa fa-user"></i></span> <span class="hidden-xs">Profile</span></a></li>
+                                <li role="presentation" class="nav-item"><a href="#workandeducation" class="nav-link" role="tab" data-toggle="tab"><span class="visible-xs"><i class="fa fa-tasks"></i></span><span class="hidden-xs"> Work and Education</span></a></li>
                             </ul>
                             <div class="tab-content">
-                               
                                 <div class="tab-pane active" id="profile">
                                     <div class="row">
                                         <div class="col-md-3 col-xs-6 b-r"> <strong>Full Name</strong>
@@ -127,6 +143,52 @@
                                     </div>
                                     @endforeach
                                     @endif
+                                </div>
+                                <div class="tab-pane" id="workandeducation">
+                                <h4>Work</h4>
+                                <hr>
+                                @foreach($works->showWork($user->id) as $details)
+                                    @if($details->work_company != null)
+                                    <a href="#">{{ $details->work_company }}</a><br>
+                                    @endif
+                                    @if($details->work_position != null)
+                                    <small>{{ $details->work_position }} •</small>
+                                    @endif
+                                    @if($details->work_started != null)
+                                    <small> {{ Carbon\Carbon::parse($details->work_started)->toFormattedDateString() }}</small>
+                                    @endif
+                                    @if($details->work_ended != null)
+                                    <small>to {{ Carbon\Carbon::parse($details->work_ended)->toFormattedDateString() }}</small>
+                                    @endif
+                                    @if($details->work_city != null)
+                                    <small>• {{ $details->work_city }}</small><br>
+                                    @endif
+                                @endforeach
+                                <hr>
+                                <h4>Education</h4>
+                                <hr>
+                                <small>University</small>
+                                @foreach($works->showUniversity($user->id) as $university)
+                                        <a href="#">{{ $university->university_school }}</a><br>
+                                        <small>{{ $university->university_degree }}</small><br>
+                                        @if($university->university_started != null)
+                                        <small>{{ Carbon\Carbon::parse($university->university_started)->toFormattedDateString() }}</small>
+                                        @endif
+                                        @if($university->university_ended != null)
+                                        <small>to {{ Carbon\Carbon::parse($university->university_ended)->toFormattedDateString() }}</small><br>
+                                        @endif
+                                @endforeach
+                                <hr>
+                                <small>High School</small>
+                                @foreach($works->showHighschool($user->id) as $highschool)
+                                        <a href="#">{{ $highschool->highschool_school }}</a><br>
+                                        @if($highschool->highschool_started != null)
+                                        <small>{{ Carbon\Carbon::parse($highschool->highschool_started)->toFormattedDateString() }}</small>
+                                        @endif
+                                        @if($highschool->highschool_ended != null)
+                                        <small>to {{ Carbon\Carbon::parse($highschool->highschool_ended)->toFormattedDateString() }}</small><br>
+                                        @endif
+                                @endforeach
                                 </div>
                             </div>
                         </div>
