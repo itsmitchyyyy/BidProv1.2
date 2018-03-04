@@ -244,6 +244,9 @@ class ModuleController extends Controller
         $propose_moduleStatus = $_POST['propose_moduleStatus'];
         $module_percent = $_POST['module_percent'];
         $module_id = $_POST['module_id'];
+        $module_url_proposal_id = $_POST['module_url_proposal_id'];
+        $module_url_seeker_id = $_POST['module_url_seeker_id'];
+        $module_url_project_id = $_POST['module_url_project_id'];
         DB::table('proposal_modules')
             ->where('id',$propose_moduleID)
             ->update([
@@ -255,6 +258,8 @@ class ModuleController extends Controller
         $total = $percent + $module_percent;
         $module->percentDone = $total;
         $module->save();
+        $module_url = route('acceptedBid', ['proposal_id' => $module_url_proposal_id, 'seeker_id' => $module_url_seeker_id, 'project_id' => $module_url_project_id]);
+        event(new \App\Events\ModuleUpdateEvent($module_url));
         echo 'ok';
     }
 

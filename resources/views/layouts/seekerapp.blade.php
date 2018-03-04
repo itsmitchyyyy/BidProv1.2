@@ -32,8 +32,10 @@
         }
     </style>
     <link rel="stylesheet" href="{{ asset('css/seeker/seeker.css') }}">
+    <link rel="stylesheet" href="{{ asset('js/toastr/toastr.css') }}">
     @stack('css')
     <script src="{{ asset('js/app.js') }}"></script>
+    <script src="{{ asset('js/toastr/toastr.js') }}"></script>
 </head>
 <body>
 @if(Auth::user()->status == 1)
@@ -114,5 +116,21 @@
         function windowLocation($notif_link){
             window.location = $notif_link;
         }
+  </script>
+  <script>
+    var pusher = new Pusher('9ab3129dae2df45ee2fc',{
+        cluster: 'ap1',
+        encrypted: true,
+    });
+
+    var module_notify = pusher.subscribe('module-notify');
+    module_notify.bind('App\\Events\\ModuleUpdateEvent', function(data){
+        console.log(data);
+        toastr.options = {
+            "positionClass": "toast-bottom-left",
+            "timeOut": "4000"
+        }
+        toastr.success(`<a href="`+data.url+`">Module update progress</a>`);
+    });
   </script>
 </html>

@@ -371,7 +371,7 @@ function toggleComment(id){
                     myData += '<td>'+value+'</td>';
                     if(dataStatus != 'todo'){
                         if(response[i].status == 'todo'){
-                            myData +=  `<td><a onclick="moduleUpdate(`+response[i].id+`,'done','25',`+id+`)"><button class="btn btn-info wew">Done</button></a></tr></tr>`;
+                            myData +=  `<td><a onclick="moduleUpdate(`+response[i].id+`,'done','25',`+id+`,'`+proposalComment+`','`+client_id+`','`+projectComment+`')"><button class="btn btn-info wew">Done</button></a></tr></tr>`;
                         }else{
                             myData += `<td>Date Finished: `+moment(response[i].updated_at).format('LLL')+`</tr></tr>`;
                         }
@@ -600,7 +600,11 @@ function toggleComment(id){
         }
     </script>
     <script>
-        function moduleUpdate(propose_moduleID,propose_moduleStatus,module_percent,module_id){
+        function moduleUpdate(propose_moduleID,propose_moduleStatus,module_percent,module_id,proposal_id,seeker_id,project_id){
+            var test_id = [];
+            test_id['proposal_id'] = proposal_id;
+            test_id['seeker_id'] = seeker_id;
+            test_id['project_id'] = project_id;
             var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
            $.ajax({
                type: "post",
@@ -611,7 +615,10 @@ function toggleComment(id){
                    'propose_moduleID': propose_moduleID,
                    'propose_moduleStatus': propose_moduleStatus,
                    'module_percent': module_percent,
-                   'module_id': module_id
+                   'module_id': module_id,
+                   'module_url_proposal_id': proposal_id,
+                   'module_url_seeker_id': seeker_id,
+                   'module_url_project_id': project_id
                },
                cache:false,
                success:function(response){
