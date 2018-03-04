@@ -147,7 +147,7 @@
                             success:function(response){
                                for(var j = 0; j < response.length; j++){
                                    if(jQuery.inArray(response[j], res)  != -1){
-                                       toastr.info(data.user+` posted a new project <b>`+data.message+`</b> that matchers your skills`);
+                                       toastr.info(`<a href="`+data.url+`">`+data.user+` posted a new project <b>`+data.message+`</b> that matchers your skills</a>`);
                                        break;
                                    }
                                }

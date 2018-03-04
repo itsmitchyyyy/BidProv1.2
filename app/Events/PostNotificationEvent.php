@@ -16,16 +16,18 @@ class PostNotificationEvent implements ShouldBroadcast
 
     public $message;
     public $user;
+    public $url;
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($user,$message)
+    public function __construct($user,$message,$url)
     {
         //
         $this->user = $user;
         $this->message = $message;
+        $this->url = $url;
     }
 
     /**
