@@ -75,6 +75,9 @@ class ProjectController extends Controller
             $projects->preffered_skills = $preferred_skills;
         }
         $projects->save();
+        $post_user = ucfirst(Auth::user()->firstname).' '.ucfirst(Auth::user()->lastname);
+        $project_title = ucwords($request->title);
+        event(new \App\Events\PostNotificationEvent($post_user,$project_title));
         return redirect()->route('projects')->with('success','Data added');
 
     }

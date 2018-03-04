@@ -197,4 +197,6 @@ Route::group(['middleware' => ['auth']], function(){
     Route::post('bidder/education/university', ['as' => 'education.post', 'uses' => 'ResumeController@addUniversity']);
     Route::post('bidder/education/highschool', ['as' => 'highschool.post', 'uses' => 'ResumeController@addHighschool']);
     Route::post('bidder/delete/workandeducation', ['as' => 'works.delete', 'uses' => 'ResumeController@deleteData']);
+    Route::get('bidder/post/notify',['as' => 'post.notification', 'uses' => 'BidderController@notifyProjects']);
+    Route::post('bidder/myskills', ['as' => 'bidder.myskills', 'uses' => 'BidderController@bidderSkills']);
 });

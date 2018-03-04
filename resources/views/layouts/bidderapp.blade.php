@@ -8,8 +8,10 @@
     <link rel="shortcut icon" href="/img/bidprologo.png" type="image/x-icon">
     <title>BidPro</title>
     <link rel="stylesheet" href="{{ asset('css/seeker/seeker.css') }}">
+    <link rel="stylesheet" href="{{ asset('js/toastr/toastr.css') }}">
     @stack('css')
     <script src="{{ asset('js/app.js') }}"></script>
+    <script src="{{ asset('js/toastr/toastr.js') }}"></script>
     <style>
         .wew:hover{
             cursor:pointer;
@@ -112,4 +114,48 @@
             swal("You have a payment",""+data.message)
         });
     </script>
+<script>
+    var pusher = new Pusher('9ab3129dae2df45ee2fc',{
+        cluster: 'ap1',
+        encrypted: true,
+    });
+
+    var post_notify = pusher.subscribe('post-notify');
+        post_notify.bind('App\\Events\\PostNotificationEvent',function(data){
+            $(function(){
+                toastr.options = {
+                    "positionClass": "toast-bottom-left",
+                    "timeOut": "4000",
+                }
+                $.ajax({
+                    type: "get",
+                    url: "{{ route('post.notification') }}",
+                    dataType: "json",
+                    cache:false,
+                    success:function(response){
+                        var str = response.preffered_skills;
+                        var res = str.split(",");
+                        $.ajax({
+                            type: "post",
+                            url: "{{ route('bidder.myskills') }}",
+                            data: {
+                                '_token': "{{ csrf_token() }}",
+                                'id': "{{ Auth::user()->id }}"
+                            },
+                            dataType: "json",
+                            cache:false,
+                            success:function(response){
+                               for(var j = 0; j < response.length; j++){
+                                   if(jQuery.inArray(response[j], res)  != -1){
+                                       toastr.info(data.user+` posted a new project <b>`+data.message+`</b> that matchers your skills`);
+                                       break;
+                                   }
+                               }
+                            }
+                        });
+                    }
+                });
+        });
+        });
+</script>
 </html>

@@ -375,4 +375,27 @@ class BidderController extends Controller
         ->route('bids')
         ->with('success','Module updated successfully');
     }
+
+    public function notifyProjects(){
+        $projects = Project::orderby('id','desc')->first();
+        echo json_encode($projects);
+    }
+    public function bidderSkills(){
+        $id = $_POST['id'];
+        $skill = array();
+        $user = User::find($id);
+        $skills[] = $user->skills;
+        foreach($skills as $index => $value){
+            if(strpos($value,":") !== false){
+                $data = explode(",",$value);
+                foreach($data as $val){
+                    if(strpos($val,"skills") !== false){
+                        $get = explode(":",$val);
+                        $skill[] = $get[1];
+                    }
+                }
+            }
+        }
+        echo json_encode($skill);
+    }
 }
