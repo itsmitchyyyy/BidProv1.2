@@ -38,7 +38,7 @@
                         </div>
                         </div>
                         <div style="border-bottom:1px solid rgba(0,0,0,.25)" class="p-10 mt-3">
-                            <div class="floating-labels">
+                            <div class="floating-labels" id="subDiv">
                             <p>
                             <div class="form-group">
                             <input type="text" name="module_description[]" value="Create" id="module_description" required class="form-control">
@@ -63,6 +63,7 @@
                             </div>
                             </p>
                         </div>
+                        <a href="#" id="addSubModule">Add More</a>
                    </div>
                    </p>
                    </div>
@@ -96,11 +97,28 @@
     })
 </script>
 <script>
+    $(function(){
+        var subModuleHeader = $('#subDiv');
+        var j = $('#module_description p').length + 1;
+        $('#addSubModule').click(function(){
+            j++;
+            $(`<div class="form-group">
+                <input type="text" name="module_description[]"  id="module_description`+j+`" required class="form-control">
+                <span class="highlight"></span><span class="bar"></span>
+                <label for="module_description`+j+`">Module Description</label>
+                </div>`).appendTo(subModuleHeader);
+            return false;
+        });
+    });
+</script>
+<script>
 $(function(){
     var moduleHeader = $('#moduleHeader');
     var i = $('#module_name p').length + 1;
     $('#addMore').click(function(){
         i++;
+
+
         $(`<p class="mt-2">
                    <div class="p-10 mt-3" style="border-bottom:1px solid rgba(0,0,0,.25);border-top:1px solid rgba(0,0,0,.25)">
                    <div class="floating-labels mt-3">
@@ -112,7 +130,7 @@ $(function(){
                         </div>
                         </div>
                         <div style="border-bottom:1px solid rgba(0,0,0,.25)" class="p-10 mt-3">
-                        <div class="floating-labels">
+                        <div class="floating-labels" id="subDiv`+i+`">
                                 <p>
                                 <div class="form-group">
                                 <input type="text" name="module_description[]" value="Create" id="module_description`+i+`" required class="form-control">
@@ -137,10 +155,23 @@ $(function(){
                                 </div>
                                 </p>
                         </div>
+                        <a href="javascript:void(0)" onclick="addSubModule(`+i+`)">Add More</a>
                    </div>
                    </p>`).appendTo(moduleHeader);
     });    
 });
+</script>
+<script>
+    function addSubModule(data){
+        var subModuleHeader = $('#subDiv'+data);
+        var x = $('module_description'+data+' p').length + 1;
+        x++;
+        $(`<div class="form-group">
+            <input type="text" name="module_description[]"  id="module_description`+x+`" required class="form-control">
+            <span class="highlight"></span><span class="bar"></span>
+            <label for="module_description`+x+`">Module Description</label>
+            </div>`).appendTo(subModuleHeader);
+    }
 </script>
 <script>
    $(function(){

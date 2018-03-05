@@ -325,7 +325,10 @@ class ProjectController extends Controller
             $proposal_id = $proposal->id;
 
             $module_name = $request->module_name;    
-            $module_description = array_chunk($request->module_description,4,true);
+            $count_module_name = count($module_name);
+            $module_count = count($request->module_description) / $count_module_name;
+            $module_description = array_chunk($request->module_description,$module_count,true);
+          
             $id = array();
             foreach($module_name as $name){ 
                $id[] =  DB::table('modules')->insertGetId([
